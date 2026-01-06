@@ -1,0 +1,29 @@
+services:
+  dashboard:
+    image: ${DOCKER_REGISTRY-}dashboard
+    build:
+      context: .
+      dockerfile: src/Host/Dashboard/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: flowmetrics-db
+    environment:
+      POSTGRES_USER: flowmetrics
+      POSTGRES_PASSWORD: flowmetrics123
+      POSTGRES_DB: flowmetrics
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flowmetrics -d flowmetrics"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

@@ -1,0 +1,342 @@
+@page "/analytics"
+@using Analytics.Application.Services
+@inject IDashboardService DashboardService
+@inject IAnalyticsService AnalyticsService
+@rendermode InteractiveServer
+
+<PageTitle>Analytics - FlowMetrics</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">Analytics</MudText>
+
+<!-- Period Selector -->
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+        <MudSelect T="string" Label="Time Period" @bind-Value="_selectedPeriod" Variant="Variant.Outlined"
+                   Style="max-width: 200px;">
+            <MudSelectItem Value="@("1M")">Last Month</MudSelectItem>
+            <MudSelectItem Value="@("3M")">Last 3 Months</MudSelectItem>
+            <MudSelectItem Value="@("6M")">Last 6 Months</MudSelectItem>
+            <MudSelectItem Value="@("1Y")">Last Year</MudSelectItem>
+            <MudSelectItem Value="@("ALL")">All Time</MudSelectItem>
+        </MudSelect>
+        <MudSelect T="string" Label="Granularity" @bind-Value="_granularity" Variant="Variant.Outlined"
+                   Style="max-width: 200px;">
+            <MudSelectItem Value="@("Daily")">Daily</MudSelectItem>
+            <MudSelectItem Value="@("Weekly")">Weekly</MudSelectItem>
+            <MudSelectItem Value="@("Monthly")">Monthly</MudSelectItem>
+        </MudSelect>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadDataAsync"
+                   StartIcon="@Icons.Material.Filled.Refresh">
+            Refresh
+        </MudButton>
+    </MudStack>
+</MudPaper>
+
+@if (_isLoading)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="mb-4" />
+}
+else
+{
+    <!-- Comparison Cards -->
+    <MudGrid Class="mb-4">
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Class="pa-4" Elevation="2">
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Month over Month</MudText>
+                <MudText Typo="Typo.h5" Color="@GetTrendColor(_momComparison?.Trend)">
+                    @GetTrendIcon(_momComparison?.Trend) @FormatPercentage(_momComparison?.ChangePercentage ?? 0)
+                </MudText>
+                <MudText Typo="Typo.caption" Color="Color.Secondary">
+                    @FormatCurrency(_momComparison?.ChangeUsd ?? 0)
+                </MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Class="pa-4" Elevation="2">
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Week over Week</MudText>
+                <MudText Typo="Typo.h5" Color="@GetTrendColor(_wowComparison?.Trend)">
+                    @GetTrendIcon(_wowComparison?.Trend) @FormatPercentage(_wowComparison?.ChangePercentage ?? 0)
+                </MudText>
+                <MudText Typo="Typo.caption" Color="Color.Secondary">
+                    @FormatCurrency(_wowComparison?.ChangeUsd ?? 0)
+                </MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Class="pa-4" Elevation="2">
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Overall Trend</MudText>
+                <MudText Typo="Typo.h5" Color="@GetDirectionColor(_trend?.Direction)">
+                    @_trend?.Direction
+                </MudText>
+                <MudText Typo="Typo.caption" Color="Color.Secondary">
+                    @FormatPercentage(_trend?.GrowthRatePercentage ?? 0) growth rate
+                </MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="6" md="3">
+            <MudPaper Class="pa-4" Elevation="2">
+                <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Avg per Period</MudText>
+                <MudText Typo="Typo.h5">
+                    @FormatCurrency(_trend?.AverageGrowthPerPeriodUsd ?? 0)
+                </MudText>
+                <MudText Typo="Typo.caption" Color="Color.Secondary">
+                    Per @_granularity.ToLower()
+                </MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Time Series Chart -->
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudText Typo="Typo.h6" Class="mb-4">Income Over Time</MudText>
+        @if (_timeSeries?.Points.Count > 0)
+        {
+            <MudChart ChartType="ChartType.Bar"
+                      ChartSeries="@_timeSeriesChartSeries"
+                      XAxisLabels="@_timeSeriesLabels"
+                      Width="100%"
+                      Height="350px"
+                      ChartOptions="@_chartOptions" />
+
+            <MudStack Row="true" Justify="Justify.SpaceAround" Class="mt-4">
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Total</MudText>
+                    <MudText Typo="Typo.h6">@FormatCurrency(_timeSeries.TotalUsd)</MudText>
+                </MudStack>
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Average</MudText>
+                    <MudText Typo="Typo.h6">@FormatCurrency(_timeSeries.AverageUsd)</MudText>
+                </MudStack>
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Min</MudText>
+                    <MudText Typo="Typo.h6">@FormatCurrency(_timeSeries.MinUsd)</MudText>
+                </MudStack>
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Max</MudText>
+                    <MudText Typo="Typo.h6">@FormatCurrency(_timeSeries.MaxUsd)</MudText>
+                </MudStack>
+            </MudStack>
+        }
+        else
+        {
+            <MudText Color="Color.Secondary">No data available for the selected period</MudText>
+        }
+    </MudPaper>
+
+    <!-- Distribution Charts -->
+    <MudGrid>
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4" Elevation="2">
+                <MudText Typo="Typo.h6" Class="mb-4">By Category</MudText>
+                @if (_categoryDistribution?.Items.Count > 0)
+                {
+                    <MudChart ChartType="ChartType.Pie"
+                              InputData="@_categoryData"
+                              InputLabels="@_categoryLabels"
+                              Width="100%"
+                              Height="300px" />
+
+                    <MudSimpleTable Dense="true" Class="mt-4">
+                        <tbody>
+                            @foreach (var item in _categoryDistribution.Items)
+                            {
+                                <tr>
+                                    <td>@item.Label</td>
+                                    <td style="text-align:right">@FormatCurrency(item.AmountUsd)</td>
+                                    <td style="text-align:right">@item.Percentage.ToString("F1")%</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </MudSimpleTable>
+                }
+                else
+                {
+                    <MudText Color="Color.Secondary">No data available</MudText>
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4" Elevation="2">
+                <MudText Typo="Typo.h6" Class="mb-4">By Provider</MudText>
+                @if (_providerDistribution?.Items.Count > 0)
+                {
+                    <MudChart ChartType="ChartType.Pie"
+                              InputData="@_providerData"
+                              InputLabels="@_providerLabels"
+                              Width="100%"
+                              Height="300px" />
+
+                    <MudSimpleTable Dense="true" Class="mt-4">
+                        <tbody>
+                            @foreach (var item in _providerDistribution.Items)
+                            {
+                                <tr>
+                                    <td>@item.Label</td>
+                                    <td style="text-align:right">@FormatCurrency(item.AmountUsd)</td>
+                                    <td style="text-align:right">@item.Percentage.ToString("F1")%</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </MudSimpleTable>
+                }
+                else
+                {
+                    <MudText Color="Color.Secondary">No data available</MudText>
+                }
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    private bool _isLoading = true;
+    private string _selectedPeriod = "6M";
+    private string _granularity = "Monthly";
+
+    private IncomeTimeSeries? _timeSeries;
+    private IncomeDistribution? _categoryDistribution;
+    private IncomeDistribution? _providerDistribution;
+    private AnalyticsTrend? _trend;
+    private PeriodComparison? _momComparison;
+    private PeriodComparison? _wowComparison;
+
+    private List<ChartSeries> _timeSeriesChartSeries = [];
+    private string[] _timeSeriesLabels = [];
+    private ChartOptions _chartOptions = new() { YAxisTicks = 1000 };
+
+    private double[] _categoryData = [];
+    private string[] _categoryLabels = [];
+    private double[] _providerData = [];
+    private string[] _providerLabels = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        _isLoading = true;
+
+        var (startDate, endDate) = GetDateRange();
+
+        // Sequential calls to avoid DbContext threading issues
+        var timeSeriesResult = await DashboardService.GetTimeSeriesAsync(startDate, endDate, _granularity);
+        var categoryResult = await DashboardService.GetDistributionAsync("Category", startDate, endDate);
+        var providerResult = await DashboardService.GetDistributionAsync("Provider", startDate, endDate);
+        var trendResult = await AnalyticsService.GetTrendAsync(_granularity, GetPeriodsBack());
+        var momResult = await DashboardService.GetPeriodComparisonAsync("MoM");
+        var wowResult = await DashboardService.GetPeriodComparisonAsync("WoW");
+
+        if (timeSeriesResult.IsSuccess)
+        {
+            _timeSeries = timeSeriesResult.Value;
+            PrepareTimeSeriesChart();
+        }
+        if (categoryResult.IsSuccess)
+        {
+            _categoryDistribution = categoryResult.Value;
+            PrepareCategoryChart();
+        }
+        if (providerResult.IsSuccess)
+        {
+            _providerDistribution = providerResult.Value;
+            PrepareProviderChart();
+        }
+        if (trendResult.IsSuccess) _trend = trendResult.Value;
+        if (momResult.IsSuccess) _momComparison = momResult.Value;
+        if (wowResult.IsSuccess) _wowComparison = wowResult.Value;
+
+        _isLoading = false;
+    }
+
+    private (DateOnly Start, DateOnly End) GetDateRange()
+    {
+        var now = DateTime.UtcNow;
+        var endDate = DateOnly.FromDateTime(now);
+        var startDate = _selectedPeriod switch
+        {
+            "1M" => DateOnly.FromDateTime(now.AddMonths(-1)),
+            "3M" => DateOnly.FromDateTime(now.AddMonths(-3)),
+            "6M" => DateOnly.FromDateTime(now.AddMonths(-6)),
+            "1Y" => DateOnly.FromDateTime(now.AddYears(-1)),
+            "ALL" => DateOnly.FromDateTime(now.AddYears(-10)),
+            _ => DateOnly.FromDateTime(now.AddMonths(-6))
+        };
+        return (startDate, endDate);
+    }
+
+    private int GetPeriodsBack() => _selectedPeriod switch
+    {
+        "1M" => _granularity == "Daily" ? 30 : _granularity == "Weekly" ? 4 : 1,
+        "3M" => _granularity == "Daily" ? 90 : _granularity == "Weekly" ? 12 : 3,
+        "6M" => _granularity == "Daily" ? 180 : _granularity == "Weekly" ? 24 : 6,
+        "1Y" => _granularity == "Daily" ? 365 : _granularity == "Weekly" ? 52 : 12,
+        _ => 6
+    };
+
+    private void PrepareTimeSeriesChart()
+    {
+        if (_timeSeries?.Points is null || _timeSeries.Points.Count == 0) return;
+
+        _timeSeriesLabels = _timeSeries.Points.Select(p => FormatDateLabel(p.Date)).ToArray();
+        _timeSeriesChartSeries =
+        [
+            new ChartSeries
+            {
+                Name = "Income",
+                Data = _timeSeries.Points.Select(p => (double)p.AmountUsd).ToArray()
+            }
+        ];
+    }
+
+    private string FormatDateLabel(DateOnly date) => _granularity switch
+    {
+        "Daily" => date.ToString("MM/dd"),
+        "Weekly" => $"W{date.DayOfYear / 7 + 1}",
+        "Monthly" => date.ToString("MMM yy"),
+        _ => date.ToString("MMM yy")
+    };
+
+    private void PrepareCategoryChart()
+    {
+        if (_categoryDistribution?.Items is null) return;
+        _categoryLabels = _categoryDistribution.Items.Select(i => i.Label).ToArray();
+        _categoryData = _categoryDistribution.Items.Select(i => (double)i.AmountUsd).ToArray();
+    }
+
+    private void PrepareProviderChart()
+    {
+        if (_providerDistribution?.Items is null) return;
+        _providerLabels = _providerDistribution.Items.Select(i => i.Label).ToArray();
+        _providerData = _providerDistribution.Items.Select(i => (double)i.AmountUsd).ToArray();
+    }
+
+    private static string FormatCurrency(decimal amount) =>
+        amount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+
+    private static string FormatPercentage(decimal percentage) =>
+        $"{(percentage >= 0 ? "+" : "")}{percentage:F1}%";
+
+    private static Color GetTrendColor(string? trend) => trend switch
+    {
+        "Up" => Color.Success,
+        "Down" => Color.Error,
+        _ => Color.Default
+    };
+
+    private static Color GetDirectionColor(string? direction) => direction switch
+    {
+        "Upward" => Color.Success,
+        "Downward" => Color.Error,
+        "Stable" => Color.Info,
+        _ => Color.Default
+    };
+
+    private static string GetTrendIcon(string? trend) => trend switch
+    {
+        "Up" => "▲",
+        "Down" => "▼",
+        _ => "●"
+    };
+}

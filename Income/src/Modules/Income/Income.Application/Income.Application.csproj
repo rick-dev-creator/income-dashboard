@@ -8,8 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentResults" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Domain.Shared.Kernel\Domain.Shared.Kernel.csproj" />
     <ProjectReference Include="..\Income.Domain\Income.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Income.Infrastructure" />
+    <InternalsVisibleTo Include="Income.Installer" />
+    <InternalsVisibleTo Include="Income.Infrastructure.Tests" />
   </ItemGroup>
 
 </Project>

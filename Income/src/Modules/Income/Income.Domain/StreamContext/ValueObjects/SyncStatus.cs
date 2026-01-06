@@ -67,4 +67,18 @@ internal sealed record SyncStatus
 
     public bool CanSync => State is SyncState.Active or SyncState.Failed or SyncState.Stale;
     public bool IsHealthy => State == SyncState.Active && LastError is null;
+
+    internal static SyncStatus Reconstruct(
+        SyncState state,
+        DateTime? lastSuccessAt,
+        DateTime? lastAttemptAt,
+        string? lastError,
+        DateTime? nextScheduledAt) => new()
+    {
+        State = state,
+        LastSuccessAt = lastSuccessAt,
+        LastAttemptAt = lastAttemptAt,
+        LastError = lastError,
+        NextScheduledAt = nextScheduledAt
+    };
 }

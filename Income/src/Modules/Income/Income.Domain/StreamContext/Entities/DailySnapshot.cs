@@ -66,12 +66,9 @@ internal sealed class DailySnapshot : Entity<SnapshotId>
         decimal usdAmount,
         decimal exchangeRate,
         string rateSource,
-        DateTime snapshotAt)
-    {
-        return new DailySnapshot(
+        DateTime snapshotAt) => new(
             id, date, originalAmount, originalCurrency,
             usdAmount, exchangeRate, rateSource, snapshotAt);
-    }
 
     internal void UpdateAmount(Money newAmount, ExchangeConversion conversion)
     {
