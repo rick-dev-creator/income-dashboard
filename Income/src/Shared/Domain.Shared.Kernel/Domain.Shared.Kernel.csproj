@@ -11,4 +11,15 @@
     <PackageReference Include="FluentResults" Version="3.*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Income.Domain" />
+    <InternalsVisibleTo Include="Income.Application" />
+    <InternalsVisibleTo Include="Income.Infrastructure" />
+    <InternalsVisibleTo Include="Income.Domain.Tests" />
+    <InternalsVisibleTo Include="Analytics.Domain" />
+    <InternalsVisibleTo Include="Analytics.Application" />
+    <InternalsVisibleTo Include="Analytics.Infrastructure" />
+    <InternalsVisibleTo Include="Analytics.Domain.Tests" />
+  </ItemGroup>
+
 </Project>

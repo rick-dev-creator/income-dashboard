@@ -26,4 +26,9 @@
     <Project Path="src/Modules/Analytics/Analytics.Infrastructure/Analytics.Infrastructure.csproj" />
     <Project Path="src/Modules/Analytics/Analytics.Installer/Analytics.Installer.csproj" />
   </Folder>
+
+  <!-- Tests -->
+  <Folder Name="/Tests/">
+    <Project Path="src/Modules/Income/Tests/Income.Domain.Tests/Income.Domain.Tests.csproj" />
+  </Folder>
 </Solution>
