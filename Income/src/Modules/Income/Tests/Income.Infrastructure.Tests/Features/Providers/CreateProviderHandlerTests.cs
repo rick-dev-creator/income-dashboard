@@ -1,0 +1,83 @@
+using Income.Contracts.Commands;
+using Income.Infrastructure.Features.Providers.Handlers;
+using Income.Infrastructure.Tests.Fixtures;
+
+namespace Income.Infrastructure.Tests.Features.Providers;
+
+[Collection("Postgres")]
+public class CreateProviderHandlerTests(PostgresFixture fixture)
+{
+    [Fact]
+    public async Task HandleAsync_ValidCommand_CreatesProvider()
+    {
+        // Arrange
+        await using var context = fixture.CreateDbContext();
+        var handler = new CreateProviderHandler(context);
+
+        var command = new CreateProviderCommand(
+            Name: "Blofin",
+            Type: "Exchange",
+            DefaultCurrency: "USDT",
+            SyncFrequency: "Daily",
+            ConfigSchema: null);
+
+        // Act
+        var result = await handler.HandleAsync(command);
+
+        // Assert
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.Name.ShouldBe("Blofin");
+        result.Value.Type.ShouldBe("Exchange");
+        result.Value.DefaultCurrency.ShouldBe("USDT");
+        result.Value.SyncFrequency.ShouldBe("Daily");
+    }
+
+    [Fact]
+    public async Task HandleAsync_DuplicateName_ReturnsFailure()
+    {
+        // Arrange
+        await using var context = fixture.CreateDbContext();
+        var handler = new CreateProviderHandler(context);
+
+        var command = new CreateProviderCommand(
+            Name: "DuplicateProvider",
+            Type: "Manual",
+            DefaultCurrency: "USD",
+            SyncFrequency: "Manual",
+            ConfigSchema: null);
+
+        // Create first provider
+        await handler.HandleAsync(command);
+
+        // Act - try to create duplicate
+        await using var context2 = fixture.CreateDbContext();
+        var handler2 = new CreateProviderHandler(context2);
+        var result = await handler2.HandleAsync(command);
+
+        // Assert
+        result.IsFailed.ShouldBeTrue();
+        result.Errors[0].Message.ShouldContain("already exists");
+    }
+
+    [Fact]
+    public async Task HandleAsync_InvalidType_ReturnsFailure()
+    {
+        // Arrange
+        await using var context = fixture.CreateDbContext();
+        var handler = new CreateProviderHandler(context);
+
+        var command = new CreateProviderCommand(
+            Name: "TestProvider",
+            Type: "InvalidType",
+            DefaultCurrency: "USD",
+            SyncFrequency: "Daily",
+            ConfigSchema: null);
+
+        // Act
+        var result = await handler.HandleAsync(command);
+
+        // Assert
+        result.IsFailed.ShouldBeTrue();
+        result.Errors[0].Message.ShouldContain("Invalid provider type");
+    }
+}

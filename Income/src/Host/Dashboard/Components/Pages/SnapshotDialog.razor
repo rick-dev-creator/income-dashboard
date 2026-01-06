@@ -1,0 +1,103 @@
+@using Income.Application.Services.Streams
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.AddChart" Class="mr-2" />
+            Record Snapshot for @Stream.Name
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form" @bind-IsValid="_formValid">
+            <MudStack Spacing="3">
+                <MudDatePicker Label="Date" @bind-Date="_date" Required="true"
+                               RequiredError="Date is required" Variant="Variant.Outlined"
+                               MaxDate="DateTime.Today" />
+
+                <MudNumericField T="decimal" Label="Amount" @bind-Value="_amount" Required="true"
+                                 RequiredError="Amount is required" Min="0" Variant="Variant.Outlined"
+                                 Adornment="Adornment.Start" AdornmentText="@Stream.OriginalCurrency" />
+
+                @if (Stream.OriginalCurrency != "USD")
+                {
+                    <MudNumericField T="decimal" Label="Exchange Rate to USD" @bind-Value="_exchangeRate"
+                                     Required="true" RequiredError="Exchange rate is required"
+                                     Min="0.0001m" Variant="Variant.Outlined"
+                                     HelperText="@($"1 {Stream.OriginalCurrency} = {_exchangeRate} USD")" />
+
+                    <MudTextField Label="Rate Source" @bind-Value="_rateSource" Variant="Variant.Outlined"
+                                  HelperText="e.g., CoinGecko, Yahoo Finance, Manual" />
+                }
+
+                <MudAlert Severity="Severity.Info" Dense="true" Class="mt-2">
+                    <MudText Typo="Typo.body2">
+                        USD Amount: @((_amount * _exchangeRate).ToString("C2", System.Globalization.CultureInfo.GetCultureInfo("en-US")))
+                    </MudText>
+                </MudAlert>
+            </MudStack>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit"
+                   Disabled="@(!_formValid || _amount <= 0)">
+            Record
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter]
+    public StreamListItem Stream { get; set; } = null!;
+
+    private MudForm _form = null!;
+    private bool _formValid;
+
+    private DateTime? _date = DateTime.Today;
+    private decimal _amount;
+    private decimal _exchangeRate = 1m;
+    private string _rateSource = "Manual";
+
+    protected override void OnInitialized()
+    {
+        if (Stream.OriginalCurrency == "USD")
+        {
+            _exchangeRate = 1m;
+            _rateSource = "Fixed";
+        }
+        else if (Stream.OriginalCurrency == "USDT")
+        {
+            _exchangeRate = 0.9998m;
+            _rateSource = "CoinGecko";
+        }
+
+        // Pre-fill with last snapshot amount if available
+        if (Stream.LastSnapshot is not null)
+        {
+            _amount = Stream.LastSnapshot.OriginalAmount;
+            _exchangeRate = Stream.LastSnapshot.ExchangeRate;
+            _rateSource = Stream.LastSnapshot.RateSource;
+        }
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private void Submit()
+    {
+        if (_date is null) return;
+
+        var request = new RecordSnapshotRequest(
+            StreamId: Stream.Id,
+            Date: DateOnly.FromDateTime(_date.Value),
+            OriginalAmount: _amount,
+            OriginalCurrency: Stream.OriginalCurrency,
+            UsdAmount: _amount * _exchangeRate,
+            ExchangeRate: _exchangeRate,
+            RateSource: _rateSource);
+
+        MudDialog.Close(DialogResult.Ok(request));
+    }
+}

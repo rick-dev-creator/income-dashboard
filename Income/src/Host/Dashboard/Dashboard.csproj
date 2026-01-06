@@ -6,14 +6,23 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>14</LangVersion>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    <UserSecretsId>243f0884-858e-49c0-90aa-8b2b2ccbf4e1</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Income\Income.Application\Income.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\Income\Income.Contracts\Income.Contracts.csproj" />
     <ProjectReference Include="..\..\Modules\Income\Income.Installer\Income.Installer.csproj" />
+    <ProjectReference Include="..\..\Modules\Analytics\Analytics.Application\Analytics.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\Analytics\Analytics.Contracts\Analytics.Contracts.csproj" />
     <ProjectReference Include="..\..\Modules\Analytics\Analytics.Installer\Analytics.Installer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
     <PackageReference Include="MudBlazor" Version="8.15.0" />
   </ItemGroup>
 

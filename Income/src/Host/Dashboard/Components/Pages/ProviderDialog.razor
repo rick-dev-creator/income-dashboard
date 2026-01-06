@@ -1,0 +1,107 @@
+@using Income.Application.Services.Providers
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Cable" Class="mr-2" />
+            Create Provider
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form" @bind-IsValid="_formValid">
+            <MudStack Spacing="3">
+                <MudTextField @bind-Value="_name" Label="Provider Name" Required="true"
+                              RequiredError="Name is required" Variant="Variant.Outlined"
+                              Placeholder="e.g., Blofin, Patreon, Bank of America" />
+
+                <MudSelect T="string" Label="Type" @bind-Value="_type" Required="true"
+                           RequiredError="Type is required" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("Exchange")">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudIcon Icon="@Icons.Material.Filled.CurrencyExchange" Size="Size.Small" />
+                            <span>Exchange - Crypto/trading platforms</span>
+                        </MudStack>
+                    </MudSelectItem>
+                    <MudSelectItem Value="@("Creator")">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudIcon Icon="@Icons.Material.Filled.Create" Size="Size.Small" />
+                            <span>Creator - Content platforms</span>
+                        </MudStack>
+                    </MudSelectItem>
+                    <MudSelectItem Value="@("Bank")">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Size="Size.Small" />
+                            <span>Bank - Traditional banking</span>
+                        </MudStack>
+                    </MudSelectItem>
+                    <MudSelectItem Value="@("Manual")">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                            <MudIcon Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+                            <span>Manual - Manual entry</span>
+                        </MudStack>
+                    </MudSelectItem>
+                </MudSelect>
+
+                <MudSelect T="string" Label="Default Currency" @bind-Value="_currency" Required="true"
+                           RequiredError="Currency is required" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("USD")">USD - US Dollar</MudSelectItem>
+                    <MudSelectItem Value="@("EUR")">EUR - Euro</MudSelectItem>
+                    <MudSelectItem Value="@("GBP")">GBP - British Pound</MudSelectItem>
+                    <MudSelectItem Value="@("USDT")">USDT - Tether</MudSelectItem>
+                    <MudSelectItem Value="@("BTC")">BTC - Bitcoin</MudSelectItem>
+                </MudSelect>
+
+                <MudSelect T="string" Label="Sync Frequency" @bind-Value="_syncFrequency" Required="true"
+                           RequiredError="Sync frequency is required" Variant="Variant.Outlined">
+                    <MudSelectItem Value="@("Hourly")">Hourly</MudSelectItem>
+                    <MudSelectItem Value="@("Daily")">Daily</MudSelectItem>
+                    <MudSelectItem Value="@("Weekly")">Weekly</MudSelectItem>
+                    <MudSelectItem Value="@("Manual")">Manual</MudSelectItem>
+                </MudSelect>
+
+                @if (_type != "Manual")
+                {
+                    <MudAlert Severity="Severity.Info" Dense="true">
+                        <MudText Typo="Typo.body2">
+                            API integration coming soon. For now, use manual entry to record income.
+                        </MudText>
+                    </MudAlert>
+                }
+            </MudStack>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Submit"
+                   Disabled="@(!_formValid)">
+            Create
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    private MudForm _form = null!;
+    private bool _formValid;
+
+    private string _name = "";
+    private string _type = "Manual";
+    private string _currency = "USD";
+    private string _syncFrequency = "Manual";
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private void Submit()
+    {
+        var request = new CreateProviderRequest(
+            Name: _name,
+            Type: _type,
+            DefaultCurrency: _currency,
+            SyncFrequency: _syncFrequency,
+            ConfigSchema: null);
+
+        MudDialog.Close(DialogResult.Ok(request));
+    }
+}

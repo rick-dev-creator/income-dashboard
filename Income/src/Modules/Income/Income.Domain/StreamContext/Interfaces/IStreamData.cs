@@ -11,6 +11,7 @@ internal interface ICreateStreamData
     string OriginalCurrency { get; }
     bool IsFixed { get; }
     string? FixedPeriod { get; }
+    string? EncryptedCredentials { get; }
 }
 
 internal interface IStreamData : ICreateStreamData

@@ -17,6 +17,7 @@
     <Project Path="src/Modules/Income/Income.Infrastructure/Income.Infrastructure.csproj" />
     <Project Path="src/Modules/Income/Income.Installer/Income.Installer.csproj" />
   </Folder>
+  <Folder Name="/Modules/" />
 
   <!-- Modules/Analytics -->
   <Folder Name="/Modules/Analytics/">
@@ -30,5 +31,9 @@
   <!-- Tests -->
   <Folder Name="/Tests/">
     <Project Path="src/Modules/Income/Tests/Income.Domain.Tests/Income.Domain.Tests.csproj" />
+    <Project Path="src/Modules/Income/Tests/Income.Infrastructure.Tests/Income.Infrastructure.Tests.csproj" />
   </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
 </Solution>

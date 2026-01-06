@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentResults" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\Domain.Shared.Kernel\Domain.Shared.Kernel.csproj" />
     <ProjectReference Include="..\Analytics.Domain\Analytics.Domain.csproj" />
   </ItemGroup>

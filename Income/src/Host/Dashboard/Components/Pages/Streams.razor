@@ -1,0 +1,254 @@
+@page "/streams"
+@using Income.Application.Services.Streams
+@using Income.Application.Services.Providers
+@inject IStreamService StreamService
+@inject IProviderService ProviderService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@rendermode InteractiveServer
+
+<PageTitle>Income Streams - FlowMetrics</PageTitle>
+
+<MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+    <MudText Typo="Typo.h4">Income Streams</MudText>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add"
+               OnClick="OpenCreateDialog">
+        Add Stream
+    </MudButton>
+</MudStack>
+
+@if (_isLoading)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+}
+else if (_streams.Count == 0)
+{
+    <MudPaper Class="pa-8 text-center" Elevation="2">
+        <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Size="Size.Large" Color="Color.Secondary" />
+        <MudText Typo="Typo.h6" Class="mt-4">No Income Streams Yet</MudText>
+        <MudText Color="Color.Secondary" Class="mb-4">Start tracking your income by adding your first stream</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialog">
+            Add Your First Stream
+        </MudButton>
+    </MudPaper>
+}
+else
+{
+    <MudGrid>
+        @foreach (var stream in _streams)
+        {
+            <MudItem xs="12" md="6" lg="4">
+                <MudCard Elevation="2">
+                    <MudCardHeader>
+                        <CardHeaderAvatar>
+                            <MudAvatar Color="@GetCategoryColor(stream.Category)">
+                                @stream.Category[0]
+                            </MudAvatar>
+                        </CardHeaderAvatar>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">@stream.Name</MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                @GetProviderName(stream.ProviderId)
+                            </MudText>
+                        </CardHeaderContent>
+                        <CardHeaderActions>
+                            <MudMenu Icon="@Icons.Material.Filled.MoreVert">
+                                <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="@(() => OpenEditDialog(stream))">
+                                    Edit
+                                </MudMenuItem>
+                                <MudMenuItem Icon="@Icons.Material.Filled.AddChart" OnClick="@(() => OpenSnapshotDialog(stream))">
+                                    Add Snapshot
+                                </MudMenuItem>
+                                <MudMenuItem Icon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteStream(stream))"
+                                             IconColor="Color.Error">
+                                    Delete
+                                </MudMenuItem>
+                            </MudMenu>
+                        </CardHeaderActions>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudStack Spacing="2">
+                            <MudStack Row="true" Justify="Justify.SpaceBetween">
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Category</MudText>
+                                <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined">@stream.Category</MudChip>
+                            </MudStack>
+                            <MudStack Row="true" Justify="Justify.SpaceBetween">
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Currency</MudText>
+                                <MudText>@stream.OriginalCurrency</MudText>
+                            </MudStack>
+                            <MudStack Row="true" Justify="Justify.SpaceBetween">
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Type</MudText>
+                                <MudText>@(stream.IsFixed ? $"Fixed ({stream.FixedPeriod})" : "Variable")</MudText>
+                            </MudStack>
+                            <MudStack Row="true" Justify="Justify.SpaceBetween">
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Snapshots</MudText>
+                                <MudText>@stream.SnapshotCount</MudText>
+                            </MudStack>
+                            @if (stream.LastSnapshot is not null)
+                            {
+                                <MudDivider Class="my-2" />
+                                <MudStack Row="true" Justify="Justify.SpaceBetween">
+                                    <MudText Typo="Typo.body2" Color="Color.Secondary">Last Amount</MudText>
+                                    <MudText Typo="Typo.body1" Color="Color.Success">
+                                        @stream.LastSnapshot.UsdAmount.ToString("C2", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
+                                    </MudText>
+                                </MudStack>
+                                <MudText Typo="Typo.caption" Color="Color.Secondary" Align="Align.Right">
+                                    @stream.LastSnapshot.Date.ToString("MMM dd, yyyy")
+                                </MudText>
+                            }
+                        </MudStack>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Text" Color="Color.Primary"
+                                   OnClick="@(() => OpenSnapshotDialog(stream))">
+                            Record Income
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+    private bool _isLoading = true;
+    private List<StreamListItem> _streams = [];
+    private Dictionary<string, ProviderListItem> _providers = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        _isLoading = true;
+
+        // Sequential calls to avoid DbContext threading issues
+        var streamsResult = await StreamService.GetAllAsync();
+        var providersResult = await ProviderService.GetAllAsync();
+
+        if (streamsResult.IsSuccess)
+            _streams = streamsResult.Value.ToList();
+
+        if (providersResult.IsSuccess)
+            _providers = providersResult.Value.ToDictionary(p => p.Id, p => p);
+
+        _isLoading = false;
+    }
+
+    private string GetProviderName(string providerId) =>
+        _providers.TryGetValue(providerId, out var provider) ? provider.Name : providerId;
+
+    private static Color GetCategoryColor(string category) => category.ToLower() switch
+    {
+        "salary" => Color.Primary,
+        "trading" => Color.Warning,
+        "subscription" => Color.Info,
+        "referral" => Color.Success,
+        _ => Color.Default
+    };
+
+    private async Task OpenCreateDialog()
+    {
+        var parameters = new DialogParameters<StreamDialog>
+        {
+            { x => x.Providers, _providers.Values.ToList() }
+        };
+
+        var dialog = await DialogService.ShowAsync<StreamDialog>("Create Stream", parameters,
+            new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true });
+
+        var result = await dialog.Result;
+        if (result is { Canceled: false, Data: CreateStreamRequest request })
+        {
+            var createResult = await StreamService.CreateAsync(request);
+            if (createResult.IsSuccess)
+            {
+                Snackbar.Add("Stream created successfully!", Severity.Success);
+                await LoadDataAsync();
+            }
+            else
+            {
+                Snackbar.Add($"Error: {createResult.Errors.FirstOrDefault()?.Message}", Severity.Error);
+            }
+        }
+    }
+
+    private async Task OpenEditDialog(StreamListItem stream)
+    {
+        var parameters = new DialogParameters<StreamDialog>
+        {
+            { x => x.Providers, _providers.Values.ToList() },
+            { x => x.ExistingStream, stream }
+        };
+
+        var dialog = await DialogService.ShowAsync<StreamDialog>("Edit Stream", parameters,
+            new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true });
+
+        var result = await dialog.Result;
+        if (result is { Canceled: false, Data: UpdateStreamRequest request })
+        {
+            var updateResult = await StreamService.UpdateAsync(request);
+            if (updateResult.IsSuccess)
+            {
+                Snackbar.Add("Stream updated successfully!", Severity.Success);
+                await LoadDataAsync();
+            }
+            else
+            {
+                Snackbar.Add($"Error: {updateResult.Errors.FirstOrDefault()?.Message}", Severity.Error);
+            }
+        }
+    }
+
+    private async Task OpenSnapshotDialog(StreamListItem stream)
+    {
+        var parameters = new DialogParameters<SnapshotDialog>
+        {
+            { x => x.Stream, stream }
+        };
+
+        var dialog = await DialogService.ShowAsync<SnapshotDialog>("Record Snapshot", parameters,
+            new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true });
+
+        var result = await dialog.Result;
+        if (result is { Canceled: false, Data: RecordSnapshotRequest request })
+        {
+            var snapshotResult = await StreamService.RecordSnapshotAsync(request);
+            if (snapshotResult.IsSuccess)
+            {
+                Snackbar.Add("Snapshot recorded successfully!", Severity.Success);
+                await LoadDataAsync();
+            }
+            else
+            {
+                Snackbar.Add($"Error: {snapshotResult.Errors.FirstOrDefault()?.Message}", Severity.Error);
+            }
+        }
+    }
+
+    private async Task DeleteStream(StreamListItem stream)
+    {
+        var confirmed = await DialogService.ShowMessageBox(
+            "Delete Stream",
+            $"Are you sure you want to delete '{stream.Name}'? This will also delete all associated snapshots.",
+            yesText: "Delete",
+            cancelText: "Cancel");
+
+        if (confirmed == true)
+        {
+            var deleteResult = await StreamService.DeleteAsync(stream.Id);
+            if (deleteResult.IsSuccess)
+            {
+                Snackbar.Add("Stream deleted successfully!", Severity.Success);
+                await LoadDataAsync();
+            }
+            else
+            {
+                Snackbar.Add($"Error: {deleteResult.Errors.FirstOrDefault()?.Message}", Severity.Error);
+            }
+        }
+    }
+}

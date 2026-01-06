@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Analytics.Installer" />
+    <InternalsVisibleTo Include="Analytics.Infrastructure.Tests" />
+    <InternalsVisibleTo Include="Income.Infrastructure.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentResults" Version="4.0.0" />
     <PackageReference Include="Scrutor" Version="7.0.0" />
   </ItemGroup>
 

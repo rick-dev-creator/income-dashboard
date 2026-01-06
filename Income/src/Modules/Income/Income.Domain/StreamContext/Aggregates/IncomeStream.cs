@@ -20,6 +20,7 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
         string originalCurrency,
         bool isFixed,
         string? fixedPeriod,
+        string? encryptedCredentials,
         SyncStatus syncStatus,
         DateTime createdAt)
     {
@@ -30,6 +31,7 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
         OriginalCurrency = originalCurrency;
         IsFixed = isFixed;
         FixedPeriod = fixedPeriod;
+        EncryptedCredentials = encryptedCredentials;
         SyncStatus = syncStatus;
         CreatedAt = createdAt;
     }
@@ -49,6 +51,7 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
     public string OriginalCurrency { get; private init; } = null!;
     public bool IsFixed { get; private init; }
     public string? FixedPeriod { get; private init; }
+    public string? EncryptedCredentials { get; private set; }
     public SyncStatus SyncStatus { get; private set; } = null!;
     public DateTime CreatedAt { get; private init; }
     public IReadOnlyList<DailySnapshot> Snapshots => _snapshots.AsReadOnly();
@@ -80,6 +83,7 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
             originalCurrency: data.OriginalCurrency.ToUpperInvariant(),
             isFixed: data.IsFixed,
             fixedPeriod: data.FixedPeriod,
+            encryptedCredentials: data.EncryptedCredentials,
             syncStatus: SyncStatus.Initial(),
             createdAt: DateTime.UtcNow);
 
@@ -102,6 +106,7 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
             originalCurrency: data.OriginalCurrency,
             isFixed: data.IsFixed,
             fixedPeriod: data.FixedPeriod,
+            encryptedCredentials: data.EncryptedCredentials,
             syncStatus: data.SyncStatus,
             createdAt: data.CreatedAt);
 
@@ -177,6 +182,13 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
     {
         SyncStatus = SyncStatus.Enable();
     }
+
+    internal void UpdateCredentials(string? encryptedCredentials)
+    {
+        EncryptedCredentials = encryptedCredentials;
+    }
+
+    public bool HasCredentials => !string.IsNullOrEmpty(EncryptedCredentials);
 
     public DailySnapshot? GetSnapshotByDate(DateOnly date) =>
         _snapshots.FirstOrDefault(s => s.Date == date);

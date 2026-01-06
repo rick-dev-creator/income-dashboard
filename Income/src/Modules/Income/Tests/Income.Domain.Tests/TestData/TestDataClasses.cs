@@ -6,7 +6,8 @@ internal record TestCreateStreamData(
     StreamCategory Category,
     string OriginalCurrency,
     bool IsFixed,
-    string? FixedPeriod) : ICreateStreamData;
+    string? FixedPeriod,
+    string? EncryptedCredentials = null) : ICreateStreamData;
 
 internal record TestRecordSnapshotData(
     DateOnly Date,
