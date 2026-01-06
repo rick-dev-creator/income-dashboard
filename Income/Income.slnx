@@ -1,3 +1,29 @@
 <Solution>
-  <Project Path="Dashboard/Dashboard.csproj" />
+  <!-- Host -->
+  <Folder Name="/Host/">
+    <Project Path="src/Host/Dashboard/Dashboard.csproj" />
+  </Folder>
+
+  <!-- Shared -->
+  <Folder Name="/Shared/">
+    <Project Path="src/Shared/Domain.Shared.Kernel/Domain.Shared.Kernel.csproj" />
+  </Folder>
+
+  <!-- Modules/Income -->
+  <Folder Name="/Modules/Income/">
+    <Project Path="src/Modules/Income/Income.Domain/Income.Domain.csproj" />
+    <Project Path="src/Modules/Income/Income.Application/Income.Application.csproj" />
+    <Project Path="src/Modules/Income/Income.Contracts/Income.Contracts.csproj" />
+    <Project Path="src/Modules/Income/Income.Infrastructure/Income.Infrastructure.csproj" />
+    <Project Path="src/Modules/Income/Income.Installer/Income.Installer.csproj" />
+  </Folder>
+
+  <!-- Modules/Analytics -->
+  <Folder Name="/Modules/Analytics/">
+    <Project Path="src/Modules/Analytics/Analytics.Domain/Analytics.Domain.csproj" />
+    <Project Path="src/Modules/Analytics/Analytics.Application/Analytics.Application.csproj" />
+    <Project Path="src/Modules/Analytics/Analytics.Contracts/Analytics.Contracts.csproj" />
+    <Project Path="src/Modules/Analytics/Analytics.Infrastructure/Analytics.Infrastructure.csproj" />
+    <Project Path="src/Modules/Analytics/Analytics.Installer/Analytics.Installer.csproj" />
+  </Folder>
 </Solution>

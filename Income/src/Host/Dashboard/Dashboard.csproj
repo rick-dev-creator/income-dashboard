@@ -4,7 +4,17 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>14</LangVersion>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Modules\Income\Income.Installer\Income.Installer.csproj" />
+    <ProjectReference Include="..\..\Modules\Analytics\Analytics.Installer\Analytics.Installer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MudBlazor" Version="8.15.0" />
+  </ItemGroup>
 
 </Project>
