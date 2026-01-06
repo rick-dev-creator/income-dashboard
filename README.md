@@ -1,21 +1,21 @@
 # FlowMetrics
 
-> A personal income streams dashboard that answers: **Where am I? Where am I going? Where will I be?**
+> An income streams dashboard that answers: **Where am I? Where am I going? Where will I be?**
 
 ## The Problem
 
 Personal finance applications are obsessed with expenses. Mint, YNAB, Monarch - they all focus on budgeting and expense categorization. Net worth apps like Kubera show static wealth, not income flows.
 
 **There's no tool that answers:**
-- How much am I generating per day from my multiple sources?
+- How much am I generating per day from multiple sources?
 - What's the trend?
 - Where will I be in 6 months?
 
 The visual pattern we need already exists - but in cloud billing tools like Azure Cost Explorer, AWS Billing, and GCP Cost Management. Only applied in reverse: not "how much I spend" but **"how much I generate"**.
 
-## The Personal Pain Point
+## The Pain Point
 
-As a professional with multiple income streams (employment, trading, referrals, subscriptions, side projects), I face a daily challenge: **I have no unified view of my financial inflows**.
+Modern professionals increasingly have diversified income sources. Traders, content creators, freelancers, consultants, SaaS founders - they all face the same challenge: **no unified view of financial inflows**.
 
 Each income source lives in its own silo:
 - Exchange dashboards show trading PnL
@@ -23,25 +23,25 @@ Each income source lives in its own silo:
 - Platform dashboards show creator earnings
 - Spreadsheets (maybe) try to consolidate everything
 
-The result? I can't answer simple questions:
-- What's my true daily income rate across all sources?
+The result? Simple questions become impossible to answer:
+- What's the true daily income rate across all sources?
 - Which streams are growing vs declining?
-- How long until I reach my financial goals?
+- How long until reaching financial goals?
 - What happens if one stream disappears?
 
-### Where I Am (Current State)
-- Multiple income sources scattered across platforms
+### Current State (Where Am I?)
+- Income sources scattered across platforms
 - Manual tracking in spreadsheets (inconsistent, time-consuming)
 - No real-time visibility into combined earnings
 - Unable to spot trends or patterns
 
-### Where I'm Going (The Journey)
-- Building a unified dashboard that aggregates all income streams
-- Implementing automatic sync with exchanges and platforms
-- Creating statistical analysis to understand income stability
-- Developing projections based on historical data
+### The Journey (Where Am I Going?)
+- A unified dashboard that aggregates all income streams
+- Automatic sync with exchanges and platforms
+- Statistical analysis to understand income stability
+- Projections based on historical data
 
-### Where I'll Be (Target State)
+### Target State (Where Will I Be?)
 - Complete visibility of all income flows in one place
 - Daily normalized view for comparing different income types
 - Trend analysis showing momentum and growth
@@ -149,8 +149,6 @@ src/
 
 ## Target Audience
 
-While built for personal use, FlowMetrics addresses a common need among:
-
 - **Active traders** with multiple exchange accounts
 - **Content creators** with Patreon/YouTube/Substack income
 - **Freelancers** juggling multiple clients
@@ -159,8 +157,8 @@ While built for personal use, FlowMetrics addresses a common need among:
 
 ## License
 
-This is a personal project. License TBD based on future direction.
+MIT License - See LICENSE file for details.
 
 ---
 
-*Built with Blazor Server, .NET 10, and a passion for financial clarity.*
+*Built with Blazor Server, .NET 10, and Clean Architecture principles.*
