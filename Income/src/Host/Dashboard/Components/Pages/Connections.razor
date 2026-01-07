@@ -9,12 +9,12 @@
 
 <PageTitle>Connections - FlowMetrics</PageTitle>
 
-<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px;">
+<div class="page-header page-header-flex">
     <div>
         <h1 class="page-title">Connections</h1>
         <p class="page-subtitle">Manage your income providers</p>
     </div>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="btn-modern"
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="btn-modern btn-mobile-full"
                StartIcon="@Icons.Material.Rounded.Add" OnClick="OpenCreateDialog">
         Add Provider
     </MudButton>
@@ -97,34 +97,50 @@ else
     <!-- Provider Types Legend -->
     <MudPaper Class="pa-4 mt-4" Elevation="1">
         <MudText Typo="Typo.subtitle2" Class="mb-3">Provider Types</MudText>
-        <MudStack Row="true" Spacing="4" Wrap="Wrap.Wrap">
+        <div class="provider-types-grid">
             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                 <MudAvatar Size="Size.Small" Color="Color.Warning">
                     <MudIcon Icon="@Icons.Material.Filled.CurrencyExchange" Size="Size.Small" />
                 </MudAvatar>
-                <MudText Typo="Typo.body2">Exchange - Crypto/trading platforms</MudText>
+                <MudText Typo="Typo.body2">Exchange</MudText>
             </MudStack>
             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                 <MudAvatar Size="Size.Small" Color="Color.Info">
                     <MudIcon Icon="@Icons.Material.Filled.Create" Size="Size.Small" />
                 </MudAvatar>
-                <MudText Typo="Typo.body2">Creator - Content platforms</MudText>
+                <MudText Typo="Typo.body2">Creator</MudText>
             </MudStack>
             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                 <MudAvatar Size="Size.Small" Color="Color.Success">
                     <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Size="Size.Small" />
                 </MudAvatar>
-                <MudText Typo="Typo.body2">Bank - Traditional banking</MudText>
+                <MudText Typo="Typo.body2">Bank</MudText>
             </MudStack>
             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                 <MudAvatar Size="Size.Small" Color="Color.Default">
                     <MudIcon Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
                 </MudAvatar>
-                <MudText Typo="Typo.body2">Manual - Manual entry</MudText>
+                <MudText Typo="Typo.body2">Manual</MudText>
             </MudStack>
-        </MudStack>
+        </div>
     </MudPaper>
 }
+
+<style>
+    .provider-types-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    @@media (max-width: 599px) {
+        .provider-types-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+    }
+</style>
 
 @code {
     private bool _isLoading = true;
