@@ -42,9 +42,12 @@ internal sealed class GetProjectionHandler(
                 UpperBoundUsd: Math.Round(upperBound, 2)));
         }
 
+        var projected6MonthTotal = projections.Take(6).Sum(p => p.ProjectedUsd);
+
         return Result.Ok(new ProjectionDto(
             ProjectedMonthlyIncomeUsd: Math.Round(projectedMonthly, 2),
             ProjectedAnnualIncomeUsd: Math.Round(projectedAnnual, 2),
+            Projected6MonthTotalUsd: Math.Round(projected6MonthTotal, 2),
             FixedComponentUsd: Math.Round(fixedMonthly, 2),
             VariableComponentUsd: Math.Round(variableMonthly, 2),
             ConfidenceScore: Math.Round(confidenceScore, 2),

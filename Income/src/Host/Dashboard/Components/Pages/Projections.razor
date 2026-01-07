@@ -1,11 +1,17 @@
 @page "/projections"
+@using Analytics.Application.Services
 @inject IGetProjectionHandler ProjectionHandler
-@inject IGetPortfolioSummaryHandler PortfolioHandler
+@inject IDashboardService DashboardService
 @rendermode InteractiveServer
 
 <PageTitle>Projections - FlowMetrics</PageTitle>
 
-<MudText Typo="Typo.h4" Class="mb-4">Income Projections</MudText>
+<MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+    <div>
+        <MudText Typo="Typo.h4">Where Will I Be?</MudText>
+        <MudText Typo="Typo.body2" Color="Color.Secondary">Income projections and goal planning</MudText>
+    </div>
+</MudStack>
 
 @if (_isLoading)
 {
@@ -13,85 +19,189 @@
 }
 else if (_projection is null)
 {
-    <MudAlert Severity="Severity.Warning">Unable to generate projections. Add more income data to see forecasts.</MudAlert>
+    <MudAlert Severity="Severity.Warning">
+        Unable to generate projections. Add more income data to see forecasts.
+    </MudAlert>
 }
 else
 {
-    <!-- Summary Cards -->
-    <MudGrid Class="mb-4">
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                    <div>
-                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Projected Monthly</MudText>
-                        <MudText Typo="Typo.h4" Color="Color.Primary">
-                            @FormatCurrency(_projection.ProjectedMonthlyIncomeUsd)
+    <!-- The Big Number - 6 Month Projection -->
+    <MudPaper Class="pa-6 mb-4" Elevation="3" Style="background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);">
+        <MudGrid>
+            <MudItem xs="12" md="6">
+                <MudStack Spacing="2">
+                    <MudText Typo="Typo.overline" Style="color: rgba(255,255,255,0.7);">
+                        PROJECTED TOTAL IN 6 MONTHS
+                    </MudText>
+                    <MudText Typo="Typo.h2" Style="color: white; font-weight: 700;">
+                        @FormatCurrency(_projection.Projected6MonthTotalUsd)
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                        <MudText Typo="Typo.body1" Style="color: rgba(255,255,255,0.7);">
+                            Confidence:
                         </MudText>
-                    </div>
-                    <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Color="Color.Primary" Size="Size.Large" />
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                    <div>
-                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Projected Annual</MudText>
-                        <MudText Typo="Typo.h4" Color="Color.Success">
-                            @FormatCurrency(_projection.ProjectedAnnualIncomeUsd)
-                        </MudText>
-                    </div>
-                    <MudIcon Icon="@Icons.Material.Filled.DateRange" Color="Color.Success" Size="Size.Large" />
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                    <div>
-                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Fixed Component</MudText>
-                        <MudText Typo="Typo.h4">
-                            @FormatCurrency(_projection.FixedComponentUsd)
-                        </MudText>
-                        <MudText Typo="Typo.caption" Color="Color.Secondary">
-                            @((_projection.FixedComponentUsd / _projection.ProjectedMonthlyIncomeUsd * 100).ToString("F0"))% of total
-                        </MudText>
-                    </div>
-                    <MudIcon Icon="@Icons.Material.Filled.Lock" Color="Color.Info" Size="Size.Large" />
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                    <div>
-                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Confidence Score</MudText>
-                        <MudText Typo="Typo.h4" Color="@GetConfidenceColor(_projection.ConfidenceScore)">
+                        <MudProgressLinear Value="@((double)(_projection.ConfidenceScore * 100))"
+                                           Color="@GetConfidenceColor(_projection.ConfidenceScore)"
+                                           Style="width: 100px; height: 8px;" />
+                        <MudText Typo="Typo.body1" Style="color: white; font-weight: 600;">
                             @((_projection.ConfidenceScore * 100).ToString("F0"))%
                         </MudText>
-                        <MudText Typo="Typo.caption" Color="Color.Secondary">
-                            @GetConfidenceLabel(_projection.ConfidenceScore)
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudStack Row="true" Justify="Justify.SpaceAround" Style="height: 100%;" AlignItems="AlignItems.Center">
+                    <MudStack AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.6);">Monthly Rate</MudText>
+                        <MudText Typo="Typo.h4" Style="color: white;">
+                            @FormatCurrency(_projection.ProjectedMonthlyIncomeUsd)
                         </MudText>
+                    </MudStack>
+                    <MudStack AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.6);">Annual Rate</MudText>
+                        <MudText Typo="Typo.h4" Style="color: white;">
+                            @FormatCurrency(_projection.ProjectedAnnualIncomeUsd)
+                        </MudText>
+                    </MudStack>
+                    <MudStack AlignItems="AlignItems.Center">
+                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.6);">Daily Rate</MudText>
+                        <MudText Typo="Typo.h4" Style="color: white;">
+                            @FormatCurrency(_kpis?.DailyRate.AverageDailyUsd ?? 0)
+                        </MudText>
+                    </MudStack>
+                </MudStack>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <!-- Time to Goal Calculator -->
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudText Typo="Typo.h6" Class="mb-3">Time to Goal</MudText>
+        <MudGrid>
+            <MudItem xs="12" md="4">
+                <MudTextField @bind-Value="_goalAmount" Label="Target Amount (USD)"
+                              Variant="Variant.Outlined" Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.AttachMoney"
+                              Immediate="true" OnKeyUp="CalculateTimeToGoal" />
+            </MudItem>
+            <MudItem xs="12" md="8">
+                @if (_goalAmount > 0 && _projection.ProjectedMonthlyIncomeUsd > 0)
+                {
+                    var monthsToGoal = _goalAmount / _projection.ProjectedMonthlyIncomeUsd;
+                    var targetDate = DateTime.UtcNow.AddMonths((int)Math.Ceiling(monthsToGoal));
+                    <MudPaper Class="pa-4" Elevation="0" Style="background-color: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.3); border-radius: 8px;">
+                        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                            <div>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">At your current rate, you'll reach</MudText>
+                                <MudText Typo="Typo.h5" Color="Color.Success">@FormatCurrency(_goalAmount)</MudText>
+                            </div>
+                            <div style="text-align: right;">
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">in approximately</MudText>
+                                <MudText Typo="Typo.h5" Color="Color.Primary">
+                                    @Math.Ceiling(monthsToGoal) months
+                                </MudText>
+                                <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                    (@targetDate.ToString("MMMM yyyy"))
+                                </MudText>
+                            </div>
+                        </MudStack>
+                    </MudPaper>
+                }
+                else
+                {
+                    <MudPaper Class="pa-4" Elevation="0" Style="background-color: rgba(158, 158, 158, 0.1); border-radius: 8px;">
+                        <MudText Color="Color.Secondary">Enter a target amount to see when you'll reach it</MudText>
+                    </MudPaper>
+                }
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <!-- Income Composition -->
+    <MudGrid Class="mb-4">
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4" Elevation="2" Style="height: 100%;">
+                <MudText Typo="Typo.h6" Class="mb-3">Income Stability</MudText>
+                <MudChart ChartType="ChartType.Donut"
+                          InputData="@_compositionData"
+                          InputLabels="@_compositionLabels"
+                          Width="100%"
+                          Height="200px" />
+                <MudStack Spacing="2" Class="mt-4">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                            <MudIcon Icon="@Icons.Material.Filled.Lock" Color="Color.Success" Size="Size.Small" />
+                            <MudText Typo="Typo.body2">Fixed Income</MudText>
+                        </MudStack>
+                        <MudText Typo="Typo.h6" Color="Color.Success">
+                            @FormatCurrency(_projection.FixedComponentUsd)
+                        </MudText>
+                    </MudStack>
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                            <MudIcon Icon="@Icons.Material.Filled.ShowChart" Color="Color.Warning" Size="Size.Small" />
+                            <MudText Typo="Typo.body2">Variable Income</MudText>
+                        </MudStack>
+                        <MudText Typo="Typo.h6" Color="Color.Warning">
+                            @FormatCurrency(_projection.VariableComponentUsd)
+                        </MudText>
+                    </MudStack>
+                    <MudDivider Class="my-2" />
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">
+                        @if (_projection.ProjectedMonthlyIncomeUsd > 0)
+                        {
+                            var fixedPercent = (_projection.FixedComponentUsd / _projection.ProjectedMonthlyIncomeUsd * 100);
+                            <span>@fixedPercent.ToString("F0")% of your income is predictable and stable.</span>
+                        }
+                    </MudText>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <MudPaper Class="pa-4" Elevation="2" Style="height: 100%;">
+                <MudText Typo="Typo.h6" Class="mb-3">Confidence Analysis</MudText>
+                <MudStack Spacing="3">
+                    <div>
+                        <MudStack Row="true" Justify="Justify.SpaceBetween" Class="mb-1">
+                            <MudText Typo="Typo.body2">Projection Confidence</MudText>
+                            <MudText Typo="Typo.body2" Color="@GetConfidenceColor(_projection.ConfidenceScore)">
+                                @GetConfidenceLabel(_projection.ConfidenceScore)
+                            </MudText>
+                        </MudStack>
+                        <MudProgressLinear Value="@((double)(_projection.ConfidenceScore * 100))"
+                                           Color="@GetConfidenceColor(_projection.ConfidenceScore)"
+                                           Size="Size.Large" Rounded="true" />
                     </div>
-                    <MudIcon Icon="@Icons.Material.Filled.Analytics" Color="@GetConfidenceColor(_projection.ConfidenceScore)" Size="Size.Large" />
+
+                    <MudAlert Severity="@GetConfidenceSeverity(_projection.ConfidenceScore)" Dense="true">
+                        <MudText Typo="Typo.body2">
+                            @GetConfidenceDescription(_projection.ConfidenceScore)
+                        </MudText>
+                    </MudAlert>
+
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">
+                        Confidence is calculated based on:
+                    </MudText>
+                    <MudStack Spacing="1">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                            <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Color="Color.Success" />
+                            <MudText Typo="Typo.caption">Fixed income ratio (50%)</MudText>
+                        </MudStack>
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                            <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Color="Color.Info" />
+                            <MudText Typo="Typo.caption">Income variability (30%)</MudText>
+                        </MudStack>
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                            <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Size="Size.Small" Color="Color.Warning" />
+                            <MudText Typo="Typo.caption">Data quality (20%)</MudText>
+                        </MudStack>
+                    </MudStack>
                 </MudStack>
             </MudPaper>
         </MudItem>
     </MudGrid>
 
-    <!-- Confidence Indicator -->
-    <MudPaper Class="pa-4 mb-4" Elevation="2">
-        <MudText Typo="Typo.h6" Class="mb-2">Projection Confidence</MudText>
-        <MudProgressLinear Value="@((double)(_projection.ConfidenceScore * 100))" Color="@GetConfidenceColor(_projection.ConfidenceScore)"
-                           Size="Size.Large" Rounded="true" />
-        <MudStack Row="true" Justify="Justify.SpaceBetween" Class="mt-2">
-            <MudText Typo="Typo.caption" Color="Color.Secondary">Low</MudText>
-            <MudText Typo="Typo.caption" Color="Color.Secondary">Medium</MudText>
-            <MudText Typo="Typo.caption" Color="Color.Secondary">High</MudText>
-        </MudStack>
-    </MudPaper>
-
-    <!-- Projection Chart -->
+    <!-- 12-Month Projection Chart -->
     <MudPaper Class="pa-4 mb-4" Elevation="2">
         <MudText Typo="Typo.h6" Class="mb-4">12-Month Forecast</MudText>
 
@@ -101,92 +211,65 @@ else
                       ChartSeries="@_chartSeries"
                       XAxisLabels="@_chartLabels"
                       Width="100%"
-                      Height="400px"
+                      Height="350px"
                       ChartOptions="@_chartOptions" />
+
+            <MudStack Row="true" Justify="Justify.Center" Spacing="4" Class="mt-3">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <div style="width: 20px; height: 3px; background-color: #1976D2;"></div>
+                    <MudText Typo="Typo.caption">Projected</MudText>
+                </MudStack>
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <div style="width: 20px; height: 3px; background-color: #f44336;"></div>
+                    <MudText Typo="Typo.caption">Lower Bound</MudText>
+                </MudStack>
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <div style="width: 20px; height: 3px; background-color: #4caf50;"></div>
+                    <MudText Typo="Typo.caption">Upper Bound</MudText>
+                </MudStack>
+            </MudStack>
         }
     </MudPaper>
 
-    <!-- Monthly Breakdown Table -->
+    <!-- Cumulative Projection -->
     <MudPaper Class="pa-4" Elevation="2">
-        <MudText Typo="Typo.h6" Class="mb-4">Monthly Breakdown</MudText>
+        <MudText Typo="Typo.h6" Class="mb-3">Cumulative Income Milestones</MudText>
 
-        <MudTable Items="@_projection.MonthlyProjections" Hover="true" Dense="true" Striped="true">
+        <MudTable Items="@GetMilestones()" Dense="true" Hover="true" Elevation="0">
             <HeaderContent>
-                <MudTh>Month</MudTh>
-                <MudTh Style="text-align:right">Projected</MudTh>
-                <MudTh Style="text-align:right">Lower Bound</MudTh>
-                <MudTh Style="text-align:right">Upper Bound</MudTh>
-                <MudTh Style="text-align:right">Range</MudTh>
+                <MudTh>Timeframe</MudTh>
+                <MudTh Style="text-align:right">Cumulative Total</MudTh>
+                <MudTh Style="text-align:right">Lower Estimate</MudTh>
+                <MudTh Style="text-align:right">Upper Estimate</MudTh>
             </HeaderContent>
             <RowTemplate>
                 <MudTd>
-                    <MudText Typo="Typo.body2">@context.Month.ToString("MMMM yyyy")</MudText>
+                    <MudText Typo="Typo.body2" Style="font-weight: 500;">@context.Label</MudText>
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">@context.Date.ToString("MMMM yyyy")</MudText>
                 </MudTd>
                 <MudTd Style="text-align:right">
-                    <MudText Typo="Typo.body2" Color="Color.Primary">@FormatCurrency(context.ProjectedUsd)</MudText>
+                    <MudText Typo="Typo.h6" Color="Color.Primary">@FormatCurrency(context.Cumulative)</MudText>
                 </MudTd>
                 <MudTd Style="text-align:right">
-                    <MudText Typo="Typo.body2" Color="Color.Error">@FormatCurrency(context.LowerBoundUsd)</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Error">@FormatCurrency(context.LowerBound)</MudText>
                 </MudTd>
                 <MudTd Style="text-align:right">
-                    <MudText Typo="Typo.body2" Color="Color.Success">@FormatCurrency(context.UpperBoundUsd)</MudText>
-                </MudTd>
-                <MudTd Style="text-align:right">
-                    <MudText Typo="Typo.caption" Color="Color.Secondary">
-                        @FormatCurrency(context.UpperBoundUsd - context.LowerBoundUsd)
-                    </MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Success">@FormatCurrency(context.UpperBound)</MudText>
                 </MudTd>
             </RowTemplate>
         </MudTable>
     </MudPaper>
-
-    <!-- Income Composition -->
-    <MudGrid Class="mt-4">
-        <MudItem xs="12" md="6">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudText Typo="Typo.h6" Class="mb-4">Income Composition</MudText>
-                <MudChart ChartType="ChartType.Donut"
-                          InputData="@_compositionData"
-                          InputLabels="@_compositionLabels"
-                          Width="100%"
-                          Height="250px" />
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" md="6">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudText Typo="Typo.h6" Class="mb-4">What This Means</MudText>
-                <MudStack Spacing="3">
-                    <MudAlert Severity="Severity.Info" Dense="true">
-                        <MudText Typo="Typo.body2">
-                            <strong>Fixed income (@FormatCurrency(_projection.FixedComponentUsd)/mo)</strong> provides stable,
-                            predictable revenue from recurring sources like salaries and subscriptions.
-                        </MudText>
-                    </MudAlert>
-                    <MudAlert Severity="Severity.Warning" Dense="true">
-                        <MudText Typo="Typo.body2">
-                            <strong>Variable income (@FormatCurrency(_projection.VariableComponentUsd)/mo)</strong> fluctuates
-                            based on trading, referrals, and other non-recurring sources.
-                        </MudText>
-                    </MudAlert>
-                    <MudAlert Severity="@(GetConfidenceSeverity(_projection.ConfidenceScore))" Dense="true">
-                        <MudText Typo="Typo.body2">
-                            <strong>@GetConfidenceLabel(_projection.ConfidenceScore) confidence</strong> means projections are
-                            @GetConfidenceDescription(_projection.ConfidenceScore).
-                        </MudText>
-                    </MudAlert>
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
 }
 
 @code {
     private bool _isLoading = true;
     private ProjectionDto? _projection;
+    private DashboardKpis? _kpis;
+    private decimal _goalAmount = 0;
 
     private List<ChartSeries> _chartSeries = [];
     private string[] _chartLabels = [];
-    private ChartOptions _chartOptions = new() { YAxisTicks = 1000 };
+    private ChartOptions _chartOptions = new() { YAxisTicks = 1000, InterpolationOption = InterpolationOption.Straight };
 
     private double[] _compositionData = [];
     private string[] _compositionLabels = [];
@@ -201,11 +284,16 @@ else
         _isLoading = true;
 
         var projectionResult = await ProjectionHandler.HandleAsync(new GetProjectionQuery(12));
-
         if (projectionResult.IsSuccess)
         {
             _projection = projectionResult.Value;
             PrepareCharts();
+        }
+
+        var kpisResult = await DashboardService.GetKpisAsync();
+        if (kpisResult.IsSuccess)
+        {
+            _kpis = kpisResult.Value;
         }
 
         _isLoading = false;
@@ -241,6 +329,48 @@ else
         _compositionData = [(double)_projection.FixedComponentUsd, (double)_projection.VariableComponentUsd];
     }
 
+    private void CalculateTimeToGoal()
+    {
+        StateHasChanged();
+    }
+
+    private List<MilestoneItem> GetMilestones()
+    {
+        if (_projection is null) return [];
+
+        var milestones = new List<MilestoneItem>();
+        decimal cumulative = 0;
+        decimal lowerCumulative = 0;
+        decimal upperCumulative = 0;
+
+        var intervals = new[] { 3, 6, 12 };
+        var labels = new[] { "3 Months", "6 Months", "12 Months" };
+
+        for (var i = 0; i < intervals.Length && i < _projection.MonthlyProjections.Count; i++)
+        {
+            var index = intervals[i] - 1;
+            if (index >= _projection.MonthlyProjections.Count) break;
+
+            for (var j = (i == 0 ? 0 : intervals[i - 1]); j <= index; j++)
+            {
+                cumulative += _projection.MonthlyProjections[j].ProjectedUsd;
+                lowerCumulative += _projection.MonthlyProjections[j].LowerBoundUsd;
+                upperCumulative += _projection.MonthlyProjections[j].UpperBoundUsd;
+            }
+
+            milestones.Add(new MilestoneItem(
+                labels[i],
+                _projection.MonthlyProjections[index].Month,
+                cumulative,
+                lowerCumulative,
+                upperCumulative));
+        }
+
+        return milestones;
+    }
+
+    private record MilestoneItem(string Label, DateOnly Date, decimal Cumulative, decimal LowerBound, decimal UpperBound);
+
     private static string FormatCurrency(decimal amount) =>
         amount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
 
@@ -267,8 +397,8 @@ else
 
     private static string GetConfidenceDescription(decimal score) => score switch
     {
-        >= 0.7m => "based on stable, consistent income patterns",
-        >= 0.4m => "reasonably reliable but with some variability",
-        _ => "uncertain due to limited data or high variability"
+        >= 0.7m => "Your income is highly predictable. Projections are based on stable, consistent patterns.",
+        >= 0.4m => "Your income is reasonably predictable with some variability. Consider building an emergency fund.",
+        _ => "High variability in your income. Projections are uncertain. Focus on increasing fixed income sources."
     };
 }
