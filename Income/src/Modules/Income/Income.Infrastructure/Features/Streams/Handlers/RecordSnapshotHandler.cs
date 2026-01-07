@@ -10,10 +10,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Income.Infrastructure.Features.Streams.Handlers;
 
-internal sealed class RecordSnapshotHandler(IncomeDbContext dbContext) : IRecordSnapshotHandler
+internal sealed class RecordSnapshotHandler(IDbContextFactory<IncomeDbContext> dbContextFactory) : IRecordSnapshotHandler
 {
     public async Task<Result<SnapshotDto>> HandleAsync(RecordSnapshotCommand command, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entity = await dbContext.Streams
             .Include(x => x.Snapshots)
             .FirstOrDefaultAsync(x => x.Id == command.StreamId, ct);

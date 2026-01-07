@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Income.Infrastructure.Features.Providers.Handlers;
 
-internal sealed class GetAllProvidersHandler(IncomeDbContext dbContext) : IGetAllProvidersHandler
+internal sealed class GetAllProvidersHandler(IDbContextFactory<IncomeDbContext> dbContextFactory) : IGetAllProvidersHandler
 {
     public async Task<Result<IReadOnlyList<ProviderDto>>> HandleAsync(GetAllProvidersQuery query, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entities = await dbContext.Providers
             .AsNoTracking()
             .ToListAsync(ct);

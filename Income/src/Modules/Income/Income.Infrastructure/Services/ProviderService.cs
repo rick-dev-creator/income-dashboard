@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Income.Infrastructure.Services;
 
-internal sealed class ProviderService(IncomeDbContext dbContext) : IProviderService
+internal sealed class ProviderService(IDbContextFactory<IncomeDbContext> dbContextFactory) : IProviderService
 {
     public async Task<Result<IReadOnlyList<ProviderListItem>>> GetAllAsync(CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entities = await dbContext.Providers
             .AsNoTracking()
             .ToListAsync(ct);
@@ -21,6 +23,8 @@ internal sealed class ProviderService(IncomeDbContext dbContext) : IProviderServ
 
     public async Task<Result<ProviderDetail>> GetByIdAsync(string providerId, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entity = await dbContext.Providers
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == providerId, ct);
@@ -33,6 +37,8 @@ internal sealed class ProviderService(IncomeDbContext dbContext) : IProviderServ
 
     public async Task<Result<ProviderDetail>> CreateAsync(CreateProviderRequest request, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var exists = await dbContext.Providers
             .AnyAsync(x => x.Name == request.Name, ct);
 

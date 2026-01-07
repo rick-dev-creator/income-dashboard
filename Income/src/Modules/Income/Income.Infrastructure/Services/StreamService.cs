@@ -12,11 +12,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Income.Infrastructure.Services;
 
 internal sealed class StreamService(
-    IncomeDbContext dbContext,
+    IDbContextFactory<IncomeDbContext> dbContextFactory,
     ICredentialEncryptor credentialEncryptor) : IStreamService
 {
     public async Task<Result<IReadOnlyList<StreamListItem>>> GetAllAsync(CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entities = await dbContext.Streams
             .Include(x => x.Snapshots)
             .AsNoTracking()
@@ -28,6 +30,8 @@ internal sealed class StreamService(
 
     public async Task<Result<StreamDetail>> GetByIdAsync(string streamId, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entity = await dbContext.Streams
             .Include(x => x.Snapshots)
             .AsNoTracking()
@@ -41,6 +45,8 @@ internal sealed class StreamService(
 
     public async Task<Result<IReadOnlyList<StreamListItem>>> GetByProviderAsync(string providerId, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entities = await dbContext.Streams
             .Include(x => x.Snapshots)
             .AsNoTracking()
@@ -53,6 +59,8 @@ internal sealed class StreamService(
 
     public async Task<Result<StreamDetail>> CreateAsync(CreateStreamRequest request, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var providerExists = await dbContext.Providers
             .AnyAsync(x => x.Id == request.ProviderId, ct);
 
@@ -89,6 +97,8 @@ internal sealed class StreamService(
 
     public async Task<Result<StreamDetail>> UpdateAsync(UpdateStreamRequest request, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entity = await dbContext.Streams
             .Include(x => x.Snapshots)
             .FirstOrDefaultAsync(x => x.Id == request.StreamId, ct);
@@ -118,6 +128,8 @@ internal sealed class StreamService(
 
     public async Task<Result> DeleteAsync(string streamId, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entity = await dbContext.Streams
             .FirstOrDefaultAsync(x => x.Id == streamId, ct);
 
@@ -132,6 +144,8 @@ internal sealed class StreamService(
 
     public async Task<Result<SnapshotItem>> RecordSnapshotAsync(RecordSnapshotRequest request, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entity = await dbContext.Streams
             .Include(x => x.Snapshots)
             .FirstOrDefaultAsync(x => x.Id == request.StreamId, ct);
@@ -181,6 +195,8 @@ internal sealed class StreamService(
 
     public async Task<Result> UpdateCredentialsAsync(string streamId, string? credentials, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entity = await dbContext.Streams
             .FirstOrDefaultAsync(x => x.Id == streamId, ct);
 

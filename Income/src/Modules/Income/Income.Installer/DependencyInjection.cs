@@ -23,9 +23,6 @@ public static class DependencyInjection
         services.AddDbContextFactory<IncomeDbContext>(options =>
             options.UseNpgsql(connectionString));
 
-        // Also register scoped DbContext for compatibility
-        services.AddScoped(sp => sp.GetRequiredService<IDbContextFactory<IncomeDbContext>>().CreateDbContext());
-
         // Core Services
         services.AddSingleton<ICredentialEncryptor>(new AesCredentialEncryptor(encryptionKey));
 

@@ -9,10 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Income.Infrastructure.Features.Streams.Handlers;
 
-internal sealed class UpdateStreamHandler(IncomeDbContext dbContext) : IUpdateStreamHandler
+internal sealed class UpdateStreamHandler(IDbContextFactory<IncomeDbContext> dbContextFactory) : IUpdateStreamHandler
 {
     public async Task<Result<StreamDto>> HandleAsync(UpdateStreamCommand command, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entity = await dbContext.Streams
             .Include(x => x.Snapshots)
             .FirstOrDefaultAsync(x => x.Id == command.StreamId, ct);
