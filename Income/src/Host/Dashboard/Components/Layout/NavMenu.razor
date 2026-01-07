@@ -1,55 +1,24 @@
-@inject NavigationManager NavigationManager
-@implements IDisposable
-
-<MudNavMenu Class="@($"nav-menu {(IsMini ? "nav-menu-mini" : "")}")">
+<MudNavMenu Class="nav-menu">
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.SpaceDashboard" Class="nav-item">
-        @if (!IsMini) { <span>Dashboard</span> }
+        Dashboard
     </MudNavLink>
     <MudNavLink Href="streams" Icon="@Icons.Material.Rounded.AccountBalanceWallet" Class="nav-item">
-        @if (!IsMini) { <span>Streams</span> }
+        Streams
     </MudNavLink>
     <MudNavLink Href="analytics" Icon="@Icons.Material.Rounded.Insights" Class="nav-item">
-        @if (!IsMini) { <span>Analytics</span> }
+        Analytics
     </MudNavLink>
     <MudNavLink Href="projections" Icon="@Icons.Material.Rounded.Timeline" Class="nav-item">
-        @if (!IsMini) { <span>Projections</span> }
+        Projections
     </MudNavLink>
     <MudNavLink Href="connections" Icon="@Icons.Material.Rounded.Hub" Class="nav-item">
-        @if (!IsMini) { <span>Connections</span> }
+        Connections
     </MudNavLink>
 </MudNavMenu>
-
-@code {
-    [Parameter]
-    public EventCallback OnNavigation { get; set; }
-
-    [Parameter]
-    public bool IsMini { get; set; }
-
-    protected override void OnInitialized()
-    {
-        NavigationManager.LocationChanged += OnLocationChanged;
-    }
-
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
-    {
-        OnNavigation.InvokeAsync();
-    }
-
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= OnLocationChanged;
-    }
-}
 
 <style>
     .nav-menu {
         padding: 8px;
-        transition: all 0.2s ease;
-    }
-
-    .nav-menu-mini {
-        padding: 8px 4px;
     }
 
     .nav-item {
@@ -60,9 +29,6 @@
 
     .nav-item:hover {
         background: var(--mud-palette-action-default-hover) !important;
-    }
-
-    .nav-menu:not(.nav-menu-mini) .nav-item:hover {
         transform: translateX(4px);
     }
 
@@ -81,16 +47,7 @@
         font-size: 0.875rem;
     }
 
-    .nav-menu-mini :deep(.mud-nav-link) {
-        padding: 12px 8px !important;
-        justify-content: center;
-    }
-
     :deep(.mud-nav-link-icon) {
         margin-right: 12px;
-    }
-
-    .nav-menu-mini :deep(.mud-nav-link-icon) {
-        margin-right: 0;
     }
 </style>
