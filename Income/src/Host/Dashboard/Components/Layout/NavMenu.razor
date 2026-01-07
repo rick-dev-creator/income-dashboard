@@ -1,3 +1,6 @@
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
 <MudNavMenu Class="nav-menu">
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.SpaceDashboard" Class="nav-item">
         Dashboard
@@ -15,6 +18,26 @@
         Connections
     </MudNavLink>
 </MudNavMenu>
+
+@code {
+    [Parameter]
+    public EventCallback OnNavigation { get; set; }
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        OnNavigation.InvokeAsync();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}
 
 <style>
     .nav-menu {
