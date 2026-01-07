@@ -1,5 +1,8 @@
 ## Visual Studio .gitignore
 
+# Claude Code local settings
+.claude/
+
 # User-specific files
 *.rsuser
 *.suo
