@@ -84,7 +84,7 @@ else
                               Immediate="true" DebounceInterval="300" />
             </MudItem>
             <MudItem xs="12" md="8">
-                @if (_goalAmount > 0 && _projection.ProjectedMonthlyIncomeUsd > 0)
+                @if (_goalAmount > 0 && _projection is not null && _projection.ProjectedMonthlyIncomeUsd > 0)
                 {
                     var monthsToGoal = _goalAmount / _projection.ProjectedMonthlyIncomeUsd;
                     var targetDate = DateTime.UtcNow.AddMonths((int)Math.Ceiling(monthsToGoal));

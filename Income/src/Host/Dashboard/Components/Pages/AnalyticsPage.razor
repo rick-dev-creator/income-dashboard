@@ -12,12 +12,12 @@
         <p class="page-subtitle">Understand your income patterns</p>
     </div>
     <MudStack Row="true" Spacing="2">
-        <MudSelect T="string" Label="Period" Value="_selectedPeriod" ValueChanged="OnPeriodChanged" Variant="Variant.Outlined"
+        <MudSelect T="string" Label="Period" @bind-Value="SelectedPeriod" Variant="Variant.Outlined"
                    Dense="true" Style="width: 140px;">
-            <MudSelectItem Value="@("1M")">Last Month</MudSelectItem>
-            <MudSelectItem Value="@("3M")">Last 3 Months</MudSelectItem>
-            <MudSelectItem Value="@("6M")">Last 6 Months</MudSelectItem>
-            <MudSelectItem Value="@("1Y")">Last Year</MudSelectItem>
+            <MudSelectItem T="string" Value="@("1M")">Last Month</MudSelectItem>
+            <MudSelectItem T="string" Value="@("3M")">Last 3 Months</MudSelectItem>
+            <MudSelectItem T="string" Value="@("6M")">Last 6 Months</MudSelectItem>
+            <MudSelectItem T="string" Value="@("1Y")">Last Year</MudSelectItem>
         </MudSelect>
     </MudStack>
 </div>
@@ -319,8 +319,21 @@ else
 @code {
     private bool _isLoading = true;
     private bool _isLoadingChart = false;
-    private string _selectedPeriod = "6M";
+    private string _selectedPeriodValue = "6M";
     private string _granularity = "Monthly";
+
+    private string SelectedPeriod
+    {
+        get => _selectedPeriodValue;
+        set
+        {
+            if (_selectedPeriodValue != value)
+            {
+                _selectedPeriodValue = value;
+                _ = LoadDataAsync();
+            }
+        }
+    }
 
     private DailyRate? _dailyRate;
     private StackedTimeSeries? _stackedTimeSeries;
@@ -388,12 +401,6 @@ else
         _isLoading = false;
     }
 
-    private async Task OnPeriodChanged(string value)
-    {
-        _selectedPeriod = value;
-        await LoadDataAsync();
-    }
-
     private async Task OnGranularityChanged(string value)
     {
         _granularity = value;
@@ -422,7 +429,7 @@ else
     {
         var now = DateTime.UtcNow;
         var endDate = DateOnly.FromDateTime(now);
-        var startDate = _selectedPeriod switch
+        var startDate = _selectedPeriodValue switch
         {
             "1M" => DateOnly.FromDateTime(now.AddMonths(-1)),
             "3M" => DateOnly.FromDateTime(now.AddMonths(-3)),
@@ -433,7 +440,7 @@ else
         return (startDate, endDate);
     }
 
-    private int GetPeriodsBack() => _selectedPeriod switch
+    private int GetPeriodsBack() => _selectedPeriodValue switch
     {
         "1M" => _granularity == "Daily" ? 30 : _granularity == "Weekly" ? 4 : 1,
         "3M" => _granularity == "Daily" ? 90 : _granularity == "Weekly" ? 12 : 3,
