@@ -128,7 +128,10 @@ builder.Services
     .AddSingleton(theme);
 
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents(options =>
+    {
+        options.DetailedErrors = builder.Environment.IsDevelopment();
+    });
 
 var app = builder.Build();
 
