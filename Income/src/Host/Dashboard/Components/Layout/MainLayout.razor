@@ -43,14 +43,13 @@
                ClipMode="DrawerClipMode.Always"
                Elevation="@(_isMobile ? 2 : 0)"
                Variant="@_drawerVariant"
-               OpenMiniOnHover="@(!_isMobile)"
-               Class="app-drawer">
-        <div class="drawer-header">
+               Class="@($"app-drawer {(_isExpanded ? "drawer-expanded" : "drawer-mini")}")">
+        <div class="drawer-header @(_isExpanded ? "" : "drawer-header-mini")">
             <MudText Typo="Typo.overline" Color="Color.Secondary" Class="drawer-section-title">NAVIGATION</MudText>
         </div>
-        <NavMenu OnNavigation="@OnNavigation" />
+        <NavMenu OnNavigation="@OnNavigation" IsMini="@(!_isExpanded && !_isMobile)" />
         <MudSpacer />
-        <div class="drawer-footer">
+        <div class="drawer-footer @(_isExpanded ? "" : "drawer-footer-mini")">
             <MudText Typo="Typo.caption" Color="Color.Secondary" Class="version-text">v1.0.0</MudText>
         </div>
     </MudDrawer>
@@ -126,10 +125,29 @@
     .app-drawer {
         border-right: 1px solid var(--mud-palette-divider) !important;
         background: var(--mud-palette-drawer-background) !important;
+        transition: width 0.2s ease;
+    }
+
+    .drawer-expanded {
+        width: 280px !important;
+    }
+
+    .drawer-mini {
+        width: 72px !important;
     }
 
     .drawer-header {
         padding: 20px 16px 8px;
+        transition: all 0.2s ease;
+    }
+
+    .drawer-header-mini {
+        padding: 16px 8px 8px;
+        text-align: center;
+    }
+
+    .drawer-header-mini .drawer-section-title {
+        display: none;
     }
 
     .drawer-section-title {
@@ -141,6 +159,16 @@
     .drawer-footer {
         padding: 16px;
         border-top: 1px solid var(--mud-palette-divider);
+        transition: all 0.2s ease;
+    }
+
+    .drawer-footer-mini {
+        padding: 12px 8px;
+        text-align: center;
+    }
+
+    .drawer-footer-mini .version-text {
+        display: none;
     }
 
     .version-text {
@@ -173,7 +201,8 @@
     private bool _drawerOpen;
     private bool _isDarkMode = true;
     private bool _isMobile;
-    private DrawerVariant _drawerVariant = DrawerVariant.Mini;
+    private bool _isExpanded;
+    private DrawerVariant _drawerVariant = DrawerVariant.Responsive;
 
     // IBrowserViewportObserver implementation
     Guid IBrowserViewportObserver.Id { get; } = Guid.NewGuid();
@@ -195,12 +224,25 @@
     Task IBrowserViewportObserver.NotifyBrowserViewportChangeAsync(BrowserViewportEventArgs args)
     {
         _isMobile = args.Breakpoint <= Breakpoint.Sm;
-        _drawerVariant = _isMobile ? DrawerVariant.Temporary : DrawerVariant.Mini;
+        _drawerVariant = _isMobile ? DrawerVariant.Temporary : DrawerVariant.Responsive;
         _drawerOpen = !_isMobile;
+        _isExpanded = !_isMobile;
         return InvokeAsync(StateHasChanged);
     }
 
-    private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
+    private void ToggleDrawer()
+    {
+        if (_isMobile)
+        {
+            _drawerOpen = !_drawerOpen;
+        }
+        else
+        {
+            _isExpanded = !_isExpanded;
+            _drawerOpen = _isExpanded;
+        }
+    }
+
     private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
 
     private void OnNavigation()
