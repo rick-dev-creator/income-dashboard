@@ -93,21 +93,38 @@ else
                 <h2 class="section-title">Income Over Time</h2>
                 <p class="page-subtitle" style="margin-top: 4px;">Track your earnings progression</p>
             </div>
-            <MudToggleGroup T="string" @bind-Value="_selectedGranularity" Color="Color.Primary" CheckMark="false" Class="toggle-rounded">
+            <MudToggleGroup T="string" Value="_selectedGranularity" ValueChanged="OnGranularityChanged" Color="Color.Primary" CheckMark="false" Class="toggle-rounded">
                 <MudToggleItem Value="@("Daily")">Daily</MudToggleItem>
                 <MudToggleItem Value="@("Weekly")">Weekly</MudToggleItem>
                 <MudToggleItem Value="@("Monthly")">Monthly</MudToggleItem>
             </MudToggleGroup>
         </div>
 
-        @if (_stackedTimeSeries?.Points.Count > 0)
+        @if (_isLoadingChart)
         {
+            <div style="display: flex; justify-content: center; padding: 60px 0;">
+                <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+            </div>
+        }
+        else if (_stackedTimeSeries?.Points.Count > 0)
+        {
+            <!-- Stacked Bar Chart - Total Income -->
+            <MudText Typo="Typo.subtitle2" Color="Color.Secondary" Class="mb-2">Total Income (Stacked)</MudText>
             <MudChart ChartType="ChartType.StackedBar"
                       ChartSeries="@_stackedChartSeries"
                       XAxisLabels="@_stackedChartLabels"
                       Width="100%"
-                      Height="320px"
+                      Height="280px"
                       ChartOptions="@_chartOptions" />
+
+            <!-- Line Chart - Individual Stream Trends -->
+            <MudText Typo="Typo.subtitle2" Color="Color.Secondary" Class="mt-6 mb-2">Individual Stream Trends</MudText>
+            <MudChart ChartType="ChartType.Line"
+                      ChartSeries="@_stackedChartSeries"
+                      XAxisLabels="@_stackedChartLabels"
+                      Width="100%"
+                      Height="280px"
+                      ChartOptions="@_lineChartOptions" />
 
             <!-- Modern Legend -->
             <div class="chart-legend">
@@ -520,6 +537,7 @@ else
 
 @code {
     private bool _isLoading = true;
+    private bool _isLoadingChart = false;
     private string? _error;
     private string _selectedGranularity = "Monthly";
 
@@ -530,6 +548,7 @@ else
     private List<ChartSeries> _stackedChartSeries = [];
     private string[] _stackedChartLabels = [];
     private ChartOptions _chartOptions = new() { YAxisTicks = 500, InterpolationOption = InterpolationOption.Straight };
+    private ChartOptions _lineChartOptions = new() { YAxisTicks = 500, InterpolationOption = InterpolationOption.Straight, LineStrokeWidth = 2 };
     private List<(string Name, string Color)> _streamColors = [];
 
     private static readonly string[] ChartColors = [
@@ -568,6 +587,27 @@ else
         finally
         {
             _isLoading = false;
+        }
+    }
+
+    private async Task OnGranularityChanged(string value)
+    {
+        _selectedGranularity = value;
+        _isLoadingChart = true;
+        StateHasChanged();
+
+        try
+        {
+            var stackedResult = await DashboardService.GetStackedTimeSeriesAsync(_selectedGranularity, 180);
+            if (stackedResult.IsSuccess)
+            {
+                _stackedTimeSeries = stackedResult.Value;
+                PrepareStackedChart();
+            }
+        }
+        finally
+        {
+            _isLoadingChart = false;
         }
     }
 
