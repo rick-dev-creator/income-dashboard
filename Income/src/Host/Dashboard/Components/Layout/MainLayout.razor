@@ -1,19 +1,14 @@
 @inherits LayoutComponentBase
-@implements IAsyncDisposable
-@implements IBrowserViewportObserver
 @inject MudTheme Theme
-@inject IBrowserViewportService BrowserViewportService
-@inject NavigationManager NavigationManager
 
 <MudThemeProvider Theme="Theme" @bind-IsDarkMode="_isDarkMode" />
 
-<MudLayout Class="app-layout">
-    <MudAppBar Elevation="0" Class="app-bar glass-effect">
+<MudLayout>
+    <MudAppBar Elevation="1" Class="app-bar">
         <MudIconButton Icon="@Icons.Material.Rounded.Menu"
                        Color="Color.Inherit"
                        Edge="Edge.Start"
-                       OnClick="@ToggleDrawer"
-                       Class="menu-toggle" />
+                       OnClick="@ToggleDrawer" />
 
         <div class="brand">
             <div class="brand-icon">
@@ -24,11 +19,10 @@
 
         <MudSpacer />
 
-        <MudTooltip Text="@(_isDarkMode ? "Switch to light mode" : "Switch to dark mode")" Placement="Placement.Bottom">
+        <MudTooltip Text="@(_isDarkMode ? "Light mode" : "Dark mode")" Placement="Placement.Bottom">
             <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Rounded.LightMode : Icons.Material.Rounded.DarkMode)"
                            Color="Color.Inherit"
-                           OnClick="@ToggleDarkMode"
-                           Class="theme-toggle" />
+                           OnClick="@ToggleDarkMode" />
         </MudTooltip>
 
         <MudMenu Icon="@Icons.Material.Rounded.AccountCircle" Color="Color.Inherit" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
@@ -39,27 +33,19 @@
         </MudMenu>
     </MudAppBar>
 
-    <MudDrawer Open="_drawerOpen"
-               OpenChanged="OnDrawerOpenChanged"
+    <MudDrawer @bind-Open="_drawerOpen"
                ClipMode="DrawerClipMode.Always"
-               Elevation="@(_isMobile ? 2 : 0)"
-               Variant="@_drawerVariant"
-               Width="@(_isExpanded ? "280px" : "72px")"
-               MiniWidth="72px"
+               Breakpoint="Breakpoint.Md"
+               Elevation="1"
+               Variant="DrawerVariant.Responsive"
                Class="app-drawer">
-        <div class="@($"drawer-header {(_isExpanded ? "" : "drawer-header-mini")}")">
-            @if (_isExpanded)
-            {
-                <MudText Typo="Typo.overline" Color="Color.Secondary" Class="drawer-section-title">NAVIGATION</MudText>
-            }
-        </div>
-        <NavMenu OnNavigation="@OnNavigation" IsMini="@(!_isExpanded && !_isMobile)" />
+        <MudDrawerHeader>
+            <MudText Typo="Typo.subtitle1" Class="drawer-section-title">NAVIGATION</MudText>
+        </MudDrawerHeader>
+        <NavMenu />
         <MudSpacer />
-        <div class="@($"drawer-footer {(_isExpanded ? "" : "drawer-footer-mini")}")">
-            @if (_isExpanded)
-            {
-                <MudText Typo="Typo.caption" Color="Color.Secondary" Class="version-text">v1.0.0</MudText>
-            }
+        <div class="drawer-footer">
+            <MudText Typo="Typo.caption" Color="Color.Secondary" Class="version-text">v1.0.0</MudText>
         </div>
     </MudDrawer>
 
@@ -71,27 +57,9 @@
 </MudLayout>
 
 <style>
-    .app-layout {
-        min-height: 100vh;
-    }
-
     .app-bar {
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid var(--mud-palette-divider);
-    }
-
-    .glass-effect {
-        background: var(--mud-palette-appbar-background) !important;
-    }
-
-    .menu-toggle {
-        border-radius: 10px;
-        transition: all 0.2s ease;
-    }
-
-    .menu-toggle:hover {
-        background: var(--mud-palette-action-default-hover);
     }
 
     .brand {
@@ -121,46 +89,19 @@
         background-clip: text;
     }
 
-    .theme-toggle {
-        border-radius: 10px;
-        margin-right: 8px;
-        transition: all 0.3s ease;
-    }
-
-    .theme-toggle:hover {
-        transform: rotate(15deg);
-    }
-
     .app-drawer {
         border-right: 1px solid var(--mud-palette-divider) !important;
-        background: var(--mud-palette-drawer-background) !important;
-    }
-
-    .drawer-header {
-        padding: 20px 16px 8px;
-    }
-
-    .drawer-header-mini {
-        padding: 16px 8px 8px;
-        text-align: center;
-        min-height: 48px;
     }
 
     .drawer-section-title {
-        font-size: 0.65rem;
-        letter-spacing: 0.1em;
-        opacity: 0.7;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        font-weight: 600;
     }
 
     .drawer-footer {
         padding: 16px;
         border-top: 1px solid var(--mud-palette-divider);
-    }
-
-    .drawer-footer-mini {
-        padding: 12px 8px;
-        text-align: center;
-        min-height: 48px;
     }
 
     .version-text {
@@ -192,76 +133,7 @@
 @code {
     private bool _drawerOpen = true;
     private bool _isDarkMode = true;
-    private bool _isMobile;
-    private bool _isExpanded = true;
-    private DrawerVariant _drawerVariant = DrawerVariant.Mini;
 
-    // IBrowserViewportObserver implementation
-    Guid IBrowserViewportObserver.Id { get; } = Guid.NewGuid();
-
-    ResizeOptions IBrowserViewportObserver.ResizeOptions { get; } = new()
-    {
-        ReportRate = 100,
-        NotifyOnBreakpointOnly = true
-    };
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await BrowserViewportService.SubscribeAsync(this, fireImmediately: true);
-        }
-    }
-
-    Task IBrowserViewportObserver.NotifyBrowserViewportChangeAsync(BrowserViewportEventArgs args)
-    {
-        _isMobile = args.Breakpoint <= Breakpoint.Sm;
-        _drawerVariant = _isMobile ? DrawerVariant.Temporary : DrawerVariant.Mini;
-
-        if (_isMobile)
-        {
-            _drawerOpen = false;
-            _isExpanded = true; // When open on mobile, always show expanded
-        }
-        else
-        {
-            _drawerOpen = true; // Always visible on desktop
-            _isExpanded = true; // Default to expanded on desktop
-        }
-
-        return InvokeAsync(StateHasChanged);
-    }
-
-    private void ToggleDrawer()
-    {
-        if (_isMobile)
-        {
-            _drawerOpen = !_drawerOpen;
-        }
-        else
-        {
-            _isExpanded = !_isExpanded;
-            StateHasChanged();
-        }
-    }
-
-    private void OnDrawerOpenChanged(bool isOpen)
-    {
-        _drawerOpen = isOpen;
-    }
-
+    private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
     private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
-
-    private void OnNavigation()
-    {
-        if (_isMobile)
-        {
-            _drawerOpen = false;
-        }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await BrowserViewportService.UnsubscribeAsync(this);
-    }
 }
