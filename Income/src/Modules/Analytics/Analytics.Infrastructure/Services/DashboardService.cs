@@ -9,7 +9,12 @@ internal sealed class DashboardService(
     IGetIncomeTimeSeriesHandler timeSeriesHandler,
     IGetDistributionHandler distributionHandler,
     IGetTopPerformersHandler topPerformersHandler,
-    IGetPeriodComparisonHandler periodComparisonHandler) : IDashboardService
+    IGetPeriodComparisonHandler periodComparisonHandler,
+    IGetDailyRateHandler dailyRateHandler,
+    IGetStackedTimeSeriesHandler stackedTimeSeriesHandler,
+    IGetStreamTrendsHandler streamTrendsHandler,
+    IGetProjectionHandler projectionHandler,
+    IGetTrendHandler trendHandler) : IDashboardService
 {
     public async Task<Result<DashboardSummary>> GetSummaryAsync(CancellationToken ct = default)
     {
@@ -134,5 +139,91 @@ internal sealed class DashboardService(
             ChangeUsd: data.ChangeUsd,
             ChangePercentage: data.ChangePercentage,
             Trend: data.Trend));
+    }
+
+    public async Task<Result<DashboardKpis>> GetKpisAsync(CancellationToken ct = default)
+    {
+        var dailyRateResult = await dailyRateHandler.HandleAsync(new GetDailyRateQuery(30), ct);
+        if (dailyRateResult.IsFailed)
+            return dailyRateResult.ToResult<DashboardKpis>();
+
+        var trendResult = await trendHandler.HandleAsync(new GetTrendQuery("Monthly", 2), ct);
+        if (trendResult.IsFailed)
+            return trendResult.ToResult<DashboardKpis>();
+
+        var projectionResult = await projectionHandler.HandleAsync(new GetProjectionQuery(6), ct);
+        if (projectionResult.IsFailed)
+            return projectionResult.ToResult<DashboardKpis>();
+
+        var dailyRate = dailyRateResult.Value;
+        var trend = trendResult.Value;
+        var projection = projectionResult.Value;
+
+        return Result.Ok(new DashboardKpis(
+            DailyRate: new DailyRate(
+                AverageDailyUsd: dailyRate.AverageDailyUsd,
+                MedianDailyUsd: dailyRate.MedianDailyUsd,
+                DaysAnalyzed: dailyRate.DaysAnalyzed,
+                StandardDeviation: dailyRate.StandardDeviation,
+                CoefficientOfVariation: dailyRate.CoefficientOfVariation),
+            Trend: new TrendIndicator(
+                ChangePercentage: trend.GrowthRatePercentage,
+                Direction: trend.Direction,
+                ComparisonPeriod: "vs last month"),
+            Projection: new ProjectionSummary(
+                Projected6MonthTotalUsd: projection.Projected6MonthTotalUsd,
+                ConfidenceScore: projection.ConfidenceScore)));
+    }
+
+    public async Task<Result<StackedTimeSeries>> GetStackedTimeSeriesAsync(
+        string granularity = "Daily",
+        int periodsBack = 180,
+        CancellationToken ct = default)
+    {
+        var query = new GetStackedTimeSeriesQuery(granularity, periodsBack);
+        var result = await stackedTimeSeriesHandler.HandleAsync(query, ct);
+        if (result.IsFailed)
+            return result.ToResult<StackedTimeSeries>();
+
+        var data = result.Value;
+        return Result.Ok(new StackedTimeSeries(
+            Points: data.Points.Select(p => new StackedPoint(
+                Date: p.Date,
+                TotalUsd: p.TotalUsd,
+                Streams: p.Streams.Select(s => new StreamContribution(
+                    StreamId: s.StreamId,
+                    StreamName: s.StreamName,
+                    Category: s.Category,
+                    AmountUsd: s.AmountUsd)).ToList())).ToList(),
+            StreamNames: data.StreamNames,
+            StartDate: data.StartDate,
+            EndDate: data.EndDate,
+            TotalUsd: data.TotalUsd));
+    }
+
+    public async Task<Result<StreamHealthSummary>> GetStreamHealthAsync(
+        string comparisonType = "MoM",
+        CancellationToken ct = default)
+    {
+        var query = new GetStreamTrendsQuery(comparisonType);
+        var result = await streamTrendsHandler.HandleAsync(query, ct);
+        if (result.IsFailed)
+            return result.ToResult<StreamHealthSummary>();
+
+        var data = result.Value;
+        return Result.Ok(new StreamHealthSummary(
+            Streams: data.Streams.Select(s => new StreamHealthItem(
+                StreamId: s.StreamId,
+                StreamName: s.StreamName,
+                Category: s.Category,
+                ProviderName: s.ProviderName,
+                CurrentPeriodUsd: s.CurrentPeriodUsd,
+                PreviousPeriodUsd: s.PreviousPeriodUsd,
+                ChangeUsd: s.ChangeUsd,
+                ChangePercentage: s.ChangePercentage,
+                Direction: s.Direction)).ToList(),
+            GrowingCount: data.GrowingCount,
+            DecliningCount: data.DecliningCount,
+            StableCount: data.StableCount));
     }
 }

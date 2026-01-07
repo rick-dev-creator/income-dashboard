@@ -3,9 +3,7 @@
 @inject IDashboardService DashboardService
 @rendermode InteractiveServer
 
-<PageTitle>Dashboard - FlowMetrics</PageTitle>
-
-<MudText Typo="Typo.h4" Class="mb-4">Income Dashboard</MudText>
+<PageTitle>FlowMetrics - Income Dashboard</PageTitle>
 
 @if (_isLoading)
 {
@@ -17,130 +15,181 @@ else if (_error is not null)
 }
 else
 {
-    <!-- Summary Cards -->
-    <MudGrid>
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                    <div>
-                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Total Income</MudText>
-                        <MudText Typo="Typo.h4">@FormatCurrency(_summary?.TotalIncomeUsd ?? 0)</MudText>
-                    </div>
-                    <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Color="Color.Primary" Size="Size.Large" />
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                    <div>
-                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Monthly Fixed</MudText>
-                        <MudText Typo="Typo.h4">@FormatCurrency(_summary?.FixedMonthlyIncomeUsd ?? 0)</MudText>
-                    </div>
-                    <MudIcon Icon="@Icons.Material.Filled.EventRepeat" Color="Color.Success" Size="Size.Large" />
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                    <div>
-                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Active Streams</MudText>
-                        <MudText Typo="Typo.h4">@(_summary?.ActiveStreamCount ?? 0)</MudText>
-                    </div>
-                    <MudIcon Icon="@Icons.Material.Filled.Stream" Color="Color.Info" Size="Size.Large" />
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12" sm="6" md="3">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                    <div>
-                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">MoM Growth</MudText>
-                        <MudText Typo="Typo.h4" Color="@GetTrendColor(_summary?.MonthOverMonth?.Trend)">
-                            @GetTrendIcon(_summary?.MonthOverMonth?.Trend) @FormatPercentage(_summary?.MonthOverMonth?.ChangePercentage ?? 0)
-                        </MudText>
-                    </div>
-                    <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Color="@GetTrendColor(_summary?.MonthOverMonth?.Trend)" Size="Size.Large" />
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
-
-    <!-- Charts Row -->
-    <MudGrid Class="mt-4">
-        <MudItem xs="12" md="8">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudText Typo="Typo.h6" Class="mb-4">Income Over Time</MudText>
-                @if (_timeSeries?.Points.Count > 0)
-                {
-                    <MudChart ChartType="ChartType.Line"
-                              ChartSeries="@_chartSeries"
-                              XAxisLabels="@_chartLabels"
-                              Width="100%"
-                              Height="300px"
-                              ChartOptions="@_chartOptions" />
-                }
-                else
-                {
-                    <MudText Color="Color.Secondary">No data available</MudText>
-                }
-            </MudPaper>
-        </MudItem>
+    <!-- THE 3 KEY QUESTIONS -->
+    <MudGrid Class="mb-6">
+        <!-- WHERE AM I? -->
         <MudItem xs="12" md="4">
-            <MudPaper Class="pa-4" Elevation="2">
-                <MudText Typo="Typo.h6" Class="mb-4">By Category</MudText>
-                @if (_distribution?.Items.Count > 0)
-                {
-                    <MudChart ChartType="ChartType.Donut"
-                              InputData="@_distributionData"
-                              InputLabels="@_distributionLabels"
-                              Width="100%"
-                              Height="300px" />
-                }
-                else
-                {
-                    <MudText Color="Color.Secondary">No data available</MudText>
-                }
+            <MudPaper Class="pa-6" Elevation="3" Style="background: linear-gradient(135deg, #1a237e 0%, #283593 100%); height: 100%;">
+                <MudStack Spacing="2">
+                    <MudText Typo="Typo.overline" Style="color: rgba(255,255,255,0.7);">WHERE AM I?</MudText>
+                    <MudText Typo="Typo.h3" Style="color: white; font-weight: 600;">
+                        @FormatCurrency(_kpis?.DailyRate.AverageDailyUsd ?? 0)<span style="font-size: 0.5em; opacity: 0.8;">/day</span>
+                    </MudText>
+                    <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.7);">
+                        avg last @(_kpis?.DailyRate.DaysAnalyzed ?? 30) days
+                    </MudText>
+                    @if (_kpis?.DailyRate.StandardDeviation > 0)
+                    {
+                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.5);">
+                            σ = @FormatCurrency(_kpis.DailyRate.StandardDeviation) volatility
+                        </MudText>
+                    }
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+
+        <!-- WHERE AM I GOING? -->
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-6" Elevation="3" Style="@($"{GetTrendBackground(_kpis?.Trend.Direction)} height: 100%;")">
+                <MudStack Spacing="2">
+                    <MudText Typo="Typo.overline" Style="color: rgba(255,255,255,0.7);">WHERE AM I GOING?</MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                        <MudIcon Icon="@GetTrendArrowIcon(_kpis?.Trend.Direction)"
+                                 Style="color: white; font-size: 2.5rem;" />
+                        <MudText Typo="Typo.h3" Style="color: white; font-weight: 600;">
+                            @FormatSignedPercentage(_kpis?.Trend.ChangePercentage ?? 0)
+                        </MudText>
+                    </MudStack>
+                    <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.7);">
+                        @(_kpis?.Trend.ComparisonPeriod ?? "vs last month")
+                    </MudText>
+                    <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.5);">
+                        @(_kpis?.Trend.Direction ?? "Stable") trend
+                    </MudText>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+
+        <!-- WHERE WILL I BE? -->
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-6" Elevation="3" Style="background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%); height: 100%;">
+                <MudStack Spacing="2">
+                    <MudText Typo="Typo.overline" Style="color: rgba(255,255,255,0.7);">WHERE WILL I BE?</MudText>
+                    <MudText Typo="Typo.h3" Style="color: white; font-weight: 600;">
+                        @FormatCurrency(_kpis?.Projection.Projected6MonthTotalUsd ?? 0)
+                    </MudText>
+                    <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.7);">
+                        in 6 months
+                    </MudText>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.5);">
+                            confidence:
+                        </MudText>
+                        <MudProgressLinear Color="@GetConfidenceColor(_kpis?.Projection.ConfidenceScore ?? 0)"
+                                           Value="@((double)((_kpis?.Projection.ConfidenceScore ?? 0) * 100))"
+                                           Style="width: 60px; height: 6px;" />
+                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.7);">
+                            @(((_kpis?.Projection.ConfidenceScore ?? 0) * 100).ToString("F0"))%
+                        </MudText>
+                    </MudStack>
+                </MudStack>
             </MudPaper>
         </MudItem>
     </MudGrid>
 
-    <!-- Top Performers -->
-    <MudPaper Class="pa-4 mt-4" Elevation="2">
-        <MudText Typo="Typo.h6" Class="mb-4">Top Performing Streams</MudText>
-        @if (_topPerformers?.Count > 0)
+    <!-- INCOME OVER TIME (STACKED AREA CHART) -->
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+            <MudText Typo="Typo.h6">Income Over Time</MudText>
+            <MudChipSet T="string" @bind-SelectedValue="_selectedGranularity" SelectionMode="SelectionMode.SingleSelection">
+                <MudChip T="string" Value="@("Daily")" Variant="Variant.Text" SelectedColor="Color.Primary">Daily</MudChip>
+                <MudChip T="string" Value="@("Weekly")" Variant="Variant.Text" SelectedColor="Color.Primary">Weekly</MudChip>
+                <MudChip T="string" Value="@("Monthly")" Variant="Variant.Text" SelectedColor="Color.Primary">Monthly</MudChip>
+            </MudChipSet>
+        </MudStack>
+
+        @if (_stackedTimeSeries?.Points.Count > 0)
         {
-            <MudTable Items="@_topPerformers" Hover="true" Dense="true">
+            <MudChart ChartType="ChartType.StackedBar"
+                      ChartSeries="@_stackedChartSeries"
+                      XAxisLabels="@_stackedChartLabels"
+                      Width="100%"
+                      Height="350px"
+                      ChartOptions="@_chartOptions" />
+
+            <!-- Legend -->
+            <MudStack Row="true" Justify="Justify.Center" Spacing="4" Class="mt-3">
+                @foreach (var (name, color) in _streamColors)
+                {
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                        <div style="width: 12px; height: 12px; background-color: @color; border-radius: 2px;"></div>
+                        <MudText Typo="Typo.caption">@name</MudText>
+                    </MudStack>
+                }
+            </MudStack>
+        }
+        else
+        {
+            <MudAlert Severity="Severity.Info">
+                No income data yet. Add income streams and record snapshots to see your income trends.
+            </MudAlert>
+        }
+    </MudPaper>
+
+    <!-- STREAM HEALTH -->
+    <MudPaper Class="pa-4" Elevation="2">
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+            <MudText Typo="Typo.h6">Stream Health</MudText>
+            <MudStack Row="true" Spacing="2">
+                <MudChip T="string" Color="Color.Success" Size="Size.Small" Variant="Variant.Filled">
+                    @(_streamHealth?.GrowingCount ?? 0) Growing
+                </MudChip>
+                <MudChip T="string" Color="Color.Default" Size="Size.Small" Variant="Variant.Filled">
+                    @(_streamHealth?.StableCount ?? 0) Stable
+                </MudChip>
+                <MudChip T="string" Color="Color.Error" Size="Size.Small" Variant="Variant.Filled">
+                    @(_streamHealth?.DecliningCount ?? 0) Declining
+                </MudChip>
+            </MudStack>
+        </MudStack>
+
+        @if (_streamHealth?.Streams.Count > 0)
+        {
+            <MudTable Items="@_streamHealth.Streams" Hover="true" Dense="true" Elevation="0">
                 <HeaderContent>
-                    <MudTh>Rank</MudTh>
                     <MudTh>Stream</MudTh>
                     <MudTh>Category</MudTh>
                     <MudTh>Provider</MudTh>
-                    <MudTh Style="text-align:right">Total</MudTh>
-                    <MudTh Style="text-align:right">% of Total</MudTh>
+                    <MudTh>Trend</MudTh>
+                    <MudTh Style="text-align:right">This Period</MudTh>
+                    <MudTh Style="text-align:right">Change</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd>
-                        <MudChip T="string" Size="Size.Small" Color="@GetRankColor(context.Rank)">
-                            #@context.Rank
+                    <MudTd DataLabel="Stream">
+                        <MudText Typo="Typo.body2" Style="font-weight: 500;">@context.StreamName</MudText>
+                    </MudTd>
+                    <MudTd DataLabel="Category">
+                        <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="@GetCategoryColor(context.Category)">
+                            @context.Category
                         </MudChip>
                     </MudTd>
-                    <MudTd>@context.StreamName</MudTd>
-                    <MudTd>
-                        <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined">@context.Category</MudChip>
+                    <MudTd DataLabel="Provider">@context.ProviderName</MudTd>
+                    <MudTd DataLabel="Trend">
+                        <MudIcon Icon="@GetDirectionIcon(context.Direction)"
+                                 Color="@GetDirectionColor(context.Direction)"
+                                 Size="Size.Medium" />
                     </MudTd>
-                    <MudTd>@context.ProviderName</MudTd>
-                    <MudTd Style="text-align:right">
-                        <MudText Typo="Typo.body2" Color="Color.Success">@FormatCurrency(context.TotalUsd)</MudText>
+                    <MudTd DataLabel="This Period" Style="text-align:right">
+                        <MudText Typo="Typo.body2">@FormatCurrency(context.CurrentPeriodUsd)</MudText>
                     </MudTd>
-                    <MudTd Style="text-align:right">@context.Percentage.ToString("F1")%</MudTd>
+                    <MudTd DataLabel="Change" Style="text-align:right">
+                        <MudStack Row="true" Justify="Justify.FlexEnd" AlignItems="AlignItems.Center" Spacing="1">
+                            <MudText Typo="Typo.body2" Color="@GetDirectionColor(context.Direction)">
+                                @FormatSignedPercentage(context.ChangePercentage)
+                            </MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                (@FormatSignedCurrency(context.ChangeUsd))
+                            </MudText>
+                        </MudStack>
+                    </MudTd>
                 </RowTemplate>
             </MudTable>
         }
         else
         {
-            <MudText Color="Color.Secondary">No streams yet. Add your first income stream to get started!</MudText>
+            <MudAlert Severity="Severity.Info">
+                No streams to analyze. Add your first income stream to track its performance.
+            </MudAlert>
         }
     </MudPaper>
 }
@@ -148,18 +197,21 @@ else
 @code {
     private bool _isLoading = true;
     private string? _error;
+    private string _selectedGranularity = "Monthly";
 
-    private DashboardSummary? _summary;
-    private IncomeTimeSeries? _timeSeries;
-    private IncomeDistribution? _distribution;
-    private IReadOnlyList<TopPerformerItem>? _topPerformers;
+    private DashboardKpis? _kpis;
+    private StackedTimeSeries? _stackedTimeSeries;
+    private StreamHealthSummary? _streamHealth;
 
-    private List<ChartSeries> _chartSeries = [];
-    private string[] _chartLabels = [];
-    private ChartOptions _chartOptions = new() { YAxisTicks = 1000 };
+    private List<ChartSeries> _stackedChartSeries = [];
+    private string[] _stackedChartLabels = [];
+    private ChartOptions _chartOptions = new() { YAxisTicks = 500, InterpolationOption = InterpolationOption.Straight };
+    private List<(string Name, string Color)> _streamColors = [];
 
-    private double[] _distributionData = [];
-    private string[] _distributionLabels = [];
+    private static readonly string[] ChartColors = [
+        "#1976D2", "#388E3C", "#F57C00", "#7B1FA2", "#C2185B",
+        "#00796B", "#5D4037", "#455A64", "#E64A19", "#1565C0"
+    ];
 
     protected override async Task OnInitializedAsync()
     {
@@ -172,30 +224,21 @@ else
         {
             _isLoading = true;
 
-            var now = DateTime.UtcNow;
-            var sixMonthsAgo = now.AddMonths(-6);
+            // Load KPIs
+            var kpisResult = await DashboardService.GetKpisAsync();
+            if (kpisResult.IsSuccess) _kpis = kpisResult.Value;
 
-            // Sequential calls to avoid DbContext threading issues
-            var summaryResult = await DashboardService.GetSummaryAsync();
-            var timeSeriesResult = await DashboardService.GetTimeSeriesAsync(
-                DateOnly.FromDateTime(sixMonthsAgo),
-                DateOnly.FromDateTime(now),
-                "Monthly");
-            var distributionResult = await DashboardService.GetDistributionAsync("Category");
-            var topPerformersResult = await DashboardService.GetTopPerformersAsync(5);
+            // Load Stacked Time Series
+            var stackedResult = await DashboardService.GetStackedTimeSeriesAsync(_selectedGranularity, 180);
+            if (stackedResult.IsSuccess)
+            {
+                _stackedTimeSeries = stackedResult.Value;
+                PrepareStackedChart();
+            }
 
-            if (summaryResult.IsSuccess) _summary = summaryResult.Value;
-            if (timeSeriesResult.IsSuccess)
-            {
-                _timeSeries = timeSeriesResult.Value;
-                PrepareTimeSeriesChart();
-            }
-            if (distributionResult.IsSuccess)
-            {
-                _distribution = distributionResult.Value;
-                PrepareDistributionChart();
-            }
-            if (topPerformersResult.IsSuccess) _topPerformers = topPerformersResult.Value;
+            // Load Stream Health
+            var healthResult = await DashboardService.GetStreamHealthAsync("MoM");
+            if (healthResult.IsSuccess) _streamHealth = healthResult.Value;
         }
         catch (Exception ex)
         {
@@ -207,54 +250,90 @@ else
         }
     }
 
-    private void PrepareTimeSeriesChart()
+    private void PrepareStackedChart()
     {
-        if (_timeSeries?.Points is null || _timeSeries.Points.Count == 0) return;
+        if (_stackedTimeSeries?.Points is null || _stackedTimeSeries.Points.Count == 0) return;
 
-        _chartLabels = _timeSeries.Points.Select(p => p.Date.ToString("MMM yy")).ToArray();
-        _chartSeries =
-        [
-            new ChartSeries
-            {
-                Name = "Income (USD)",
-                Data = _timeSeries.Points.Select(p => (double)p.AmountUsd).ToArray()
-            }
-        ];
+        var streamNames = _stackedTimeSeries.StreamNames.ToList();
+        _streamColors = streamNames.Select((name, i) => (name, ChartColors[i % ChartColors.Length])).ToList();
+
+        _stackedChartLabels = _stackedTimeSeries.Points
+            .Select(p => FormatDateLabel(p.Date, _selectedGranularity))
+            .ToArray();
+
+        _stackedChartSeries = streamNames.Select((streamName, index) => new ChartSeries
+        {
+            Name = streamName,
+            Data = _stackedTimeSeries.Points
+                .Select(p => (double)(p.Streams.FirstOrDefault(s => s.StreamName == streamName)?.AmountUsd ?? 0))
+                .ToArray()
+        }).ToList();
     }
 
-    private void PrepareDistributionChart()
+    private static string FormatDateLabel(DateOnly date, string granularity) => granularity switch
     {
-        if (_distribution?.Items is null || _distribution.Items.Count == 0) return;
+        "Daily" => date.ToString("MMM dd"),
+        "Weekly" => $"W{GetWeekNumber(date)}",
+        "Monthly" => date.ToString("MMM yy"),
+        _ => date.ToString("MMM dd")
+    };
 
-        _distributionLabels = _distribution.Items.Select(i => i.Label).ToArray();
-        _distributionData = _distribution.Items.Select(i => (double)i.AmountUsd).ToArray();
+    private static int GetWeekNumber(DateOnly date)
+    {
+        var jan1 = new DateOnly(date.Year, 1, 1);
+        return (date.DayNumber - jan1.DayNumber) / 7 + 1;
     }
 
     private static string FormatCurrency(decimal amount) =>
         amount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
 
-    private static string FormatPercentage(decimal percentage) =>
+    private static string FormatSignedCurrency(decimal amount) =>
+        (amount >= 0 ? "+" : "") + amount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+
+    private static string FormatSignedPercentage(decimal percentage) =>
         $"{(percentage >= 0 ? "+" : "")}{percentage:F1}%";
 
-    private static Color GetTrendColor(string? trend) => trend switch
+    private static string GetTrendBackground(string? direction) => direction switch
     {
-        "Up" => Color.Success,
-        "Down" => Color.Error,
+        "Upward" => "background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);",
+        "Downward" => "background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%);",
+        _ => "background: linear-gradient(135deg, #37474f 0%, #455a64 100%);"
+    };
+
+    private static string GetTrendArrowIcon(string? direction) => direction switch
+    {
+        "Upward" => Icons.Material.Filled.TrendingUp,
+        "Downward" => Icons.Material.Filled.TrendingDown,
+        _ => Icons.Material.Filled.TrendingFlat
+    };
+
+    private static Color GetConfidenceColor(decimal confidence) => confidence switch
+    {
+        >= 0.7m => Color.Success,
+        >= 0.4m => Color.Warning,
+        _ => Color.Error
+    };
+
+    private static string GetDirectionIcon(string? direction) => direction switch
+    {
+        "Upward" => Icons.Material.Filled.ArrowUpward,
+        "Downward" => Icons.Material.Filled.ArrowDownward,
+        _ => Icons.Material.Filled.Remove
+    };
+
+    private static Color GetDirectionColor(string? direction) => direction switch
+    {
+        "Upward" => Color.Success,
+        "Downward" => Color.Error,
         _ => Color.Default
     };
 
-    private static string GetTrendIcon(string? trend) => trend switch
+    private static Color GetCategoryColor(string? category) => category?.ToLower() switch
     {
-        "Up" => "▲",
-        "Down" => "▼",
-        _ => "●"
-    };
-
-    private static Color GetRankColor(int rank) => rank switch
-    {
-        1 => Color.Warning,
-        2 => Color.Default,
-        3 => Color.Dark,
+        "salary" => Color.Primary,
+        "trading" => Color.Warning,
+        "subscription" => Color.Info,
+        "referral" => Color.Success,
         _ => Color.Default
     };
 }

@@ -1,8 +1,10 @@
 @page "/streams"
 @using Income.Application.Services.Streams
 @using Income.Application.Services.Providers
+@using Analytics.Application.Services
 @inject IStreamService StreamService
 @inject IProviderService ProviderService
+@inject IDashboardService DashboardService
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 @rendermode InteractiveServer
@@ -10,7 +12,10 @@
 <PageTitle>Income Streams - FlowMetrics</PageTitle>
 
 <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
-    <MudText Typo="Typo.h4">Income Streams</MudText>
+    <div>
+        <MudText Typo="Typo.h4">Income Streams</MudText>
+        <MudText Typo="Typo.body2" Color="Color.Secondary">Manage your income sources</MudText>
+    </div>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add"
                OnClick="OpenCreateDialog">
         Add Stream
@@ -34,19 +39,65 @@ else if (_streams.Count == 0)
 }
 else
 {
+    <!-- Summary Stats -->
+    <MudGrid Class="mb-4">
+        <MudItem xs="6" sm="3">
+            <MudPaper Class="pa-3" Elevation="1">
+                <MudText Typo="Typo.caption" Color="Color.Secondary">Total Streams</MudText>
+                <MudText Typo="Typo.h5">@_streams.Count</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="6" sm="3">
+            <MudPaper Class="pa-3" Elevation="1">
+                <MudText Typo="Typo.caption" Color="Color.Secondary">Growing</MudText>
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Color="Color.Success" Size="Size.Small" />
+                    <MudText Typo="Typo.h5" Color="Color.Success">@_streamHealth?.GrowingCount</MudText>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="6" sm="3">
+            <MudPaper Class="pa-3" Elevation="1">
+                <MudText Typo="Typo.caption" Color="Color.Secondary">Stable</MudText>
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <MudIcon Icon="@Icons.Material.Filled.TrendingFlat" Color="Color.Default" Size="Size.Small" />
+                    <MudText Typo="Typo.h5">@_streamHealth?.StableCount</MudText>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="6" sm="3">
+            <MudPaper Class="pa-3" Elevation="1">
+                <MudText Typo="Typo.caption" Color="Color.Secondary">Declining</MudText>
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <MudIcon Icon="@Icons.Material.Filled.TrendingDown" Color="Color.Error" Size="Size.Small" />
+                    <MudText Typo="Typo.h5" Color="Color.Error">@_streamHealth?.DecliningCount</MudText>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
     <MudGrid>
         @foreach (var stream in _streams)
         {
+            var health = GetStreamHealth(stream.Id);
             <MudItem xs="12" md="6" lg="4">
-                <MudCard Elevation="2">
+                <MudCard Elevation="2" Style="height: 100%;">
                     <MudCardHeader>
                         <CardHeaderAvatar>
-                            <MudAvatar Color="@GetCategoryColor(stream.Category)">
+                            <MudAvatar Color="@GetCategoryColor(stream.Category)" Size="Size.Medium">
                                 @stream.Category[0]
                             </MudAvatar>
                         </CardHeaderAvatar>
                         <CardHeaderContent>
-                            <MudText Typo="Typo.h6">@stream.Name</MudText>
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudText Typo="Typo.h6">@stream.Name</MudText>
+                                @if (health is not null)
+                                {
+                                    <MudIcon Icon="@GetDirectionIcon(health.Direction)"
+                                             Color="@GetDirectionColor(health.Direction)"
+                                             Size="Size.Small" />
+                                }
+                            </MudStack>
                             <MudText Typo="Typo.body2" Color="Color.Secondary">
                                 @GetProviderName(stream.ProviderId)
                             </MudText>
@@ -68,40 +119,71 @@ else
                     </MudCardHeader>
                     <MudCardContent>
                         <MudStack Spacing="2">
+                            <!-- Trend Indicator -->
+                            @if (health is not null && health.ChangePercentage != 0)
+                            {
+                                <MudPaper Class="pa-2" Elevation="0" Style="@GetTrendBackground(health.Direction)">
+                                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                                        <MudText Typo="Typo.body2" Style="color: white;">
+                                            @health.Direction this month
+                                        </MudText>
+                                        <MudText Typo="Typo.body1" Style="color: white; font-weight: 600;">
+                                            @FormatSignedPercentage(health.ChangePercentage)
+                                        </MudText>
+                                    </MudStack>
+                                </MudPaper>
+                            }
+
                             <MudStack Row="true" Justify="Justify.SpaceBetween">
                                 <MudText Typo="Typo.body2" Color="Color.Secondary">Category</MudText>
-                                <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined">@stream.Category</MudChip>
-                            </MudStack>
-                            <MudStack Row="true" Justify="Justify.SpaceBetween">
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">Currency</MudText>
-                                <MudText>@stream.OriginalCurrency</MudText>
+                                <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined"
+                                         Color="@GetCategoryColor(stream.Category)">@stream.Category</MudChip>
                             </MudStack>
                             <MudStack Row="true" Justify="Justify.SpaceBetween">
                                 <MudText Typo="Typo.body2" Color="Color.Secondary">Type</MudText>
                                 <MudText>@(stream.IsFixed ? $"Fixed ({stream.FixedPeriod})" : "Variable")</MudText>
                             </MudStack>
                             <MudStack Row="true" Justify="Justify.SpaceBetween">
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">Snapshots</MudText>
-                                <MudText>@stream.SnapshotCount</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Currency</MudText>
+                                <MudText>@stream.OriginalCurrency</MudText>
                             </MudStack>
+
                             @if (stream.LastSnapshot is not null)
                             {
                                 <MudDivider Class="my-2" />
-                                <MudStack Row="true" Justify="Justify.SpaceBetween">
-                                    <MudText Typo="Typo.body2" Color="Color.Secondary">Last Amount</MudText>
-                                    <MudText Typo="Typo.body1" Color="Color.Success">
-                                        @stream.LastSnapshot.UsdAmount.ToString("C2", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
-                                    </MudText>
+                                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.End">
+                                    <div>
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">Last Recorded</MudText>
+                                        <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                            @stream.LastSnapshot.Date.ToString("MMM dd, yyyy")
+                                        </MudText>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <MudText Typo="Typo.h5" Color="Color.Success">
+                                            @FormatCurrency(stream.LastSnapshot.UsdAmount)
+                                        </MudText>
+                                        @if (health?.CurrentPeriodUsd > 0)
+                                        {
+                                            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                                @FormatCurrency(health.CurrentPeriodUsd) this month
+                                            </MudText>
+                                        }
+                                    </div>
                                 </MudStack>
-                                <MudText Typo="Typo.caption" Color="Color.Secondary" Align="Align.Right">
-                                    @stream.LastSnapshot.Date.ToString("MMM dd, yyyy")
-                                </MudText>
+                            }
+                            else
+                            {
+                                <MudDivider Class="my-2" />
+                                <MudAlert Severity="Severity.Info" Dense="true" NoIcon="true">
+                                    <MudText Typo="Typo.caption">No snapshots yet</MudText>
+                                </MudAlert>
                             }
                         </MudStack>
                     </MudCardContent>
                     <MudCardActions>
-                        <MudButton Variant="Variant.Text" Color="Color.Primary"
-                                   OnClick="@(() => OpenSnapshotDialog(stream))">
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" FullWidth="true"
+                                   OnClick="@(() => OpenSnapshotDialog(stream))"
+                                   StartIcon="@Icons.Material.Filled.AddChart">
                             Record Income
                         </MudButton>
                     </MudCardActions>
@@ -115,6 +197,8 @@ else
     private bool _isLoading = true;
     private List<StreamListItem> _streams = [];
     private Dictionary<string, ProviderListItem> _providers = [];
+    private StreamHealthSummary? _streamHealth;
+    private Dictionary<string, StreamHealthItem> _streamHealthMap = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -125,9 +209,9 @@ else
     {
         _isLoading = true;
 
-        // Sequential calls to avoid DbContext threading issues
         var streamsResult = await StreamService.GetAllAsync();
         var providersResult = await ProviderService.GetAllAsync();
+        var healthResult = await DashboardService.GetStreamHealthAsync("MoM");
 
         if (streamsResult.IsSuccess)
             _streams = streamsResult.Value.ToList();
@@ -135,8 +219,17 @@ else
         if (providersResult.IsSuccess)
             _providers = providersResult.Value.ToDictionary(p => p.Id, p => p);
 
+        if (healthResult.IsSuccess)
+        {
+            _streamHealth = healthResult.Value;
+            _streamHealthMap = _streamHealth.Streams.ToDictionary(s => s.StreamId, s => s);
+        }
+
         _isLoading = false;
     }
+
+    private StreamHealthItem? GetStreamHealth(string streamId) =>
+        _streamHealthMap.TryGetValue(streamId, out var health) ? health : null;
 
     private string GetProviderName(string providerId) =>
         _providers.TryGetValue(providerId, out var provider) ? provider.Name : providerId;
@@ -149,6 +242,33 @@ else
         "referral" => Color.Success,
         _ => Color.Default
     };
+
+    private static string GetDirectionIcon(string? direction) => direction switch
+    {
+        "Upward" => Icons.Material.Filled.TrendingUp,
+        "Downward" => Icons.Material.Filled.TrendingDown,
+        _ => Icons.Material.Filled.TrendingFlat
+    };
+
+    private static Color GetDirectionColor(string? direction) => direction switch
+    {
+        "Upward" => Color.Success,
+        "Downward" => Color.Error,
+        _ => Color.Default
+    };
+
+    private static string GetTrendBackground(string? direction) => direction switch
+    {
+        "Upward" => "background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%); border-radius: 4px;",
+        "Downward" => "background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%); border-radius: 4px;",
+        _ => "background: linear-gradient(135deg, #37474f 0%, #455a64 100%); border-radius: 4px;"
+    };
+
+    private static string FormatCurrency(decimal amount) =>
+        amount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+
+    private static string FormatSignedPercentage(decimal percentage) =>
+        $"{(percentage >= 0 ? "+" : "")}{percentage:F1}%";
 
     private async Task OpenCreateDialog()
     {
