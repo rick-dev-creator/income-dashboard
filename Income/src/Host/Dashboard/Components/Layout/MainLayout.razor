@@ -1,5 +1,9 @@
 @inherits LayoutComponentBase
+@implements IAsyncDisposable
+@implements IBrowserViewportObserver
 @inject MudTheme Theme
+@inject IBrowserViewportService BrowserViewportService
+@inject NavigationManager NavigationManager
 
 <MudThemeProvider Theme="Theme" @bind-IsDarkMode="_isDarkMode" />
 
@@ -37,14 +41,14 @@
 
     <MudDrawer @bind-Open="_drawerOpen"
                ClipMode="DrawerClipMode.Always"
-               Elevation="0"
-               Variant="DrawerVariant.Mini"
-               OpenMiniOnHover="true"
+               Elevation="@(_isMobile ? 2 : 0)"
+               Variant="@_drawerVariant"
+               OpenMiniOnHover="@(!_isMobile)"
                Class="app-drawer">
         <div class="drawer-header">
             <MudText Typo="Typo.overline" Color="Color.Secondary" Class="drawer-section-title">NAVIGATION</MudText>
         </div>
-        <NavMenu />
+        <NavMenu OnNavigation="@OnNavigation" />
         <MudSpacer />
         <div class="drawer-footer">
             <MudText Typo="Typo.caption" Color="Color.Secondary" Class="version-text">v1.0.0</MudText>
@@ -166,9 +170,49 @@
 </style>
 
 @code {
-    private bool _drawerOpen = true;
+    private bool _drawerOpen;
     private bool _isDarkMode = true;
+    private bool _isMobile;
+    private DrawerVariant _drawerVariant = DrawerVariant.Mini;
+
+    // IBrowserViewportObserver implementation
+    Guid IBrowserViewportObserver.Id { get; } = Guid.NewGuid();
+
+    ResizeOptions IBrowserViewportObserver.ResizeOptions { get; } = new()
+    {
+        ReportRate = 100,
+        NotifyOnBreakpointOnly = true
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await BrowserViewportService.SubscribeAsync(this, fireImmediately: true);
+        }
+    }
+
+    Task IBrowserViewportObserver.NotifyBrowserViewportChangeAsync(BrowserViewportEventArgs args)
+    {
+        _isMobile = args.Breakpoint <= Breakpoint.Sm;
+        _drawerVariant = _isMobile ? DrawerVariant.Temporary : DrawerVariant.Mini;
+        _drawerOpen = !_isMobile;
+        return InvokeAsync(StateHasChanged);
+    }
 
     private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
     private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
+
+    private void OnNavigation()
+    {
+        if (_isMobile)
+        {
+            _drawerOpen = false;
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await BrowserViewportService.UnsubscribeAsync(this);
+    }
 }
