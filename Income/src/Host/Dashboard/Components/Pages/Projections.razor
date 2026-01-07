@@ -77,10 +77,11 @@ else
         <MudText Typo="Typo.h6" Class="mb-3">Time to Goal</MudText>
         <MudGrid>
             <MudItem xs="12" md="4">
-                <MudTextField @bind-Value="_goalAmount" Label="Target Amount (USD)"
+                <MudTextField T="decimal" Value="_goalAmount" ValueChanged="OnGoalAmountChanged"
+                              Label="Target Amount (USD)"
                               Variant="Variant.Outlined" Adornment="Adornment.Start"
                               AdornmentIcon="@Icons.Material.Filled.AttachMoney"
-                              Immediate="true" OnKeyUp="CalculateTimeToGoal" />
+                              Immediate="true" DebounceInterval="300" />
             </MudItem>
             <MudItem xs="12" md="8">
                 @if (_goalAmount > 0 && _projection.ProjectedMonthlyIncomeUsd > 0)
@@ -327,8 +328,9 @@ else
         _compositionData = [(double)_projection.FixedComponentUsd, (double)_projection.VariableComponentUsd];
     }
 
-    private void CalculateTimeToGoal()
+    private void OnGoalAmountChanged(decimal value)
     {
+        _goalAmount = value;
         StateHasChanged();
     }
 

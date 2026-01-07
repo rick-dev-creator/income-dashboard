@@ -12,17 +12,13 @@
         <p class="page-subtitle">Understand your income patterns</p>
     </div>
     <MudStack Row="true" Spacing="2">
-        <MudSelect T="string" Label="Period" @bind-Value="_selectedPeriod" Variant="Variant.Outlined"
+        <MudSelect T="string" Label="Period" Value="_selectedPeriod" ValueChanged="OnPeriodChanged" Variant="Variant.Outlined"
                    Dense="true" Style="width: 140px;">
             <MudSelectItem Value="@("1M")">Last Month</MudSelectItem>
             <MudSelectItem Value="@("3M")">Last 3 Months</MudSelectItem>
             <MudSelectItem Value="@("6M")">Last 6 Months</MudSelectItem>
             <MudSelectItem Value="@("1Y")">Last Year</MudSelectItem>
         </MudSelect>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadDataAsync"
-                   StartIcon="@Icons.Material.Rounded.Refresh" Size="Size.Medium" Class="btn-modern">
-            Refresh
-        </MudButton>
     </MudStack>
 </div>
 
@@ -148,14 +144,20 @@ else
     <MudPaper Class="pa-4 mb-4" Elevation="2">
         <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
             <MudText Typo="Typo.h6">Income Breakdown Over Time</MudText>
-            <MudChipSet T="string" @bind-SelectedValue="_granularity" SelectionMode="SelectionMode.SingleSelection">
+            <MudChipSet T="string" SelectedValue="_granularity" SelectedValueChanged="OnGranularityChanged" SelectionMode="SelectionMode.SingleSelection">
                 <MudChip T="string" Value="@("Daily")" Variant="Variant.Text" SelectedColor="Color.Primary">Daily</MudChip>
                 <MudChip T="string" Value="@("Weekly")" Variant="Variant.Text" SelectedColor="Color.Primary">Weekly</MudChip>
                 <MudChip T="string" Value="@("Monthly")" Variant="Variant.Text" SelectedColor="Color.Primary">Monthly</MudChip>
             </MudChipSet>
         </MudStack>
 
-        @if (_stackedTimeSeries?.Points.Count > 0)
+        @if (_isLoadingChart)
+        {
+            <div style="display: flex; justify-content: center; padding: 60px 0;">
+                <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+            </div>
+        }
+        else if (_stackedTimeSeries?.Points.Count > 0)
         {
             <MudChart ChartType="ChartType.StackedBar"
                       ChartSeries="@_stackedChartSeries"
@@ -316,6 +318,7 @@ else
 
 @code {
     private bool _isLoading = true;
+    private bool _isLoadingChart = false;
     private string _selectedPeriod = "6M";
     private string _granularity = "Monthly";
 
@@ -383,6 +386,36 @@ else
         if (healthResult.IsSuccess) _streamHealth = healthResult.Value;
 
         _isLoading = false;
+    }
+
+    private async Task OnPeriodChanged(string value)
+    {
+        _selectedPeriod = value;
+        await LoadDataAsync();
+    }
+
+    private async Task OnGranularityChanged(string value)
+    {
+        _granularity = value;
+        _isLoadingChart = true;
+        StateHasChanged();
+
+        try
+        {
+            var stackedResult = await DashboardService.GetStackedTimeSeriesAsync(_granularity, GetPeriodsBack());
+            if (stackedResult.IsSuccess)
+            {
+                _stackedTimeSeries = stackedResult.Value;
+                PrepareStackedChart();
+            }
+
+            var trendResult = await AnalyticsService.GetTrendAsync(_granularity, GetPeriodsBack());
+            if (trendResult.IsSuccess) _trend = trendResult.Value;
+        }
+        finally
+        {
+            _isLoadingChart = false;
+        }
     }
 
     private (DateOnly Start, DateOnly End) GetDateRange()
