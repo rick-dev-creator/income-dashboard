@@ -9,13 +9,16 @@
 
 <PageTitle>Connections - FlowMetrics</PageTitle>
 
-<MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
-    <MudText Typo="Typo.h4">Connections</MudText>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add"
-               OnClick="OpenCreateDialog">
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px;">
+    <div>
+        <h1 class="page-title">Connections</h1>
+        <p class="page-subtitle">Manage your income providers</p>
+    </div>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="btn-modern"
+               StartIcon="@Icons.Material.Rounded.Add" OnClick="OpenCreateDialog">
         Add Provider
     </MudButton>
-</MudStack>
+</div>
 
 @if (_isLoading)
 {

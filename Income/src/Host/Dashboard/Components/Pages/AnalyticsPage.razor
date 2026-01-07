@@ -6,10 +6,10 @@
 
 <PageTitle>Analytics - FlowMetrics</PageTitle>
 
-<MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px;">
     <div>
-        <MudText Typo="Typo.h4">Deep Analytics</MudText>
-        <MudText Typo="Typo.body2" Color="Color.Secondary">Understand your income patterns</MudText>
+        <h1 class="page-title">Deep Analytics</h1>
+        <p class="page-subtitle">Understand your income patterns</p>
     </div>
     <MudStack Row="true" Spacing="2">
         <MudSelect T="string" Label="Period" @bind-Value="_selectedPeriod" Variant="Variant.Outlined"
@@ -20,11 +20,11 @@
             <MudSelectItem Value="@("1Y")">Last Year</MudSelectItem>
         </MudSelect>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadDataAsync"
-                   StartIcon="@Icons.Material.Filled.Refresh" Size="Size.Medium">
+                   StartIcon="@Icons.Material.Rounded.Refresh" Size="Size.Medium" Class="btn-modern">
             Refresh
         </MudButton>
     </MudStack>
-</MudStack>
+</div>
 
 @if (_isLoading)
 {
