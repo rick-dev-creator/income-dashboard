@@ -1,27 +1,30 @@
 @inject NavigationManager NavigationManager
 @implements IDisposable
 
-<MudNavMenu Class="nav-menu">
+<MudNavMenu Class="@($"nav-menu {(IsMini ? "nav-menu-mini" : "")}")">
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.SpaceDashboard" Class="nav-item">
-        Dashboard
+        @if (!IsMini) { <span>Dashboard</span> }
     </MudNavLink>
     <MudNavLink Href="streams" Icon="@Icons.Material.Rounded.AccountBalanceWallet" Class="nav-item">
-        Streams
+        @if (!IsMini) { <span>Streams</span> }
     </MudNavLink>
     <MudNavLink Href="analytics" Icon="@Icons.Material.Rounded.Insights" Class="nav-item">
-        Analytics
+        @if (!IsMini) { <span>Analytics</span> }
     </MudNavLink>
     <MudNavLink Href="projections" Icon="@Icons.Material.Rounded.Timeline" Class="nav-item">
-        Projections
+        @if (!IsMini) { <span>Projections</span> }
     </MudNavLink>
     <MudNavLink Href="connections" Icon="@Icons.Material.Rounded.Hub" Class="nav-item">
-        Connections
+        @if (!IsMini) { <span>Connections</span> }
     </MudNavLink>
 </MudNavMenu>
 
 @code {
     [Parameter]
     public EventCallback OnNavigation { get; set; }
+
+    [Parameter]
+    public bool IsMini { get; set; }
 
     protected override void OnInitialized()
     {
@@ -42,6 +45,11 @@
 <style>
     .nav-menu {
         padding: 8px;
+        transition: all 0.2s ease;
+    }
+
+    .nav-menu-mini {
+        padding: 8px 4px;
     }
 
     .nav-item {
@@ -52,6 +60,9 @@
 
     .nav-item:hover {
         background: var(--mud-palette-action-default-hover) !important;
+    }
+
+    .nav-menu:not(.nav-menu-mini) .nav-item:hover {
         transform: translateX(4px);
     }
 
@@ -70,7 +81,16 @@
         font-size: 0.875rem;
     }
 
+    .nav-menu-mini :deep(.mud-nav-link) {
+        padding: 12px 8px !important;
+        justify-content: center;
+    }
+
     :deep(.mud-nav-link-icon) {
         margin-right: 12px;
+    }
+
+    .nav-menu-mini :deep(.mud-nav-link-icon) {
+        margin-right: 0;
     }
 </style>
