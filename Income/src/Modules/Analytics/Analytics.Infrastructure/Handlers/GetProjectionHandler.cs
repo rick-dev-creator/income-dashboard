@@ -21,6 +21,7 @@ internal sealed class GetProjectionHandler(
 
         var fixedMonthly = CalculateFixedMonthlyIncome(streams);
         var (variableMonthly, variableStdDev) = CalculateVariableMonthlyStats(streams);
+        var monthlyGrowthRate = CalculateMonthlyGrowthRate(streams);
 
         var projectedMonthly = fixedMonthly + variableMonthly;
         var projectedAnnual = projectedMonthly * 12;
@@ -31,9 +32,18 @@ internal sealed class GetProjectionHandler(
         for (var i = 1; i <= query.MonthsAhead; i++)
         {
             var month = currentMonth.AddMonths(i);
-            var projected = projectedMonthly;
-            var lowerBound = fixedMonthly + Math.Max(0, variableMonthly - variableStdDev * 1.5m);
-            var upperBound = fixedMonthly + variableMonthly + variableStdDev * 1.5m;
+
+            // Apply compound growth to variable income (fixed income stays constant)
+            var growthMultiplier = (decimal)Math.Pow(1 + (double)monthlyGrowthRate, i);
+            var projectedVariable = variableMonthly * growthMultiplier;
+            var projected = fixedMonthly + projectedVariable;
+
+            // Confidence interval widens as we project further into the future
+            var uncertaintyMultiplier = 1 + (i * 0.1m); // 10% more uncertainty per month
+            var adjustedStdDev = variableStdDev * uncertaintyMultiplier * growthMultiplier;
+
+            var lowerBound = fixedMonthly + Math.Max(0, projectedVariable - adjustedStdDev * 1.5m);
+            var upperBound = fixedMonthly + projectedVariable + adjustedStdDev * 1.5m;
 
             projections.Add(new ProjectedPointDto(
                 Month: month,
@@ -121,5 +131,53 @@ internal sealed class GetProjectionHandler(
 
         var confidence = (fixedRatio * 0.5m) + ((1 - variabilityPenalty) * 0.3m) + (dataQuality * 0.2m);
         return Math.Min(Math.Max(confidence, 0), 1);
+    }
+
+    private static decimal CalculateMonthlyGrowthRate(IReadOnlyList<StreamDto> streams)
+    {
+        // Get all snapshots grouped by month
+        var allSnapshots = streams
+            .SelectMany(s => s.Snapshots)
+            .GroupBy(s => new DateOnly(s.Date.Year, s.Date.Month, 1))
+            .OrderBy(g => g.Key)
+            .Select(g => new { Month = g.Key, Total = g.Sum(s => s.UsdAmount) })
+            .ToList();
+
+        if (allSnapshots.Count < 2)
+            return 0.02m; // Default 2% monthly growth if insufficient data
+
+        // Calculate month-over-month growth rates
+        var growthRates = new List<decimal>();
+        for (var i = 1; i < allSnapshots.Count; i++)
+        {
+            var previous = allSnapshots[i - 1].Total;
+            var current = allSnapshots[i].Total;
+
+            if (previous > 0)
+            {
+                var rate = (current - previous) / previous;
+                // Cap extreme values to prevent unrealistic projections
+                rate = Math.Max(-0.5m, Math.Min(0.5m, rate));
+                growthRates.Add(rate);
+            }
+        }
+
+        if (growthRates.Count == 0)
+            return 0.02m;
+
+        // Use weighted average: more recent months have higher weight
+        var weightedSum = 0m;
+        var weightTotal = 0m;
+        for (var i = 0; i < growthRates.Count; i++)
+        {
+            var weight = i + 1; // Linear weighting: 1, 2, 3, ...
+            weightedSum += growthRates[i] * weight;
+            weightTotal += weight;
+        }
+
+        var weightedAverage = weightedSum / weightTotal;
+
+        // Apply dampening factor to avoid overly optimistic/pessimistic projections
+        return weightedAverage * 0.7m;
     }
 }

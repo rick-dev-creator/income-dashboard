@@ -14,10 +14,10 @@ public class GetAllStreamsHandlerTests(PostgresFixture fixture)
     {
         // Arrange - Create provider and streams
         var uniqueSuffix = Guid.NewGuid().ToString()[..8];
+        var factory = fixture.CreateFactory();
         var providerId = await CreateProviderAsync(uniqueSuffix);
 
-        await using var createContext = fixture.CreateDbContext();
-        var createHandler = new CreateStreamHandler(createContext, TestCredentialEncryptor.Create());
+        var createHandler = new CreateStreamHandler(factory, TestCredentialEncryptor.Create());
 
         await createHandler.HandleAsync(new CreateStreamCommand(
             ProviderId: providerId,
@@ -36,8 +36,7 @@ public class GetAllStreamsHandlerTests(PostgresFixture fixture)
             FixedPeriod: "Monthly"));
 
         // Act
-        await using var context = fixture.CreateDbContext();
-        var handler = new GetAllStreamsHandler(context);
+        var handler = new GetAllStreamsHandler(factory);
 
         var result = await handler.HandleAsync(new GetAllStreamsQuery());
 
@@ -48,8 +47,8 @@ public class GetAllStreamsHandlerTests(PostgresFixture fixture)
 
     private async Task<string> CreateProviderAsync(string suffix)
     {
-        await using var context = fixture.CreateDbContext();
-        var handler = new CreateProviderHandler(context);
+        var factory = fixture.CreateFactory();
+        var handler = new CreateProviderHandler(factory);
 
         var result = await handler.HandleAsync(new CreateProviderCommand(
             Name: $"GetAllStreamsTestProvider_{suffix}",

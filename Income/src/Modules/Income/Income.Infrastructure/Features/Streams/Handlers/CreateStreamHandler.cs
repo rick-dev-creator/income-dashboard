@@ -14,11 +14,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Income.Infrastructure.Features.Streams.Handlers;
 
 internal sealed class CreateStreamHandler(
-    IncomeDbContext dbContext,
+    IDbContextFactory<IncomeDbContext> dbContextFactory,
     ICredentialEncryptor credentialEncryptor) : ICreateStreamHandler
 {
     public async Task<Result<StreamDto>> HandleAsync(CreateStreamCommand command, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var providerExists = await dbContext.Providers
             .AnyAsync(x => x.Id == command.ProviderId, ct);
 

@@ -12,8 +12,8 @@ public class CreateStreamHandlerTests(PostgresFixture fixture)
     public async Task HandleAsync_ValidCommand_CreatesStream()
     {
         // Arrange - Create a provider first
-        await using var setupContext = fixture.CreateDbContext();
-        var createProviderHandler = new CreateProviderHandler(setupContext);
+        var factory = fixture.CreateFactory();
+        var createProviderHandler = new CreateProviderHandler(factory);
 
         var uniqueSuffix = Guid.NewGuid().ToString()[..8];
         var providerResult = await createProviderHandler.HandleAsync(new CreateProviderCommand(
@@ -24,8 +24,7 @@ public class CreateStreamHandlerTests(PostgresFixture fixture)
             ConfigSchema: null));
 
         // Act
-        await using var context = fixture.CreateDbContext();
-        var handler = new CreateStreamHandler(context, TestCredentialEncryptor.Create());
+        var handler = new CreateStreamHandler(factory, TestCredentialEncryptor.Create());
 
         var command = new CreateStreamCommand(
             ProviderId: providerResult.Value.Id,
@@ -49,8 +48,8 @@ public class CreateStreamHandlerTests(PostgresFixture fixture)
     public async Task HandleAsync_InvalidProvider_ReturnsFailure()
     {
         // Arrange
-        await using var context = fixture.CreateDbContext();
-        var handler = new CreateStreamHandler(context, TestCredentialEncryptor.Create());
+        var factory = fixture.CreateFactory();
+        var handler = new CreateStreamHandler(factory, TestCredentialEncryptor.Create());
 
         var command = new CreateStreamCommand(
             ProviderId: "non-existent-provider",
@@ -72,8 +71,8 @@ public class CreateStreamHandlerTests(PostgresFixture fixture)
     public async Task HandleAsync_InvalidCategory_ReturnsFailure()
     {
         // Arrange - Create a provider first
-        await using var setupContext = fixture.CreateDbContext();
-        var createProviderHandler = new CreateProviderHandler(setupContext);
+        var factory = fixture.CreateFactory();
+        var createProviderHandler = new CreateProviderHandler(factory);
 
         var uniqueSuffix = Guid.NewGuid().ToString()[..8];
         var providerResult = await createProviderHandler.HandleAsync(new CreateProviderCommand(
@@ -84,8 +83,7 @@ public class CreateStreamHandlerTests(PostgresFixture fixture)
             ConfigSchema: null));
 
         // Act
-        await using var context = fixture.CreateDbContext();
-        var handler = new CreateStreamHandler(context, TestCredentialEncryptor.Create());
+        var handler = new CreateStreamHandler(factory, TestCredentialEncryptor.Create());
 
         var command = new CreateStreamCommand(
             ProviderId: providerResult.Value.Id,

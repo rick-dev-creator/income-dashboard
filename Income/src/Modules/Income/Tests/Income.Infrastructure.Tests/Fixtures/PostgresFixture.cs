@@ -39,6 +39,23 @@ public sealed class PostgresFixture : IAsyncLifetime
 
         return new IncomeDbContext(options);
     }
+
+    internal IDbContextFactory<IncomeDbContext> CreateDbContextFactory()
+    {
+        return new TestDbContextFactory(ConnectionString);
+    }
+}
+
+internal sealed class TestDbContextFactory(string connectionString) : IDbContextFactory<IncomeDbContext>
+{
+    public IncomeDbContext CreateDbContext()
+    {
+        var options = new DbContextOptionsBuilder<IncomeDbContext>()
+            .UseNpgsql(connectionString)
+            .Options;
+
+        return new IncomeDbContext(options);
+    }
 }
 
 [CollectionDefinition("Postgres")]
@@ -50,4 +67,7 @@ internal static class PostgresFixtureExtensions
 {
     internal static IncomeDbContext CreateDbContext(this PostgresFixture fixture) =>
         fixture.CreateDbContextInternal();
+
+    internal static IDbContextFactory<IncomeDbContext> CreateFactory(this PostgresFixture fixture) =>
+        fixture.CreateDbContextFactory();
 }
