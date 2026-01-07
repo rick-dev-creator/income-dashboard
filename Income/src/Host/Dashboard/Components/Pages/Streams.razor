@@ -11,187 +11,474 @@
 
 <PageTitle>Income Streams - FlowMetrics</PageTitle>
 
-<MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+<div class="page-header">
     <div>
-        <MudText Typo="Typo.h4">Income Streams</MudText>
-        <MudText Typo="Typo.body2" Color="Color.Secondary">Manage your income sources</MudText>
+        <h1 class="page-title">Income Streams</h1>
+        <p class="page-subtitle">Manage and track your income sources</p>
     </div>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add"
-               OnClick="OpenCreateDialog">
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="btn-modern"
+               StartIcon="@Icons.Material.Rounded.Add" OnClick="OpenCreateDialog">
         Add Stream
     </MudButton>
-</MudStack>
+</div>
 
 @if (_isLoading)
 {
-    <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+    <div class="loading-container">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+        <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-3">Loading streams...</MudText>
+    </div>
 }
 else if (_streams.Count == 0)
 {
-    <MudPaper Class="pa-8 text-center" Elevation="2">
-        <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Size="Size.Large" Color="Color.Secondary" />
-        <MudText Typo="Typo.h6" Class="mt-4">No Income Streams Yet</MudText>
-        <MudText Color="Color.Secondary" Class="mb-4">Start tracking your income by adding your first stream</MudText>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialog">
+    <div class="empty-state-card animate-scale-in">
+        <div class="empty-state-icon">
+            <MudIcon Icon="@Icons.Material.Rounded.AccountBalanceWallet" Size="Size.Large" />
+        </div>
+        <h2>No Income Streams Yet</h2>
+        <p>Start tracking your income by adding your first stream</p>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4 btn-modern"
+                   StartIcon="@Icons.Material.Rounded.Add" OnClick="OpenCreateDialog">
             Add Your First Stream
         </MudButton>
-    </MudPaper>
+    </div>
 }
 else
 {
     <!-- Summary Stats -->
-    <MudGrid Class="mb-4">
-        <MudItem xs="6" sm="3">
-            <MudPaper Class="pa-3" Elevation="1">
-                <MudText Typo="Typo.caption" Color="Color.Secondary">Total Streams</MudText>
-                <MudText Typo="Typo.h5">@_streams.Count</MudText>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="6" sm="3">
-            <MudPaper Class="pa-3" Elevation="1">
-                <MudText Typo="Typo.caption" Color="Color.Secondary">Growing</MudText>
-                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                    <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Color="Color.Success" Size="Size.Small" />
-                    <MudText Typo="Typo.h5" Color="Color.Success">@_streamHealth?.GrowingCount</MudText>
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="6" sm="3">
-            <MudPaper Class="pa-3" Elevation="1">
-                <MudText Typo="Typo.caption" Color="Color.Secondary">Stable</MudText>
-                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                    <MudIcon Icon="@Icons.Material.Filled.TrendingFlat" Color="Color.Default" Size="Size.Small" />
-                    <MudText Typo="Typo.h5">@_streamHealth?.StableCount</MudText>
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="6" sm="3">
-            <MudPaper Class="pa-3" Elevation="1">
-                <MudText Typo="Typo.caption" Color="Color.Secondary">Declining</MudText>
-                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                    <MudIcon Icon="@Icons.Material.Filled.TrendingDown" Color="Color.Error" Size="Size.Small" />
-                    <MudText Typo="Typo.h5" Color="Color.Error">@_streamHealth?.DecliningCount</MudText>
-                </MudStack>
-            </MudPaper>
-        </MudItem>
-    </MudGrid>
+    <div class="stats-row animate-slide-up">
+        <div class="mini-stat">
+            <div class="mini-stat-icon gradient-primary">
+                <MudIcon Icon="@Icons.Material.Rounded.Layers" Size="Size.Small" />
+            </div>
+            <div class="mini-stat-content">
+                <span class="mini-stat-value">@_streams.Count</span>
+                <span class="mini-stat-label">Total Streams</span>
+            </div>
+        </div>
+        <div class="mini-stat">
+            <div class="mini-stat-icon gradient-success">
+                <MudIcon Icon="@Icons.Material.Rounded.TrendingUp" Size="Size.Small" />
+            </div>
+            <div class="mini-stat-content">
+                <span class="mini-stat-value text-success">@(_streamHealth?.GrowingCount ?? 0)</span>
+                <span class="mini-stat-label">Growing</span>
+            </div>
+        </div>
+        <div class="mini-stat">
+            <div class="mini-stat-icon gradient-dark">
+                <MudIcon Icon="@Icons.Material.Rounded.TrendingFlat" Size="Size.Small" />
+            </div>
+            <div class="mini-stat-content">
+                <span class="mini-stat-value">@(_streamHealth?.StableCount ?? 0)</span>
+                <span class="mini-stat-label">Stable</span>
+            </div>
+        </div>
+        <div class="mini-stat">
+            <div class="mini-stat-icon gradient-error">
+                <MudIcon Icon="@Icons.Material.Rounded.TrendingDown" Size="Size.Small" />
+            </div>
+            <div class="mini-stat-content">
+                <span class="mini-stat-value text-error">@(_streamHealth?.DecliningCount ?? 0)</span>
+                <span class="mini-stat-label">Declining</span>
+            </div>
+        </div>
+    </div>
 
-    <MudGrid>
+    <!-- Stream Cards Grid -->
+    <div class="streams-grid animate-slide-up" style="animation-delay: 0.1s;">
         @foreach (var stream in _streams)
         {
             var health = GetStreamHealth(stream.Id);
-            <MudItem xs="12" md="6" lg="4">
-                <MudCard Elevation="2" Style="height: 100%;">
-                    <MudCardHeader>
-                        <CardHeaderAvatar>
-                            <MudAvatar Color="@GetCategoryColor(stream.Category)" Size="Size.Medium">
-                                @stream.Category[0]
-                            </MudAvatar>
-                        </CardHeaderAvatar>
-                        <CardHeaderContent>
-                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                                <MudText Typo="Typo.h6">@stream.Name</MudText>
-                                @if (health is not null)
-                                {
-                                    <MudIcon Icon="@GetDirectionIcon(health.Direction)"
-                                             Color="@GetDirectionColor(health.Direction)"
-                                             Size="Size.Small" />
-                                }
-                            </MudStack>
-                            <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                @GetProviderName(stream.ProviderId)
-                            </MudText>
-                        </CardHeaderContent>
-                        <CardHeaderActions>
-                            <MudMenu Icon="@Icons.Material.Filled.MoreVert">
-                                <MudMenuItem Icon="@Icons.Material.Filled.Edit" OnClick="@(() => OpenEditDialog(stream))">
-                                    Edit
-                                </MudMenuItem>
-                                <MudMenuItem Icon="@Icons.Material.Filled.AddChart" OnClick="@(() => OpenSnapshotDialog(stream))">
-                                    Add Snapshot
-                                </MudMenuItem>
-                                <MudMenuItem Icon="@Icons.Material.Filled.Delete" OnClick="@(() => DeleteStream(stream))"
-                                             IconColor="Color.Error">
-                                    Delete
-                                </MudMenuItem>
-                            </MudMenu>
-                        </CardHeaderActions>
-                    </MudCardHeader>
-                    <MudCardContent>
-                        <MudStack Spacing="2">
-                            <!-- Trend Indicator -->
-                            @if (health is not null && health.ChangePercentage != 0)
+            <div class="stream-card hover-lift">
+                <div class="stream-card-header">
+                    <div class="stream-avatar @GetCategoryClass(stream.Category)">
+                        @stream.Name[0]
+                    </div>
+                    <div class="stream-header-info">
+                        <div class="stream-title-row">
+                            <span class="stream-title">@stream.Name</span>
+                            @if (health is not null)
                             {
-                                <MudPaper Class="pa-2" Elevation="0" Style="@GetTrendBackground(health.Direction)">
-                                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                                        <MudText Typo="Typo.body2" Style="color: white;">
-                                            @health.Direction this month
-                                        </MudText>
-                                        <MudText Typo="Typo.body1" Style="color: white; font-weight: 600;">
-                                            @FormatSignedPercentage(health.ChangePercentage)
-                                        </MudText>
-                                    </MudStack>
-                                </MudPaper>
+                                <MudIcon Icon="@GetDirectionIcon(health.Direction)"
+                                         Color="@GetDirectionColor(health.Direction)"
+                                         Size="Size.Small" />
                             }
-
-                            <MudStack Row="true" Justify="Justify.SpaceBetween">
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">Category</MudText>
-                                <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined"
-                                         Color="@GetCategoryColor(stream.Category)">@stream.Category</MudChip>
-                            </MudStack>
-                            <MudStack Row="true" Justify="Justify.SpaceBetween">
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">Type</MudText>
-                                <MudText>@(stream.IsFixed ? $"Fixed ({stream.FixedPeriod})" : "Variable")</MudText>
-                            </MudStack>
-                            <MudStack Row="true" Justify="Justify.SpaceBetween">
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">Currency</MudText>
-                                <MudText>@stream.OriginalCurrency</MudText>
-                            </MudStack>
-
-                            @if (stream.LastSnapshot is not null)
-                            {
-                                <MudDivider Class="my-2" />
-                                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.End">
-                                    <div>
-                                        <MudText Typo="Typo.caption" Color="Color.Secondary">Last Recorded</MudText>
-                                        <MudText Typo="Typo.caption" Color="Color.Secondary">
-                                            @stream.LastSnapshot.Date.ToString("MMM dd, yyyy")
-                                        </MudText>
-                                    </div>
-                                    <div style="text-align: right;">
-                                        <MudText Typo="Typo.h5" Color="Color.Success">
-                                            @FormatCurrency(stream.LastSnapshot.UsdAmount)
-                                        </MudText>
-                                        @if (health?.CurrentPeriodUsd > 0)
-                                        {
-                                            <MudText Typo="Typo.caption" Color="Color.Secondary">
-                                                @FormatCurrency(health.CurrentPeriodUsd) this month
-                                            </MudText>
-                                        }
-                                    </div>
-                                </MudStack>
-                            }
-                            else
-                            {
-                                <MudDivider Class="my-2" />
-                                <MudAlert Severity="Severity.Info" Dense="true" NoIcon="true">
-                                    <MudText Typo="Typo.caption">No snapshots yet</MudText>
-                                </MudAlert>
-                            }
-                        </MudStack>
-                    </MudCardContent>
-                    <MudCardActions>
-                        <MudButton Variant="Variant.Text" Color="Color.Primary" FullWidth="true"
-                                   OnClick="@(() => OpenSnapshotDialog(stream))"
-                                   StartIcon="@Icons.Material.Filled.AddChart">
+                        </div>
+                        <span class="stream-subtitle">@GetProviderName(stream.ProviderId)</span>
+                    </div>
+                    <MudMenu Icon="@Icons.Material.Rounded.MoreVert" Size="Size.Small" AnchorOrigin="Origin.BottomRight">
+                        <MudMenuItem Icon="@Icons.Material.Rounded.Edit" OnClick="@(() => OpenEditDialog(stream))">
+                            Edit
+                        </MudMenuItem>
+                        <MudMenuItem Icon="@Icons.Material.Rounded.AddChart" OnClick="@(() => OpenSnapshotDialog(stream))">
                             Record Income
-                        </MudButton>
-                    </MudCardActions>
-                </MudCard>
-            </MudItem>
+                        </MudMenuItem>
+                        <MudDivider Class="my-1" />
+                        <MudMenuItem Icon="@Icons.Material.Rounded.Delete" IconColor="Color.Error" OnClick="@(() => DeleteStream(stream))">
+                            Delete
+                        </MudMenuItem>
+                    </MudMenu>
+                </div>
+
+                @if (health is not null && health.ChangePercentage != 0)
+                {
+                    <div class="trend-banner @GetTrendClass(health.Direction)">
+                        <span>@health.Direction this month</span>
+                        <span class="trend-value">@FormatSignedPercentage(health.ChangePercentage)</span>
+                    </div>
+                }
+
+                <div class="stream-card-body">
+                    <div class="stream-detail">
+                        <span class="detail-label">Category</span>
+                        <span class="category-badge @GetCategoryClass(stream.Category)">@stream.Category</span>
+                    </div>
+                    <div class="stream-detail">
+                        <span class="detail-label">Type</span>
+                        <span class="detail-value">@(stream.IsFixed ? $"Fixed ({stream.FixedPeriod})" : "Variable")</span>
+                    </div>
+                    <div class="stream-detail">
+                        <span class="detail-label">Currency</span>
+                        <span class="detail-value">@stream.OriginalCurrency</span>
+                    </div>
+                </div>
+
+                <div class="stream-card-footer">
+                    @if (stream.LastSnapshot is not null)
+                    {
+                        <div class="last-snapshot">
+                            <div class="snapshot-date">
+                                <MudIcon Icon="@Icons.Material.Rounded.Schedule" Size="Size.Small" />
+                                <span>@stream.LastSnapshot.Date.ToString("MMM dd, yyyy")</span>
+                            </div>
+                            <div class="snapshot-amount">
+                                <span class="amount">@FormatCurrency(stream.LastSnapshot.UsdAmount)</span>
+                                @if (health?.CurrentPeriodUsd > 0)
+                                {
+                                    <span class="period-amount">@FormatCurrency(health.CurrentPeriodUsd) this month</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-snapshot">
+                            <MudIcon Icon="@Icons.Material.Rounded.Info" Size="Size.Small" />
+                            <span>No snapshots yet</span>
+                        </div>
+                    }
+                </div>
+
+                <button class="record-btn" @onclick="@(() => OpenSnapshotDialog(stream))">
+                    <MudIcon Icon="@Icons.Material.Rounded.AddChart" Size="Size.Small" />
+                    <span>Record Income</span>
+                </button>
+            </div>
         }
-    </MudGrid>
+    </div>
 }
+
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 32px;
+    }
+
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+    }
+
+    .empty-state-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 64px 32px;
+        background: var(--mud-palette-surface);
+        border: 1px solid var(--mud-palette-divider);
+        border-radius: 20px;
+        text-align: center;
+    }
+
+    .empty-state-card .empty-state-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--mud-palette-primary) 0%, var(--mud-palette-secondary) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-bottom: 24px;
+    }
+
+    .empty-state-card h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .empty-state-card p {
+        color: var(--mud-palette-text-secondary);
+        margin-bottom: 0;
+    }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .mini-stat {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        background: var(--mud-palette-surface);
+        border: 1px solid var(--mud-palette-divider);
+        border-radius: 12px;
+    }
+
+    .mini-stat-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .mini-stat-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mini-stat-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    .mini-stat-label {
+        font-size: 0.75rem;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .text-success { color: var(--mud-palette-success); }
+    .text-error { color: var(--mud-palette-error); }
+
+    .streams-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 20px;
+    }
+
+    .stream-card {
+        background: var(--mud-palette-surface);
+        border: 1px solid var(--mud-palette-divider);
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .stream-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 20px 16px;
+    }
+
+    .stream-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .stream-avatar.category-salary { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
+    .stream-avatar.category-trading { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+    .stream-avatar.category-subscription { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+    .stream-avatar.category-referral { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .stream-avatar.category-default { background: linear-gradient(135deg, #64748b 0%, #475569 100%); }
+
+    .stream-header-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .stream-title-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .stream-title {
+        font-weight: 600;
+        font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .stream-subtitle {
+        font-size: 0.8125rem;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .trend-banner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        font-size: 0.8125rem;
+        color: white;
+    }
+
+    .trend-banner.trend-up { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .trend-banner.trend-down { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+    .trend-banner.trend-flat { background: linear-gradient(135deg, #64748b 0%, #475569 100%); }
+
+    .trend-value {
+        font-weight: 600;
+    }
+
+    .stream-card-body {
+        padding: 0 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .stream-detail {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .detail-label {
+        font-size: 0.8125rem;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .detail-value {
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .category-badge {
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .category-badge.category-salary { background: rgba(99, 102, 241, 0.15); color: #818cf8; }
+    .category-badge.category-trading { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .category-badge.category-subscription { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .category-badge.category-referral { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .category-badge.category-default { background: var(--mud-palette-divider); color: var(--mud-palette-text-secondary); }
+
+    .stream-card-footer {
+        padding: 16px 20px;
+        margin-top: auto;
+        border-top: 1px solid var(--mud-palette-divider);
+    }
+
+    .last-snapshot {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .snapshot-date {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .snapshot-amount {
+        text-align: right;
+    }
+
+    .snapshot-amount .amount {
+        display: block;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--mud-palette-success);
+    }
+
+    .snapshot-amount .period-amount {
+        font-size: 0.75rem;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .no-snapshot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px;
+        background: var(--mud-palette-background);
+        border-radius: 8px;
+        font-size: 0.8125rem;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .record-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 14px;
+        background: transparent;
+        border: none;
+        border-top: 1px solid var(--mud-palette-divider);
+        color: var(--mud-palette-primary);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .record-btn:hover {
+        background: var(--mud-palette-primary);
+        color: white;
+    }
+
+    @@media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .stats-row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .streams-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 
 @code {
     private bool _isLoading = true;
@@ -234,20 +521,13 @@ else
     private string GetProviderName(string providerId) =>
         _providers.TryGetValue(providerId, out var provider) ? provider.Name : providerId;
 
-    private static Color GetCategoryColor(string category) => category.ToLower() switch
-    {
-        "salary" => Color.Primary,
-        "trading" => Color.Warning,
-        "subscription" => Color.Info,
-        "referral" => Color.Success,
-        _ => Color.Default
-    };
+    private static string GetCategoryClass(string category) => $"category-{category.ToLower()}";
 
     private static string GetDirectionIcon(string? direction) => direction switch
     {
-        "Upward" => Icons.Material.Filled.TrendingUp,
-        "Downward" => Icons.Material.Filled.TrendingDown,
-        _ => Icons.Material.Filled.TrendingFlat
+        "Upward" => Icons.Material.Rounded.TrendingUp,
+        "Downward" => Icons.Material.Rounded.TrendingDown,
+        _ => Icons.Material.Rounded.TrendingFlat
     };
 
     private static Color GetDirectionColor(string? direction) => direction switch
@@ -257,11 +537,11 @@ else
         _ => Color.Default
     };
 
-    private static string GetTrendBackground(string? direction) => direction switch
+    private static string GetTrendClass(string? direction) => direction switch
     {
-        "Upward" => "background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%); border-radius: 4px;",
-        "Downward" => "background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%); border-radius: 4px;",
-        _ => "background: linear-gradient(135deg, #37474f 0%, #455a64 100%); border-radius: 4px;"
+        "Upward" => "trend-up",
+        "Downward" => "trend-down",
+        _ => "trend-flat"
     };
 
     private static string FormatCurrency(decimal amount) =>
