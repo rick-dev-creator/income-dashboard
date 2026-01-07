@@ -464,18 +464,79 @@ else
         color: white;
     }
 
-    @@media (max-width: 768px) {
-        .page-header {
-            flex-direction: column;
-            gap: 16px;
-        }
-
+    @@media (max-width: 959px) {
         .stats-row {
             grid-template-columns: repeat(2, 1fr);
         }
 
         .streams-grid {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+    }
+
+    @@media (max-width: 599px) {
+        .page-header {
+            flex-direction: column;
+            gap: 16px;
+            align-items: stretch;
+        }
+
+        .page-header .btn-modern {
+            width: 100%;
+        }
+
+        .stats-row {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .mini-stat {
+            padding: 12px;
+            gap: 10px;
+        }
+
+        .mini-stat-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        .mini-stat-value {
+            font-size: 1.125rem;
+        }
+
+        .streams-grid {
             grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .stream-card-header {
+            padding: 16px 16px 12px;
+        }
+
+        .stream-avatar {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+
+        .stream-title {
+            font-size: 0.9375rem;
+        }
+
+        .stream-card-body {
+            padding: 0 16px;
+        }
+
+        .stream-card-footer {
+            padding: 12px 16px;
+        }
+
+        .snapshot-amount .amount {
+            font-size: 1.125rem;
+        }
+
+        .record-btn {
+            padding: 12px;
         }
     }
 </style>

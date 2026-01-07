@@ -24,46 +24,46 @@ else if (_projection is null)
 else
 {
     <!-- The Big Number - 6 Month Projection -->
-    <MudPaper Class="pa-6 mb-4" Elevation="3" Style="background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);">
+    <MudPaper Class="pa-4 pa-sm-6 mb-4" Elevation="3" Style="background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);">
         <MudGrid>
             <MudItem xs="12" md="6">
                 <MudStack Spacing="2">
                     <MudText Typo="Typo.overline" Style="color: rgba(255,255,255,0.7);">
                         PROJECTED TOTAL IN 6 MONTHS
                     </MudText>
-                    <MudText Typo="Typo.h2" Style="color: white; font-weight: 700;">
+                    <MudText Typo="Typo.h3" Class="projection-big-number" Style="color: white; font-weight: 700;">
                         @FormatCurrency(_projection.Projected6MonthTotalUsd)
                     </MudText>
-                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                        <MudText Typo="Typo.body1" Style="color: rgba(255,255,255,0.7);">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="flex-wrap">
+                        <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.7);">
                             Confidence:
                         </MudText>
                         <MudProgressLinear Value="@((double)(_projection.ConfidenceScore * 100))"
                                            Color="@GetConfidenceColor(_projection.ConfidenceScore)"
-                                           Style="width: 100px; height: 8px;" />
-                        <MudText Typo="Typo.body1" Style="color: white; font-weight: 600;">
+                                           Style="width: 80px; height: 8px; flex-shrink: 0;" />
+                        <MudText Typo="Typo.body2" Style="color: white; font-weight: 600;">
                             @((_projection.ConfidenceScore * 100).ToString("F0"))%
                         </MudText>
                     </MudStack>
                 </MudStack>
             </MudItem>
             <MudItem xs="12" md="6">
-                <MudStack Row="true" Justify="Justify.SpaceAround" Style="height: 100%;" AlignItems="AlignItems.Center">
+                <MudStack Row="true" Justify="Justify.SpaceBetween" Class="projection-rates" AlignItems="AlignItems.Center">
                     <MudStack AlignItems="AlignItems.Center">
-                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.6);">Monthly Rate</MudText>
-                        <MudText Typo="Typo.h4" Style="color: white;">
+                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.6);">Monthly</MudText>
+                        <MudText Typo="Typo.h5" Class="rate-value" Style="color: white;">
                             @FormatCurrency(_projection.ProjectedMonthlyIncomeUsd)
                         </MudText>
                     </MudStack>
                     <MudStack AlignItems="AlignItems.Center">
-                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.6);">Annual Rate</MudText>
-                        <MudText Typo="Typo.h4" Style="color: white;">
+                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.6);">Annual</MudText>
+                        <MudText Typo="Typo.h5" Class="rate-value" Style="color: white;">
                             @FormatCurrency(_projection.ProjectedAnnualIncomeUsd)
                         </MudText>
                     </MudStack>
                     <MudStack AlignItems="AlignItems.Center">
-                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.6);">Daily Rate</MudText>
-                        <MudText Typo="Typo.h4" Style="color: white;">
+                        <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.6);">Daily</MudText>
+                        <MudText Typo="Typo.h5" Class="rate-value" Style="color: white;">
                             @FormatCurrency(_kpis?.DailyRate.AverageDailyUsd ?? 0)
                         </MudText>
                     </MudStack>
@@ -234,31 +234,74 @@ else
     <MudPaper Class="pa-4" Elevation="2">
         <MudText Typo="Typo.h6" Class="mb-3">Cumulative Income Milestones</MudText>
 
-        <MudTable Items="@GetMilestones()" Dense="true" Hover="true" Elevation="0">
-            <HeaderContent>
-                <MudTh>Timeframe</MudTh>
-                <MudTh Style="text-align:right">Cumulative Total</MudTh>
-                <MudTh Style="text-align:right">Lower Estimate</MudTh>
-                <MudTh Style="text-align:right">Upper Estimate</MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd>
-                    <MudText Typo="Typo.body2" Style="font-weight: 500;">@context.Label</MudText>
-                    <MudText Typo="Typo.caption" Color="Color.Secondary">@context.Date.ToString("MMMM yyyy")</MudText>
-                </MudTd>
-                <MudTd Style="text-align:right">
-                    <MudText Typo="Typo.h6" Color="Color.Primary">@FormatCurrency(context.Cumulative)</MudText>
-                </MudTd>
-                <MudTd Style="text-align:right">
-                    <MudText Typo="Typo.body2" Color="Color.Error">@FormatCurrency(context.LowerBound)</MudText>
-                </MudTd>
-                <MudTd Style="text-align:right">
-                    <MudText Typo="Typo.body2" Color="Color.Success">@FormatCurrency(context.UpperBound)</MudText>
-                </MudTd>
-            </RowTemplate>
-        </MudTable>
+        <div class="table-responsive">
+            <MudTable Items="@GetMilestones()" Dense="true" Hover="true" Elevation="0">
+                <HeaderContent>
+                    <MudTh>Timeframe</MudTh>
+                    <MudTh Style="text-align:right">Cumulative Total</MudTh>
+                    <MudTh Style="text-align:right" Class="hide-xs">Lower Estimate</MudTh>
+                    <MudTh Style="text-align:right" Class="hide-xs">Upper Estimate</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>
+                        <MudText Typo="Typo.body2" Style="font-weight: 500;">@context.Label</MudText>
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">@context.Date.ToString("MMM yy")</MudText>
+                    </MudTd>
+                    <MudTd Style="text-align:right">
+                        <MudText Typo="Typo.subtitle1" Color="Color.Primary">@FormatCurrency(context.Cumulative)</MudText>
+                    </MudTd>
+                    <MudTd Style="text-align:right" Class="hide-xs">
+                        <MudText Typo="Typo.body2" Color="Color.Error">@FormatCurrency(context.LowerBound)</MudText>
+                    </MudTd>
+                    <MudTd Style="text-align:right" Class="hide-xs">
+                        <MudText Typo="Typo.body2" Color="Color.Success">@FormatCurrency(context.UpperBound)</MudText>
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </div>
     </MudPaper>
 }
+
+<style>
+    .projection-big-number {
+        font-size: 2rem;
+    }
+
+    .projection-rates {
+        height: 100%;
+        padding-top: 16px;
+    }
+
+    .flex-wrap {
+        flex-wrap: wrap;
+    }
+
+    @@media (min-width: 960px) {
+        .projection-big-number {
+            font-size: 2.5rem;
+        }
+
+        .rate-value {
+            font-size: 1.5rem;
+        }
+    }
+
+    @@media (max-width: 599px) {
+        .projection-big-number {
+            font-size: 1.75rem;
+        }
+
+        .projection-rates {
+            justify-content: space-between !important;
+            gap: 8px;
+            padding-top: 12px;
+        }
+
+        .rate-value {
+            font-size: 1rem !important;
+        }
+    }
+</style>
 
 @code {
     private bool _isLoading = true;

@@ -6,7 +6,7 @@
 
 <PageTitle>Analytics - FlowMetrics</PageTitle>
 
-<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px;">
+<div class="page-header page-header-flex">
     <div>
         <h1 class="page-title">Deep Analytics</h1>
         <p class="page-subtitle">Understand your income patterns</p>
@@ -261,50 +261,52 @@ else
         <MudText Typo="Typo.h6" Class="mb-3">Stream Performance This Month</MudText>
         @if (_streamHealth?.Streams.Count > 0)
         {
-            <MudTable Items="@_streamHealth.Streams" Dense="true" Hover="true" Elevation="0">
-                <HeaderContent>
-                    <MudTh>Stream</MudTh>
-                    <MudTh>Category</MudTh>
-                    <MudTh>Trend</MudTh>
-                    <MudTh Style="text-align:right">This Month</MudTh>
-                    <MudTh Style="text-align:right">Last Month</MudTh>
-                    <MudTh Style="text-align:right">Change</MudTh>
-                </HeaderContent>
-                <RowTemplate>
-                    <MudTd>
-                        <MudText Typo="Typo.body2" Style="font-weight: 500;">@context.StreamName</MudText>
-                        <MudText Typo="Typo.caption" Color="Color.Secondary">@context.ProviderName</MudText>
-                    </MudTd>
-                    <MudTd>
-                        <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined"
-                                 Color="@GetCategoryColor(context.Category)">@context.Category</MudChip>
-                    </MudTd>
-                    <MudTd>
-                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                            <MudIcon Icon="@GetDirectionIcon(context.Direction)"
-                                     Color="@GetDirectionColor(context.Direction)"
-                                     Size="Size.Small" />
+            <div class="table-responsive">
+                <MudTable Items="@_streamHealth.Streams" Dense="true" Hover="true" Elevation="0">
+                    <HeaderContent>
+                        <MudTh>Stream</MudTh>
+                        <MudTh Class="hide-xs">Category</MudTh>
+                        <MudTh Class="hide-xs">Trend</MudTh>
+                        <MudTh Style="text-align:right">This Month</MudTh>
+                        <MudTh Style="text-align:right" Class="hide-xs">Last Month</MudTh>
+                        <MudTh Style="text-align:right">Change</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>
+                            <MudText Typo="Typo.body2" Style="font-weight: 500;">@context.StreamName</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">@context.ProviderName</MudText>
+                        </MudTd>
+                        <MudTd Class="hide-xs">
+                            <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined"
+                                     Color="@GetCategoryColor(context.Category)">@context.Category</MudChip>
+                        </MudTd>
+                        <MudTd Class="hide-xs">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@GetDirectionIcon(context.Direction)"
+                                         Color="@GetDirectionColor(context.Direction)"
+                                         Size="Size.Small" />
+                                <MudText Typo="Typo.body2" Color="@GetDirectionColor(context.Direction)">
+                                    @context.Direction
+                                </MudText>
+                            </MudStack>
+                        </MudTd>
+                        <MudTd Style="text-align:right">
+                            <MudText Typo="Typo.body2">@FormatCurrency(context.CurrentPeriodUsd)</MudText>
+                        </MudTd>
+                        <MudTd Style="text-align:right" Class="hide-xs">
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">@FormatCurrency(context.PreviousPeriodUsd)</MudText>
+                        </MudTd>
+                        <MudTd Style="text-align:right">
                             <MudText Typo="Typo.body2" Color="@GetDirectionColor(context.Direction)">
-                                @context.Direction
+                                @FormatSignedPercentage(context.ChangePercentage)
                             </MudText>
-                        </MudStack>
-                    </MudTd>
-                    <MudTd Style="text-align:right">
-                        <MudText Typo="Typo.body2">@FormatCurrency(context.CurrentPeriodUsd)</MudText>
-                    </MudTd>
-                    <MudTd Style="text-align:right">
-                        <MudText Typo="Typo.body2" Color="Color.Secondary">@FormatCurrency(context.PreviousPeriodUsd)</MudText>
-                    </MudTd>
-                    <MudTd Style="text-align:right">
-                        <MudText Typo="Typo.body2" Color="@GetDirectionColor(context.Direction)">
-                            @FormatSignedPercentage(context.ChangePercentage)
-                        </MudText>
-                        <MudText Typo="Typo.caption" Color="Color.Secondary">
-                            (@FormatSignedCurrency(context.ChangeUsd))
-                        </MudText>
-                    </MudTd>
-                </RowTemplate>
-            </MudTable>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary" Class="hide-xs">
+                                (@FormatSignedCurrency(context.ChangeUsd))
+                            </MudText>
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </div>
         }
         else
         {
