@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Income.Infrastructure.Seeding;
 
-internal sealed class SeedDataGenerator(IncomeDbContext dbContext) : ISeedDataGenerator
+internal sealed class SeedDataGenerator(IDbContextFactory<IncomeDbContext> dbContextFactory) : ISeedDataGenerator
 {
     public async Task<bool> HasDataAsync(CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
         // Check for our specific seeded providers, not just any provider
         return await dbContext.Providers.AnyAsync(p => p.Id == "provider-manual-salary", ct);
     }
@@ -16,6 +17,8 @@ internal sealed class SeedDataGenerator(IncomeDbContext dbContext) : ISeedDataGe
     {
         if (await HasDataAsync(ct))
             return;
+
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
 
         var providers = CreateProviders();
         await dbContext.Providers.AddRangeAsync(providers, ct);

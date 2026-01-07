@@ -5,10 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Income.Infrastructure.Features.Streams.Handlers;
 
-internal sealed class DeleteStreamHandler(IncomeDbContext dbContext) : IDeleteStreamHandler
+internal sealed class DeleteStreamHandler(IDbContextFactory<IncomeDbContext> dbContextFactory) : IDeleteStreamHandler
 {
     public async Task<Result> HandleAsync(DeleteStreamCommand command, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entity = await dbContext.Streams
             .FirstOrDefaultAsync(x => x.Id == command.StreamId, ct);
 

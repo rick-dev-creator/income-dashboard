@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Income.Infrastructure.Features.Providers.Handlers;
 
-internal sealed class GetProviderHandler(IncomeDbContext dbContext) : IGetProviderHandler
+internal sealed class GetProviderHandler(IDbContextFactory<IncomeDbContext> dbContextFactory) : IGetProviderHandler
 {
     public async Task<Result<ProviderDto>> HandleAsync(GetProviderQuery query, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entity = await dbContext.Providers
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == query.ProviderId, ct);

@@ -9,10 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Income.Infrastructure.Features.Providers.Handlers;
 
-internal sealed class CreateProviderHandler(IncomeDbContext dbContext) : ICreateProviderHandler
+internal sealed class CreateProviderHandler(IDbContextFactory<IncomeDbContext> dbContextFactory) : ICreateProviderHandler
 {
     public async Task<Result<ProviderDto>> HandleAsync(CreateProviderCommand command, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var exists = await dbContext.Providers
             .AnyAsync(x => x.Name == command.Name, ct);
 

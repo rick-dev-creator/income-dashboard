@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Income.Infrastructure.Features.Streams.Handlers;
 
-internal sealed class GetAllStreamsHandler(IncomeDbContext dbContext) : IGetAllStreamsHandler
+internal sealed class GetAllStreamsHandler(IDbContextFactory<IncomeDbContext> dbContextFactory) : IGetAllStreamsHandler
 {
     public async Task<Result<IReadOnlyList<StreamDto>>> HandleAsync(GetAllStreamsQuery query, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entities = await dbContext.Streams
             .Include(x => x.Snapshots)
             .AsNoTracking()

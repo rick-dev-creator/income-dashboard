@@ -8,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 namespace Income.Infrastructure.Features.Streams.Handlers;
 
 internal sealed class UpdateCredentialsHandler(
-    IncomeDbContext dbContext,
+    IDbContextFactory<IncomeDbContext> dbContextFactory,
     ICredentialEncryptor credentialEncryptor) : IUpdateCredentialsHandler
 {
     public async Task<Result> HandleAsync(UpdateCredentialsCommand command, CancellationToken ct = default)
     {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
         var entity = await dbContext.Streams
             .FirstOrDefaultAsync(x => x.Id == command.StreamId, ct);
 
