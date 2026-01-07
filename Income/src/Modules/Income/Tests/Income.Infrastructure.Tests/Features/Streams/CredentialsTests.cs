@@ -16,9 +16,9 @@ public class CredentialsTests(PostgresFixture fixture)
         var providerId = await CreateProviderAsync();
         var credentials = """{"apiKey":"my-api-key","apiSecret":"my-secret"}""";
 
-        await using var context = fixture.CreateDbContext();
+        var factory = fixture.CreateFactory();
         var encryptor = TestCredentialEncryptor.Create();
-        var handler = new CreateStreamHandler(context, encryptor);
+        var handler = new CreateStreamHandler(factory, encryptor);
 
         // Act
         var result = await handler.HandleAsync(new CreateStreamCommand(
@@ -48,8 +48,8 @@ public class CredentialsTests(PostgresFixture fixture)
         // Arrange
         var providerId = await CreateProviderAsync();
 
-        await using var context = fixture.CreateDbContext();
-        var handler = new CreateStreamHandler(context, TestCredentialEncryptor.Create());
+        var factory = fixture.CreateFactory();
+        var handler = new CreateStreamHandler(factory, TestCredentialEncryptor.Create());
 
         // Act
         var result = await handler.HandleAsync(new CreateStreamCommand(
@@ -72,8 +72,8 @@ public class CredentialsTests(PostgresFixture fixture)
         var providerId = await CreateProviderAsync();
         var credentials = """{"apiKey":"updated-key","apiSecret":"updated-secret"}""";
 
-        await using var createContext = fixture.CreateDbContext();
-        var createHandler = new CreateStreamHandler(createContext, TestCredentialEncryptor.Create());
+        var factory = fixture.CreateFactory();
+        var createHandler = new CreateStreamHandler(factory, TestCredentialEncryptor.Create());
 
         var createResult = await createHandler.HandleAsync(new CreateStreamCommand(
             ProviderId: providerId,
@@ -86,8 +86,7 @@ public class CredentialsTests(PostgresFixture fixture)
         createResult.Value.HasCredentials.ShouldBeFalse();
 
         // Act - Update credentials
-        await using var updateContext = fixture.CreateDbContext();
-        var updateHandler = new UpdateCredentialsHandler(updateContext, TestCredentialEncryptor.Create());
+        var updateHandler = new UpdateCredentialsHandler(factory, TestCredentialEncryptor.Create());
 
         var updateResult = await updateHandler.HandleAsync(new UpdateCredentialsCommand(
             StreamId: createResult.Value.Id,
@@ -124,8 +123,8 @@ public class CredentialsTests(PostgresFixture fixture)
     {
         var uniqueSuffix = Guid.NewGuid().ToString()[..8];
 
-        await using var context = fixture.CreateDbContext();
-        var handler = new CreateProviderHandler(context);
+        var factory = fixture.CreateFactory();
+        var handler = new CreateProviderHandler(factory);
 
         var result = await handler.HandleAsync(new CreateProviderCommand(
             Name: $"CredTestProvider_{uniqueSuffix}",

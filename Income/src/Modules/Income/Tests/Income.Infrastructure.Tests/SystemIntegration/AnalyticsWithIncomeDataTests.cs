@@ -6,13 +6,14 @@ using Income.Infrastructure.Features.Providers.Handlers;
 using Income.Infrastructure.Persistence;
 using Income.Infrastructure.Seeding;
 using Income.Infrastructure.Tests.Fixtures;
+using Microsoft.EntityFrameworkCore;
 
 namespace Income.Infrastructure.Tests.SystemIntegration;
 
 [Collection("Postgres")]
 public class AnalyticsWithIncomeDataTests(PostgresFixture fixture) : IAsyncLifetime
 {
-    private IncomeDbContext _context = null!;
+    private IDbContextFactory<IncomeDbContext> _factory = null!;
     private IGetAllStreamsHandler _streamsHandler = null!;
     private IGetAllProvidersHandler _providersHandler = null!;
     private static readonly SemaphoreSlim SeedLock = new(1, 1);
@@ -20,16 +21,16 @@ public class AnalyticsWithIncomeDataTests(PostgresFixture fixture) : IAsyncLifet
 
     public async Task InitializeAsync()
     {
-        _context = fixture.CreateDbContext();
-        _streamsHandler = new GetAllStreamsHandler(_context);
-        _providersHandler = new GetAllProvidersHandler(_context);
+        _factory = fixture.CreateFactory();
+        _streamsHandler = new GetAllStreamsHandler(_factory);
+        _providersHandler = new GetAllProvidersHandler(_factory);
 
         await SeedDatabaseOnceAsync();
     }
 
-    public async Task DisposeAsync()
+    public Task DisposeAsync()
     {
-        await _context.DisposeAsync();
+        return Task.CompletedTask;
     }
 
     private async Task SeedDatabaseOnceAsync()
@@ -42,7 +43,7 @@ public class AnalyticsWithIncomeDataTests(PostgresFixture fixture) : IAsyncLifet
             if (_isSeeded) return;
 
             // Always seed our specific test data (using unique IDs to avoid conflicts)
-            var seeder = new SeedDataGenerator(_context);
+            var seeder = new SeedDataGenerator(_factory);
             await seeder.SeedAsync(); // Will skip if our specific providers already exist
             _isSeeded = true;
         }

@@ -12,8 +12,8 @@ public class GetAllProvidersHandlerTests(PostgresFixture fixture)
     public async Task HandleAsync_WithProviders_ReturnsAll()
     {
         // Arrange - Create some providers first
-        await using var setupContext = fixture.CreateDbContext();
-        var createHandler = new CreateProviderHandler(setupContext);
+        var factory = fixture.CreateFactory();
+        var createHandler = new CreateProviderHandler(factory);
 
         var uniqueSuffix = Guid.NewGuid().ToString()[..8];
         await createHandler.HandleAsync(new CreateProviderCommand(
@@ -31,8 +31,7 @@ public class GetAllProvidersHandlerTests(PostgresFixture fixture)
             ConfigSchema: null));
 
         // Act
-        await using var context = fixture.CreateDbContext();
-        var handler = new GetAllProvidersHandler(context);
+        var handler = new GetAllProvidersHandler(factory);
 
         var result = await handler.HandleAsync(new GetAllProvidersQuery());
 

@@ -15,8 +15,8 @@ public class GetStreamHandlerTests(PostgresFixture fixture)
         // Arrange - Create provider and stream
         var streamId = await CreateStreamAsync();
 
-        await using var context = fixture.CreateDbContext();
-        var handler = new GetStreamHandler(context);
+        var factory = fixture.CreateFactory();
+        var handler = new GetStreamHandler(factory);
 
         // Act
         var result = await handler.HandleAsync(new GetStreamQuery(streamId));
@@ -30,8 +30,8 @@ public class GetStreamHandlerTests(PostgresFixture fixture)
     public async Task HandleAsync_NonExistingStream_ReturnsFailure()
     {
         // Arrange
-        await using var context = fixture.CreateDbContext();
-        var handler = new GetStreamHandler(context);
+        var factory = fixture.CreateFactory();
+        var handler = new GetStreamHandler(factory);
 
         // Act
         var result = await handler.HandleAsync(new GetStreamQuery("non-existent-id"));
@@ -48,8 +48,8 @@ public class GetStreamHandlerTests(PostgresFixture fixture)
         var streamId = await CreateStreamAsync();
 
         // Add snapshot
-        await using var snapshotContext = fixture.CreateDbContext();
-        var snapshotHandler = new RecordSnapshotHandler(snapshotContext);
+        var factory = fixture.CreateFactory();
+        var snapshotHandler = new RecordSnapshotHandler(factory);
 
         await snapshotHandler.HandleAsync(new RecordSnapshotCommand(
             StreamId: streamId,
@@ -61,8 +61,7 @@ public class GetStreamHandlerTests(PostgresFixture fixture)
             RateSource: "Test"));
 
         // Act
-        await using var context = fixture.CreateDbContext();
-        var handler = new GetStreamHandler(context);
+        var handler = new GetStreamHandler(factory);
 
         var result = await handler.HandleAsync(new GetStreamQuery(streamId));
 
@@ -75,10 +74,10 @@ public class GetStreamHandlerTests(PostgresFixture fixture)
     private async Task<string> CreateStreamAsync()
     {
         var uniqueSuffix = Guid.NewGuid().ToString()[..8];
+        var factory = fixture.CreateFactory();
 
         // Create provider
-        await using var providerContext = fixture.CreateDbContext();
-        var createProviderHandler = new CreateProviderHandler(providerContext);
+        var createProviderHandler = new CreateProviderHandler(factory);
 
         var providerResult = await createProviderHandler.HandleAsync(new CreateProviderCommand(
             Name: $"GetStreamTestProvider_{uniqueSuffix}",
@@ -88,8 +87,7 @@ public class GetStreamHandlerTests(PostgresFixture fixture)
             ConfigSchema: null));
 
         // Create stream
-        await using var streamContext = fixture.CreateDbContext();
-        var createStreamHandler = new CreateStreamHandler(streamContext, TestCredentialEncryptor.Create());
+        var createStreamHandler = new CreateStreamHandler(factory, TestCredentialEncryptor.Create());
 
         var streamResult = await createStreamHandler.HandleAsync(new CreateStreamCommand(
             ProviderId: providerResult.Value.Id,

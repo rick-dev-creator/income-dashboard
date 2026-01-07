@@ -11,8 +11,8 @@ public class CreateProviderHandlerTests(PostgresFixture fixture)
     public async Task HandleAsync_ValidCommand_CreatesProvider()
     {
         // Arrange
-        await using var context = fixture.CreateDbContext();
-        var handler = new CreateProviderHandler(context);
+        var factory = fixture.CreateFactory();
+        var handler = new CreateProviderHandler(factory);
 
         var command = new CreateProviderCommand(
             Name: "Blofin",
@@ -36,8 +36,8 @@ public class CreateProviderHandlerTests(PostgresFixture fixture)
     public async Task HandleAsync_DuplicateName_ReturnsFailure()
     {
         // Arrange
-        await using var context = fixture.CreateDbContext();
-        var handler = new CreateProviderHandler(context);
+        var factory = fixture.CreateFactory();
+        var handler = new CreateProviderHandler(factory);
 
         var command = new CreateProviderCommand(
             Name: "DuplicateProvider",
@@ -50,8 +50,7 @@ public class CreateProviderHandlerTests(PostgresFixture fixture)
         await handler.HandleAsync(command);
 
         // Act - try to create duplicate
-        await using var context2 = fixture.CreateDbContext();
-        var handler2 = new CreateProviderHandler(context2);
+        var handler2 = new CreateProviderHandler(factory);
         var result = await handler2.HandleAsync(command);
 
         // Assert
@@ -63,8 +62,8 @@ public class CreateProviderHandlerTests(PostgresFixture fixture)
     public async Task HandleAsync_InvalidType_ReturnsFailure()
     {
         // Arrange
-        await using var context = fixture.CreateDbContext();
-        var handler = new CreateProviderHandler(context);
+        var factory = fixture.CreateFactory();
+        var handler = new CreateProviderHandler(factory);
 
         var command = new CreateProviderCommand(
             Name: "TestProvider",
