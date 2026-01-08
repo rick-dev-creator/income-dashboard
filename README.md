@@ -1,5 +1,7 @@
 # FlowMetrics
 
+<img width="1303" height="866" alt="flow-metrics-screenshot" src="https://github.com/user-attachments/assets/902dfc48-5eb2-4ce1-aa30-13c9ee89856b" />
+
 > An income streams dashboard that answers: **Where am I? Where am I going? Where will I be?**
 
 ## The Problem
