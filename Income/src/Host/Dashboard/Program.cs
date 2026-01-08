@@ -1,6 +1,7 @@
 using Dashboard.Components;
 using Income.Installer;
 using Analytics.Installer;
+using Connectors.Blofin;
 using MudBlazor;
 using MudBlazor.Services;
 
@@ -116,6 +117,7 @@ var theme = new MudTheme
 builder.Services
     .AddIncomeModule(connectionString)
     .AddAnalyticsModule()
+    .AddBlofinConnector()
     .AddMudServices(config =>
     {
         config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
