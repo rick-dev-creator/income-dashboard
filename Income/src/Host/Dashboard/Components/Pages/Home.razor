@@ -37,11 +37,18 @@ else
             <div class="stat-card-subtitle">
                 avg last @(_kpis?.DailyRate.DaysAnalyzed ?? 30) days
             </div>
-            @if (_kpis?.DailyRate.StandardDeviation > 0)
+            @if (_sparklineData.Count > 0)
             {
-                <div class="stat-card-meta">
-                    <MudIcon Icon="@Icons.Material.Rounded.ShowChart" Size="Size.Small" />
-                    <span>@FormatCurrency(_kpis.DailyRate.StandardDeviation) volatility</span>
+                <div class="sparkline-container">
+                    <ApexChart TItem="SparklinePoint"
+                               Options="_sparklineOptions"
+                               Height="40">
+                        <ApexPointSeries TItem="SparklinePoint"
+                                         Items="_sparklineData"
+                                         SeriesType="SeriesType.Area"
+                                         XValue="@(p => p.Label)"
+                                         YValue="@(p => p.Value)" />
+                    </ApexChart>
                 </div>
             }
         </div>
@@ -86,70 +93,98 @@ else
         </div>
     </div>
 
-    <!-- INCOME OVER TIME -->
-    <div class="card-modern mt-6 animate-slide-up" style="animation-delay: 0.1s;">
-        <div class="section-header">
-            <div>
-                <h2 class="section-title">Income Over Time</h2>
-                <p class="page-subtitle" style="margin-top: 4px;">Track your earnings progression</p>
+    <!-- CHARTS ROW -->
+    <div class="charts-row mt-6">
+        <!-- INCOME OVER TIME -->
+        <div class="card-modern chart-main animate-slide-up" style="animation-delay: 0.1s;">
+            <div class="section-header">
+                <div>
+                    <h2 class="section-title">Income Over Time</h2>
+                    <p class="page-subtitle" style="margin-top: 4px;">Track your earnings progression</p>
+                </div>
+                <MudToggleGroup T="string" Value="_selectedGranularity" ValueChanged="OnGranularityChanged" Color="Color.Primary" CheckMark="false" Class="toggle-rounded">
+                    <MudToggleItem Value="@("Daily")">Daily</MudToggleItem>
+                    <MudToggleItem Value="@("Weekly")">Weekly</MudToggleItem>
+                    <MudToggleItem Value="@("Monthly")">Monthly</MudToggleItem>
+                </MudToggleGroup>
             </div>
-            <MudToggleGroup T="string" Value="_selectedGranularity" ValueChanged="OnGranularityChanged" Color="Color.Primary" CheckMark="false" Class="toggle-rounded">
-                <MudToggleItem Value="@("Daily")">Daily</MudToggleItem>
-                <MudToggleItem Value="@("Weekly")">Weekly</MudToggleItem>
-                <MudToggleItem Value="@("Monthly")">Monthly</MudToggleItem>
-            </MudToggleGroup>
+
+            @if (_isLoadingChart)
+            {
+                <div style="display: flex; justify-content: center; padding: 60px 0;">
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+                </div>
+            }
+            else if (_stackedTimeSeries?.Points.Count > 0)
+            {
+                <ApexChart TItem="ChartDataPoint"
+                           Options="_areaChartOptions"
+                           Height="320"
+                           @ref="_mainChart">
+                    @foreach (var series in _apexChartSeries)
+                    {
+                        <ApexPointSeries TItem="ChartDataPoint"
+                                         Items="series.Data"
+                                         Name="@series.Name"
+                                         SeriesType="SeriesType.Bar"
+                                         XValue="@(p => p.Date)"
+                                         YValue="@(p => p.Amount)" />
+                    }
+                </ApexChart>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <MudIcon Icon="@Icons.Material.Rounded.BarChart" Size="Size.Large" Color="Color.Secondary" />
+                    </div>
+                    <MudText Typo="Typo.h6">No income data yet</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">Add income streams and record snapshots to see your trends</MudText>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" Href="/streams" StartIcon="@Icons.Material.Rounded.Add">
+                        Add Stream
+                    </MudButton>
+                </div>
+            }
         </div>
 
-        @if (_isLoadingChart)
-        {
-            <div style="display: flex; justify-content: center; padding: 60px 0;">
-                <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+        <!-- INCOME DISTRIBUTION -->
+        <div class="card-modern chart-side animate-slide-up" style="animation-delay: 0.15s;">
+            <div class="section-header">
+                <h2 class="section-title">Distribution</h2>
             </div>
-        }
-        else if (_stackedTimeSeries?.Points.Count > 0)
-        {
-            <!-- Stacked Bar Chart - Total Income -->
-            <MudText Typo="Typo.subtitle2" Color="Color.Secondary" Class="mb-2">Total Income (Stacked)</MudText>
-            <MudChart ChartType="ChartType.StackedBar"
-                      ChartSeries="@_stackedChartSeries"
-                      XAxisLabels="@_stackedChartLabels"
-                      Width="100%"
-                      Height="280px"
-                      ChartOptions="@_chartOptions" />
 
-            <!-- Line Chart - Individual Stream Trends -->
-            <MudText Typo="Typo.subtitle2" Color="Color.Secondary" Class="mt-6 mb-2">Individual Stream Trends</MudText>
-            <MudChart ChartType="ChartType.Line"
-                      ChartSeries="@_stackedChartSeries"
-                      XAxisLabels="@_stackedChartLabels"
-                      Width="100%"
-                      Height="280px"
-                      ChartOptions="@_lineChartOptions" />
+            @if (_donutData.Count > 0)
+            {
+                <ApexChart TItem="DonutDataPoint"
+                           Options="_donutChartOptions"
+                           Height="280">
+                    <ApexPointSeries TItem="DonutDataPoint"
+                                     Items="_donutData"
+                                     SeriesType="SeriesType.Donut"
+                                     XValue="@(p => p.Label)"
+                                     YValue="@(p => p.Value)"
+                                     OrderBy="@(p => p.Y)" />
+                </ApexChart>
 
-            <!-- Modern Legend -->
-            <div class="chart-legend">
-                @foreach (var (name, color) in _streamColors)
-                {
-                    <div class="legend-item">
-                        <span class="legend-dot" style="background-color: @color;"></span>
-                        <span class="legend-label">@name</span>
-                    </div>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="empty-state">
-                <div class="empty-state-icon">
-                    <MudIcon Icon="@Icons.Material.Rounded.BarChart" Size="Size.Large" Color="Color.Secondary" />
+                <div class="donut-legend">
+                    @foreach (var item in _donutData.OrderByDescending(d => d.Value).Take(5))
+                    {
+                        <div class="donut-legend-item">
+                            <span class="donut-legend-dot" style="background: @GetStreamColor(item.Label);"></span>
+                            <span class="donut-legend-label">@item.Label</span>
+                            <span class="donut-legend-value">@FormatCurrency(item.Value)</span>
+                        </div>
+                    }
                 </div>
-                <MudText Typo="Typo.h6">No income data yet</MudText>
-                <MudText Typo="Typo.body2" Color="Color.Secondary">Add income streams and record snapshots to see your trends</MudText>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" Href="/streams" StartIcon="@Icons.Material.Rounded.Add">
-                    Add Stream
-                </MudButton>
-            </div>
-        }
+            }
+            else
+            {
+                <div class="empty-state-small">
+                    <MudIcon Icon="@Icons.Material.Rounded.PieChart" Size="Size.Medium" Color="Color.Secondary" />
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">No data</MudText>
+                </div>
+            }
+        </div>
     </div>
 
     <!-- STREAM HEALTH -->
@@ -525,7 +560,86 @@ else
         overflow: hidden;
     }
 
+    /* Charts row layout */
+    .charts-row {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 24px;
+    }
+
+    .chart-main {
+        min-width: 0;
+    }
+
+    .chart-side {
+        min-width: 0;
+    }
+
+    /* Sparkline in KPI card */
+    .sparkline-container {
+        margin-top: 12px;
+        margin-left: -8px;
+        margin-right: -8px;
+        opacity: 0.9;
+    }
+
+    /* Donut legend */
+    .donut-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--mud-palette-divider);
+    }
+
+    .donut-legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .donut-legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        flex-shrink: 0;
+    }
+
+    .donut-legend-label {
+        flex: 1;
+        font-size: 0.8125rem;
+        color: var(--mud-palette-text-secondary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .donut-legend-value {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--mud-palette-text-primary);
+    }
+
+    .empty-state-small {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 40px 20px;
+        opacity: 0.6;
+    }
+
     @@media (max-width: 1279px) {
+        .charts-row {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-side {
+            order: -1;
+        }
+
         .stream-item {
             grid-template-columns: 2fr 1fr 1fr;
         }
@@ -585,14 +699,6 @@ else
         .toggle-rounded {
             width: 100%;
         }
-
-        .chart-legend {
-            gap: 12px;
-        }
-
-        .legend-item {
-            font-size: 0.75rem;
-        }
     }
 </style>
 
@@ -606,16 +712,154 @@ else
     private StackedTimeSeries? _stackedTimeSeries;
     private StreamHealthSummary? _streamHealth;
 
-    private List<ChartSeries> _stackedChartSeries = [];
-    private string[] _stackedChartLabels = [];
-    private ChartOptions _chartOptions = new() { YAxisTicks = 500, InterpolationOption = InterpolationOption.Straight };
-    private ChartOptions _lineChartOptions = new() { YAxisTicks = 500, InterpolationOption = InterpolationOption.Straight, LineStrokeWidth = 2 };
-    private List<(string Name, string Color)> _streamColors = [];
+    // ApexCharts data
+    private ApexChart<ChartDataPoint>? _mainChart;
+    private List<ChartSeriesData> _apexChartSeries = [];
+    private List<SparklinePoint> _sparklineData = [];
+    private List<DonutDataPoint> _donutData = [];
+    private Dictionary<string, string> _streamColorMap = [];
 
     private static readonly string[] ChartColors = [
         "#818cf8", "#34d399", "#fbbf24", "#f472b6", "#60a5fa",
         "#2dd4bf", "#a78bfa", "#fb923c", "#4ade80", "#38bdf8"
     ];
+
+    // Chart options
+    private ApexChartOptions<ChartDataPoint> _areaChartOptions = new()
+    {
+        Chart = new Chart
+        {
+            Stacked = true,
+            Toolbar = new Toolbar { Show = false },
+            Animations = new Animations
+            {
+                Enabled = true,
+                Speed = 400,
+                AnimateGradually = new AnimateGradually { Enabled = true, Delay = 50 }
+            }
+        },
+        PlotOptions = new PlotOptions
+        {
+            Bar = new PlotOptionsBar
+            {
+                BorderRadius = 4,
+                ColumnWidth = "60%"
+            }
+        },
+        Xaxis = new XAxis
+        {
+            Labels = new XAxisLabels
+            {
+                Style = new AxisLabelStyle { Colors = new List<string> { "#94a3b8" } }
+            }
+        },
+        Yaxis =
+        [
+            new YAxis
+            {
+                Labels = new YAxisLabels
+                {
+                    Style = new AxisLabelStyle { Colors = new List<string> { "#94a3b8" } },
+                    Formatter = "function(val) { return '$' + val.toLocaleString(); }"
+                }
+            }
+        ],
+        DataLabels = new DataLabels { Enabled = false },
+        Legend = new Legend { Show = true, Position = LegendPosition.Top },
+        Grid = new Grid
+        {
+            BorderColor = "#334155",
+            StrokeDashArray = 4
+        },
+        Tooltip = new Tooltip
+        {
+            Theme = Mode.Dark,
+            Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" }
+        },
+        Colors = ChartColors.ToList()
+    };
+
+    private ApexChartOptions<SparklinePoint> _sparklineOptions = new()
+    {
+        Chart = new Chart
+        {
+            Sparkline = new ChartSparkline { Enabled = true }
+        },
+        Stroke = new Stroke { Curve = Curve.Smooth, Width = 2 },
+        Fill = new Fill
+        {
+            Type = new List<FillType> { FillType.Gradient },
+            Gradient = new FillGradient
+            {
+                ShadeIntensity = 1,
+                OpacityFrom = 0.4,
+                OpacityTo = 0.1
+            }
+        },
+        Colors = ["#ffffff"],
+        Tooltip = new Tooltip { Enabled = false }
+    };
+
+    private ApexChartOptions<DonutDataPoint> _donutChartOptions = new()
+    {
+        Chart = new Chart
+        {
+            Toolbar = new Toolbar { Show = false }
+        },
+        Legend = new Legend { Show = false },
+        DataLabels = new DataLabels { Enabled = false },
+        PlotOptions = new PlotOptions
+        {
+            Pie = new PlotOptionsPie
+            {
+                Donut = new PlotOptionsDonut
+                {
+                    Size = "70%",
+                    Labels = new DonutLabels
+                    {
+                        Show = true,
+                        Total = new DonutLabelTotal
+                        {
+                            Show = true,
+                            Label = "Total",
+                            Formatter = "function(w) { return '$' + w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString(); }"
+                        }
+                    }
+                }
+            }
+        },
+        Tooltip = new Tooltip
+        {
+            Theme = Mode.Dark,
+            Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" }
+        },
+        Colors = ChartColors.ToList()
+    };
+
+    // Data classes
+    public class ChartDataPoint
+    {
+        public string Date { get; set; } = "";
+        public decimal Amount { get; set; }
+    }
+
+    public class ChartSeriesData
+    {
+        public string Name { get; set; } = "";
+        public List<ChartDataPoint> Data { get; set; } = [];
+    }
+
+    public class SparklinePoint
+    {
+        public string Label { get; set; } = "";
+        public decimal Value { get; set; }
+    }
+
+    public class DonutDataPoint
+    {
+        public string Label { get; set; } = "";
+        public decimal Value { get; set; }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -635,7 +879,7 @@ else
             if (stackedResult.IsSuccess)
             {
                 _stackedTimeSeries = stackedResult.Value;
-                PrepareStackedChart();
+                PrepareCharts();
             }
 
             var healthResult = await DashboardService.GetStreamHealthAsync("MoM");
@@ -663,7 +907,7 @@ else
             if (stackedResult.IsSuccess)
             {
                 _stackedTimeSeries = stackedResult.Value;
-                PrepareStackedChart();
+                PrepareCharts();
             }
         }
         finally
@@ -672,25 +916,51 @@ else
         }
     }
 
-    private void PrepareStackedChart()
+    private void PrepareCharts()
     {
         if (_stackedTimeSeries?.Points is null || _stackedTimeSeries.Points.Count == 0) return;
 
         var streamNames = _stackedTimeSeries.StreamNames.ToList();
-        _streamColors = streamNames.Select((name, i) => (name, ChartColors[i % ChartColors.Length])).ToList();
 
-        _stackedChartLabels = _stackedTimeSeries.Points
-            .Select(p => FormatDateLabel(p.Date, _selectedGranularity))
-            .ToArray();
+        // Build color map
+        _streamColorMap = streamNames
+            .Select((name, i) => (name, ChartColors[i % ChartColors.Length]))
+            .ToDictionary(x => x.name, x => x.Item2);
 
-        _stackedChartSeries = streamNames.Select((streamName, index) => new ChartSeries
+        // Prepare main chart series
+        _apexChartSeries = streamNames.Select(streamName => new ChartSeriesData
         {
             Name = streamName,
-            Data = _stackedTimeSeries.Points
-                .Select(p => (double)(p.Streams.FirstOrDefault(s => s.StreamName == streamName)?.AmountUsd ?? 0))
-                .ToArray()
+            Data = _stackedTimeSeries.Points.Select(p => new ChartDataPoint
+            {
+                Date = FormatDateLabel(p.Date, _selectedGranularity),
+                Amount = p.Streams.FirstOrDefault(s => s.StreamName == streamName)?.AmountUsd ?? 0
+            }).ToList()
         }).ToList();
+
+        // Prepare sparkline (last 7 data points of total)
+        _sparklineData = _stackedTimeSeries.Points
+            .TakeLast(7)
+            .Select(p => new SparklinePoint
+            {
+                Label = FormatDateLabel(p.Date, _selectedGranularity),
+                Value = p.Streams.Sum(s => s.AmountUsd)
+            })
+            .ToList();
+
+        // Prepare donut chart (totals by stream)
+        _donutData = streamNames.Select(streamName => new DonutDataPoint
+        {
+            Label = streamName,
+            Value = _stackedTimeSeries.Points
+                .SelectMany(p => p.Streams)
+                .Where(s => s.StreamName == streamName)
+                .Sum(s => s.AmountUsd)
+        }).Where(d => d.Value > 0).ToList();
     }
+
+    private string GetStreamColor(string streamName) =>
+        _streamColorMap.TryGetValue(streamName, out var color) ? color : "#64748b";
 
     private static string FormatDateLabel(DateOnly date, string granularity) => granularity switch
     {
