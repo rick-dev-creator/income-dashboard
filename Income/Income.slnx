@@ -9,6 +9,11 @@
     <Project Path="src/Shared/Domain.Shared.Kernel/Domain.Shared.Kernel.csproj" />
   </Folder>
 
+  <!-- Connectors -->
+  <Folder Name="/Connectors/">
+    <Project Path="src/Connectors/Connectors.Blofin/Connectors.Blofin.csproj" />
+  </Folder>
+
   <!-- Modules/Income -->
   <Folder Name="/Modules/Income/">
     <Project Path="src/Modules/Income/Income.Domain/Income.Domain.csproj" />
