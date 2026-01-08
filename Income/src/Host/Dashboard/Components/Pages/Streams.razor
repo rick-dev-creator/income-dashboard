@@ -90,7 +90,12 @@ else
         @foreach (var stream in _streams)
         {
             var health = GetStreamHealth(stream.Id);
+            var monthlyIncome = health?.CurrentPeriodUsd ?? 0;
+            var dailyRate = monthlyIncome / 30m;
+            var contribution = _totalMonthlyIncome > 0 ? (monthlyIncome / _totalMonthlyIncome * 100) : 0;
+
             <div class="stream-card hover-lift">
+                <!-- Header: Name + Provider + Trend -->
                 <div class="stream-card-header">
                     <div class="stream-avatar @GetCategoryClass(stream.Category)">
                         @stream.Name[0]
@@ -98,11 +103,12 @@ else
                     <div class="stream-header-info">
                         <div class="stream-title-row">
                             <span class="stream-title">@stream.Name</span>
-                            @if (health is not null)
+                            @if (health is not null && health.ChangePercentage != 0)
                             {
-                                <MudIcon Icon="@GetDirectionIcon(health.Direction)"
-                                         Color="@GetDirectionColor(health.Direction)"
-                                         Size="Size.Small" />
+                                <span class="trend-chip @GetTrendChipClass(health.Direction)">
+                                    <MudIcon Icon="@GetDirectionIcon(health.Direction)" Size="Size.Small" />
+                                    @FormatSignedPercentage(health.ChangePercentage)
+                                </span>
                             }
                         </div>
                         <span class="stream-subtitle">@GetProviderName(stream.ProviderId)</span>
@@ -121,57 +127,53 @@ else
                     </MudMenu>
                 </div>
 
-                @if (health is not null && health.ChangePercentage != 0)
-                {
-                    <div class="trend-banner @GetTrendClass(health.Direction)">
-                        <span>@health.Direction this month</span>
-                        <span class="trend-value">@FormatSignedPercentage(health.ChangePercentage)</span>
+                <!-- Main Metrics: Monthly Income + Daily Rate -->
+                <div class="stream-metrics">
+                    <div class="metric-primary">
+                        <span class="metric-value">@FormatCurrency(monthlyIncome)</span>
+                        <span class="metric-label">/month</span>
                     </div>
-                }
-
-                <div class="stream-card-body">
-                    <div class="stream-detail">
-                        <span class="detail-label">Category</span>
-                        <span class="category-badge @GetCategoryClass(stream.Category)">@stream.Category</span>
-                    </div>
-                    <div class="stream-detail">
-                        <span class="detail-label">Type</span>
-                        <span class="detail-value">@(stream.IsFixed ? $"Fixed ({stream.FixedPeriod})" : "Variable")</span>
-                    </div>
-                    <div class="stream-detail">
-                        <span class="detail-label">Currency</span>
-                        <span class="detail-value">@stream.OriginalCurrency</span>
+                    <div class="metric-secondary">
+                        <span class="metric-value-small">@FormatCurrency(dailyRate)</span>
+                        <span class="metric-label-small">/day</span>
                     </div>
                 </div>
 
+                <!-- Contribution Bar -->
+                <div class="contribution-section">
+                    <div class="contribution-bar-container">
+                        <div class="contribution-bar @GetCategoryClass(stream.Category)" style="width: @contribution.ToString("F0")%"></div>
+                    </div>
+                    <span class="contribution-text">@contribution.ToString("F1")% of total income</span>
+                </div>
+
+                <!-- Footer: Metadata -->
                 <div class="stream-card-footer">
-                    @if (stream.LastSnapshot is not null)
-                    {
-                        <div class="last-snapshot">
-                            <div class="snapshot-date">
-                                <MudIcon Icon="@Icons.Material.Rounded.Schedule" Size="Size.Small" />
-                                <span>@stream.LastSnapshot.Date.ToString("MMM dd, yyyy")</span>
-                            </div>
-                            <div class="snapshot-amount">
-                                <span class="amount">@FormatCurrency(stream.LastSnapshot.UsdAmount)</span>
-                                @if (health?.CurrentPeriodUsd > 0)
-                                {
-                                    <span class="period-amount">@FormatCurrency(health.CurrentPeriodUsd) this month</span>
-                                }
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="no-snapshot">
+                    <div class="stream-meta">
+                        <span class="category-badge @GetCategoryClass(stream.Category)">@stream.Category</span>
+                        <span class="meta-separator">•</span>
+                        <span class="meta-text">@(stream.IsFixed ? stream.FixedPeriod : "Variable")</span>
+                        <span class="meta-separator">•</span>
+                        <span class="meta-text">@stream.OriginalCurrency</span>
+                    </div>
+                    <div class="stream-activity">
+                        @if (stream.LastSnapshot is not null)
+                        {
+                            <MudIcon Icon="@Icons.Material.Rounded.Schedule" Size="Size.Small" />
+                            <span>@stream.LastSnapshot.Date.ToString("MMM dd")</span>
+                            <span class="meta-separator">•</span>
+                            <span>@stream.SnapshotCount entries</span>
+                        }
+                        else
+                        {
                             <MudIcon Icon="@Icons.Material.Rounded.Info" Size="Size.Small" />
-                            <span>No snapshots yet</span>
-                        </div>
-                    }
+                            <span>No entries yet</span>
+                        }
+                    </div>
                 </div>
 
                 <button class="record-btn" @onclick="@(() => OpenSnapshotDialog(stream))">
-                    <MudIcon Icon="@Icons.Material.Rounded.AddChart" Size="Size.Small" />
+                    <MudIcon Icon="@Icons.Material.Rounded.Add" Size="Size.Small" />
                     <span>Record Income</span>
                 </button>
             </div>
@@ -326,6 +328,7 @@ else
         display: flex;
         align-items: center;
         gap: 8px;
+        flex-wrap: wrap;
     }
 
     .stream-title {
@@ -341,50 +344,99 @@ else
         color: var(--mud-palette-text-secondary);
     }
 
-    .trend-banner {
-        display: flex;
-        justify-content: space-between;
+    .trend-chip {
+        display: inline-flex;
         align-items: center;
-        padding: 10px 20px;
-        font-size: 0.8125rem;
-        color: white;
-    }
-
-    .trend-banner.trend-up { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-    .trend-banner.trend-down { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
-    .trend-banner.trend-flat { background: linear-gradient(135deg, #64748b 0%, #475569 100%); }
-
-    .trend-value {
+        gap: 2px;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
         font-weight: 600;
     }
 
-    .stream-card-body {
-        padding: 0 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
+    .trend-chip-up { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+    .trend-chip-down { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .trend-chip-flat { background: var(--mud-palette-divider); color: var(--mud-palette-text-secondary); }
 
-    .stream-detail {
+    /* Main Metrics Section */
+    .stream-metrics {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: baseline;
+        padding: 16px 20px;
+        background: var(--mud-palette-background);
+        margin: 0 12px;
+        border-radius: 12px;
     }
 
-    .detail-label {
-        font-size: 0.8125rem;
+    .metric-primary {
+        display: flex;
+        align-items: baseline;
+        gap: 4px;
+    }
+
+    .metric-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--mud-palette-success);
+    }
+
+    .metric-label {
+        font-size: 0.875rem;
         color: var(--mud-palette-text-secondary);
     }
 
-    .detail-value {
-        font-size: 0.875rem;
-        font-weight: 500;
+    .metric-secondary {
+        display: flex;
+        align-items: baseline;
+        gap: 2px;
+        text-align: right;
+    }
+
+    .metric-value-small {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .metric-label-small {
+        font-size: 0.75rem;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    /* Contribution Section */
+    .contribution-section {
+        padding: 12px 20px;
+    }
+
+    .contribution-bar-container {
+        height: 6px;
+        background: var(--mud-palette-divider);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 6px;
+    }
+
+    .contribution-bar {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.5s ease;
+    }
+
+    .contribution-bar.category-salary { background: linear-gradient(90deg, #6366f1 0%, #818cf8 100%); }
+    .contribution-bar.category-trading { background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%); }
+    .contribution-bar.category-subscription { background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%); }
+    .contribution-bar.category-referral { background: linear-gradient(90deg, #10b981 0%, #34d399 100%); }
+    .contribution-bar.category-default { background: var(--mud-palette-text-secondary); }
+
+    .contribution-text {
+        font-size: 0.75rem;
+        color: var(--mud-palette-text-secondary);
     }
 
     .category-badge {
         padding: 4px 10px;
         border-radius: 6px;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: 500;
     }
 
@@ -395,50 +447,36 @@ else
     .category-badge.category-default { background: var(--mud-palette-divider); color: var(--mud-palette-text-secondary); }
 
     .stream-card-footer {
-        padding: 16px 20px;
+        padding: 12px 20px;
         margin-top: auto;
         border-top: 1px solid var(--mud-palette-divider);
-    }
-
-    .last-snapshot {
         display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
+        flex-direction: column;
+        gap: 8px;
     }
 
-    .snapshot-date {
+    .stream-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .meta-separator {
+        color: var(--mud-palette-text-disabled);
+        font-size: 0.75rem;
+    }
+
+    .meta-text {
+        font-size: 0.8125rem;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .stream-activity {
         display: flex;
         align-items: center;
         gap: 6px;
         font-size: 0.75rem;
-        color: var(--mud-palette-text-secondary);
-    }
-
-    .snapshot-amount {
-        text-align: right;
-    }
-
-    .snapshot-amount .amount {
-        display: block;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--mud-palette-success);
-    }
-
-    .snapshot-amount .period-amount {
-        font-size: 0.75rem;
-        color: var(--mud-palette-text-secondary);
-    }
-
-    .no-snapshot {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 12px;
-        background: var(--mud-palette-background);
-        border-radius: 8px;
-        font-size: 0.8125rem;
         color: var(--mud-palette-text-secondary);
     }
 
@@ -547,6 +585,7 @@ else
     private Dictionary<string, ProviderListItem> _providers = [];
     private StreamHealthSummary? _streamHealth;
     private Dictionary<string, StreamHealthItem> _streamHealthMap = [];
+    private decimal _totalMonthlyIncome;
 
     protected override async Task OnInitializedAsync()
     {
@@ -571,6 +610,7 @@ else
         {
             _streamHealth = healthResult.Value;
             _streamHealthMap = _streamHealth.Streams.ToDictionary(s => s.StreamId, s => s);
+            _totalMonthlyIncome = _streamHealth.Streams.Sum(s => s.CurrentPeriodUsd);
         }
 
         _isLoading = false;
@@ -603,6 +643,13 @@ else
         "Upward" => "trend-up",
         "Downward" => "trend-down",
         _ => "trend-flat"
+    };
+
+    private static string GetTrendChipClass(string? direction) => direction switch
+    {
+        "Upward" => "trend-chip-up",
+        "Downward" => "trend-chip-down",
+        _ => "trend-chip-flat"
     };
 
     private static string FormatCurrency(decimal amount) =>
