@@ -10,7 +10,10 @@ public sealed record CreateStreamCommand(
     string OriginalCurrency,
     bool IsFixed,
     string? FixedPeriod,
-    string? Credentials = null);
+    string? Credentials = null,
+    decimal? RecurringAmount = null,
+    int? RecurringFrequency = null,
+    DateOnly? RecurringStartDate = null);
 
 public interface ICreateStreamHandler
 {

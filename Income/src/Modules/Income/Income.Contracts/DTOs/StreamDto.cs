@@ -11,7 +11,10 @@ public sealed record StreamDto(
     bool HasCredentials,
     SyncStatusDto SyncStatus,
     DateTime CreatedAt,
-    IReadOnlyList<SnapshotDto> Snapshots);
+    IReadOnlyList<SnapshotDto> Snapshots,
+    decimal? RecurringAmount = null,
+    int? RecurringFrequency = null,
+    DateOnly? RecurringStartDate = null);
 
 public sealed record SyncStatusDto(
     string State,

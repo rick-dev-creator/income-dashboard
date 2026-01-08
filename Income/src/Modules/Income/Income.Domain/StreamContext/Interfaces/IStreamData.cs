@@ -12,6 +12,11 @@ internal interface ICreateStreamData
     bool IsFixed { get; }
     string? FixedPeriod { get; }
     string? EncryptedCredentials { get; }
+
+    // Recurring stream fields (for schedule-based income like salary)
+    decimal? RecurringAmount { get; }
+    int? RecurringFrequency { get; } // Maps to RecurringFrequency enum
+    DateOnly? RecurringStartDate { get; }
 }
 
 internal interface IStreamData : ICreateStreamData

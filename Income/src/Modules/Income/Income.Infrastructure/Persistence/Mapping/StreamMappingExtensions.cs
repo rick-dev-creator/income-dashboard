@@ -31,6 +31,9 @@ internal static class StreamMappingExtensions
             LastError = domain.SyncStatus.LastError,
             NextScheduledAt = domain.SyncStatus.NextScheduledAt,
             CreatedAt = domain.CreatedAt,
+            RecurringAmount = domain.RecurringAmount,
+            RecurringFrequency = domain.RecurringFrequency,
+            RecurringStartDate = domain.RecurringStartDate,
             Snapshots = domain.Snapshots.Select(s => s.ToEntity(domain.Id.Value)).ToList()
         };
     }
@@ -45,5 +48,8 @@ internal static class StreamMappingExtensions
         entity.LastAttemptAt = domain.SyncStatus.LastAttemptAt;
         entity.LastError = domain.SyncStatus.LastError;
         entity.NextScheduledAt = domain.SyncStatus.NextScheduledAt;
+        entity.RecurringAmount = domain.RecurringAmount;
+        entity.RecurringFrequency = domain.RecurringFrequency;
+        entity.RecurringStartDate = domain.RecurringStartDate;
     }
 }

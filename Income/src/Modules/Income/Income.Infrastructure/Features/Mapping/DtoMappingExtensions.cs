@@ -20,7 +20,10 @@ internal static class DtoMappingExtensions
             HasCredentials: stream.HasCredentials,
             SyncStatus: stream.SyncStatus.ToDto(),
             CreatedAt: stream.CreatedAt,
-            Snapshots: stream.Snapshots.Select(s => s.ToDto()).ToList());
+            Snapshots: stream.Snapshots.Select(s => s.ToDto()).ToList(),
+            RecurringAmount: stream.RecurringAmount,
+            RecurringFrequency: stream.RecurringFrequency,
+            RecurringStartDate: stream.RecurringStartDate);
     }
 
     internal static SyncStatusDto ToDto(this Domain.StreamContext.ValueObjects.SyncStatus status)

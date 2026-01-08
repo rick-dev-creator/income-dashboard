@@ -70,6 +70,17 @@ internal sealed class StreamEntityConfiguration : IEntityTypeConfiguration<Strea
             .HasColumnName("created_at")
             .IsRequired();
 
+        // Recurring stream columns
+        builder.Property(x => x.RecurringAmount)
+            .HasColumnName("recurring_amount")
+            .HasPrecision(18, 2);
+
+        builder.Property(x => x.RecurringFrequency)
+            .HasColumnName("recurring_frequency");
+
+        builder.Property(x => x.RecurringStartDate)
+            .HasColumnName("recurring_start_date");
+
         builder.HasMany(x => x.Snapshots)
             .WithOne(x => x.Stream)
             .HasForeignKey(x => x.StreamId)

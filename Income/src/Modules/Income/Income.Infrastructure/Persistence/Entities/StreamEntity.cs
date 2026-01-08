@@ -21,6 +21,11 @@ internal sealed class StreamEntity : IStreamData
     public DateTime? NextScheduledAt { get; set; }
     public DateTime CreatedAt { get; set; }
 
+    // Recurring stream fields
+    public decimal? RecurringAmount { get; set; }
+    public int? RecurringFrequency { get; set; }
+    public DateOnly? RecurringStartDate { get; set; }
+
     public List<SnapshotEntity> Snapshots { get; set; } = [];
 
     StreamId IStreamData.Id => new(Id);
@@ -31,6 +36,9 @@ internal sealed class StreamEntity : IStreamData
     bool ICreateStreamData.IsFixed => IsFixed;
     string? ICreateStreamData.FixedPeriod => FixedPeriod;
     string? ICreateStreamData.EncryptedCredentials => EncryptedCredentials;
+    decimal? ICreateStreamData.RecurringAmount => RecurringAmount;
+    int? ICreateStreamData.RecurringFrequency => RecurringFrequency;
+    DateOnly? ICreateStreamData.RecurringStartDate => RecurringStartDate;
     SyncStatus IStreamData.SyncStatus => ToSyncStatus();
     DateTime IStreamData.CreatedAt => CreatedAt;
 
