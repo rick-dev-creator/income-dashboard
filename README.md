@@ -127,22 +127,22 @@ src/
 ## Roadmap
 
 ### Phase 1: Foundation
-- [ ] Project structure setup (Clean Architecture)
-- [ ] Database schema and EF Core configuration
-- [ ] Domain entities and value objects
-- [ ] Basic Blazor Server UI scaffold
+- [x] Project structure setup (Clean Architecture)
+- [x] Database schema and EF Core configuration
+- [x] Domain entities and value objects
+- [x] Basic Blazor Server UI scaffold
 
 ### Phase 2: Core Functionality
-- [ ] Connection management module
-- [ ] Manual income entry
-- [ ] First exchange integration
-- [ ] Basic dashboard with charts
+- [x] Connection management module
+- [x] Manual income entry
+- [ ] First exchange integration (plugin architecture ready)
+- [x] Basic dashboard with charts
 
 ### Phase 3: Analytics
-- [ ] Statistical calculations
-- [ ] Trend analysis
-- [ ] Simple projections
-- [ ] Multi-currency support
+- [x] Statistical calculations
+- [x] Trend analysis
+- [x] Simple projections
+- [ ] Multi-currency support (basic conversion exists)
 
 ### Phase 4: Polish
 - [ ] Additional integrations
