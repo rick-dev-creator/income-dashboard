@@ -121,11 +121,20 @@ else
         <MudItem xs="12" md="6">
             <MudPaper Class="pa-4" Elevation="2" Style="height: 100%;">
                 <MudText Typo="Typo.h6" Class="mb-3">Income Stability</MudText>
-                <MudChart ChartType="ChartType.Donut"
-                          InputData="@_compositionData"
-                          InputLabels="@_compositionLabels"
-                          Width="100%"
-                          Height="200px" />
+                @if (_compositionDonutData.Count > 0)
+                {
+                    <ApexChart @key="@($"composition_{IsDarkMode}")"
+                               TItem="CompositionPoint"
+                               Options="_donutChartOptions"
+                               Height="200">
+                        <ApexPointSeries TItem="CompositionPoint"
+                                         Items="_compositionDonutData"
+                                         SeriesType="SeriesType.Donut"
+                                         XValue="@(p => p.Label)"
+                                         YValue="@(p => p.Value)"
+                                         OrderBy="@(p => p.Y)" />
+                    </ApexChart>
+                }
                 <MudStack Spacing="2" Class="mt-4">
                     <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
@@ -206,27 +215,29 @@ else
 
         @if (_projection.MonthlyProjections.Count > 0)
         {
-            <MudChart ChartType="ChartType.Line"
-                      ChartSeries="@_chartSeries"
-                      XAxisLabels="@_chartLabels"
-                      Width="100%"
-                      Height="350px"
-                      ChartOptions="@_chartOptions" />
-
-            <MudStack Row="true" Justify="Justify.Center" Spacing="4" Class="mt-3">
-                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                    <div style="width: 20px; height: 3px; background-color: #1976D2;"></div>
-                    <MudText Typo="Typo.caption">Projected</MudText>
-                </MudStack>
-                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                    <div style="width: 20px; height: 3px; background-color: #f44336;"></div>
-                    <MudText Typo="Typo.caption">Lower Bound</MudText>
-                </MudStack>
-                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                    <div style="width: 20px; height: 3px; background-color: #4caf50;"></div>
-                    <MudText Typo="Typo.caption">Upper Bound</MudText>
-                </MudStack>
-            </MudStack>
+            <ApexChart @key="@($"projection_{IsDarkMode}")"
+                       TItem="ProjectionChartPoint"
+                       Options="_projectionChartOptions"
+                       Height="350">
+                <ApexPointSeries TItem="ProjectionChartPoint"
+                                 Items="_projectedSeries"
+                                 Name="Projected"
+                                 SeriesType="SeriesType.Area"
+                                 XValue="@(p => p.Month)"
+                                 YValue="@(p => p.Amount)" />
+                <ApexPointSeries TItem="ProjectionChartPoint"
+                                 Items="_upperBoundSeries"
+                                 Name="Upper Bound"
+                                 SeriesType="SeriesType.Line"
+                                 XValue="@(p => p.Month)"
+                                 YValue="@(p => p.Amount)" />
+                <ApexPointSeries TItem="ProjectionChartPoint"
+                                 Items="_lowerBoundSeries"
+                                 Name="Lower Bound"
+                                 SeriesType="SeriesType.Line"
+                                 XValue="@(p => p.Month)"
+                                 YValue="@(p => p.Amount)" />
+            </ApexChart>
         }
     </MudPaper>
 
@@ -304,21 +315,135 @@ else
 </style>
 
 @code {
+    [CascadingParameter(Name = "IsDarkMode")]
+    private bool IsDarkMode { get; set; } = true;
+
     private bool _isLoading = true;
     private ProjectionDto? _projection;
     private DashboardKpis? _kpis;
     private decimal _goalAmount = 0;
 
-    private List<ChartSeries> _chartSeries = [];
-    private string[] _chartLabels = [];
-    private ChartOptions _chartOptions = new() { YAxisTicks = 1000, InterpolationOption = InterpolationOption.Straight };
+    // ApexCharts data
+    private List<ProjectionChartPoint> _projectedSeries = [];
+    private List<ProjectionChartPoint> _upperBoundSeries = [];
+    private List<ProjectionChartPoint> _lowerBoundSeries = [];
+    private List<CompositionPoint> _compositionDonutData = [];
 
-    private double[] _compositionData = [];
-    private string[] _compositionLabels = [];
+    // Theme-aware colors
+    private string AxisLabelColor => IsDarkMode ? "#94a3b8" : "#64748b";
+    private string GridColor => IsDarkMode ? "#334155" : "#e2e8f0";
+    private Mode TooltipTheme => IsDarkMode ? Mode.Dark : Mode.Light;
+
+    // Chart data classes
+    public class ProjectionChartPoint
+    {
+        public string Month { get; set; } = "";
+        public decimal Amount { get; set; }
+    }
+
+    public class CompositionPoint
+    {
+        public string Label { get; set; } = "";
+        public decimal Value { get; set; }
+    }
+
+    // Chart options - built dynamically
+    private ApexChartOptions<ProjectionChartPoint> _projectionChartOptions = null!;
+    private ApexChartOptions<CompositionPoint> _donutChartOptions = null!;
+
+    private void BuildChartOptions()
+    {
+        _projectionChartOptions = new ApexChartOptions<ProjectionChartPoint>
+        {
+            Chart = new Chart
+            {
+                Toolbar = new Toolbar { Show = false },
+                Background = "transparent",
+                Animations = new Animations { Enabled = true, Speed = 500 }
+            },
+            Stroke = new Stroke
+            {
+                Curve = Curve.Smooth,
+                Width = new List<int> { 3, 2, 2 }
+            },
+            Fill = new Fill
+            {
+                Type = new List<FillType> { FillType.Gradient, FillType.Solid, FillType.Solid },
+                Gradient = new FillGradient
+                {
+                    ShadeIntensity = 0.3,
+                    OpacityFrom = 0.5,
+                    OpacityTo = 0.1
+                }
+            },
+            Xaxis = new XAxis
+            {
+                Labels = new XAxisLabels { Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } } }
+            },
+            Yaxis = [new YAxis
+            {
+                Labels = new YAxisLabels
+                {
+                    Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } },
+                    Formatter = "function(val) { return '$' + val.toLocaleString(); }"
+                }
+            }],
+            DataLabels = new DataLabels { Enabled = false },
+            Legend = new Legend { Show = true, Position = LegendPosition.Top, Labels = new LegendLabels { Colors = new ApexCharts.Color(AxisLabelColor) } },
+            Grid = new Grid { BorderColor = GridColor, StrokeDashArray = 4 },
+            Tooltip = new Tooltip
+            {
+                Theme = TooltipTheme,
+                Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" }
+            },
+            Colors = IsDarkMode ? ["#818cf8", "#4ade80", "#f87171"] : ["#6366f1", "#10b981", "#ef4444"]
+        };
+
+        _donutChartOptions = new ApexChartOptions<CompositionPoint>
+        {
+            Chart = new Chart { Toolbar = new Toolbar { Show = false }, Background = "transparent" },
+            Legend = new Legend { Show = false },
+            DataLabels = new DataLabels { Enabled = false },
+            PlotOptions = new PlotOptions
+            {
+                Pie = new PlotOptionsPie
+                {
+                    Donut = new PlotOptionsDonut
+                    {
+                        Size = "70%",
+                        Labels = new DonutLabels
+                        {
+                            Show = true,
+                            Total = new DonutLabelTotal
+                            {
+                                Show = true,
+                                Label = "Monthly",
+                                Color = AxisLabelColor,
+                                Formatter = "function(w) { return '$' + w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString(); }"
+                            },
+                            Value = new DonutLabelValue { Color = IsDarkMode ? "#f1f5f9" : "#0f172a" }
+                        }
+                    }
+                }
+            },
+            Tooltip = new Tooltip
+            {
+                Theme = TooltipTheme,
+                Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" }
+            },
+            Colors = IsDarkMode ? ["#4ade80", "#fbbf24"] : ["#10b981", "#f59e0b"]
+        };
+    }
 
     protected override async Task OnInitializedAsync()
     {
+        BuildChartOptions();
         await LoadDataAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        BuildChartOptions();
     }
 
     private async Task LoadDataAsync()
@@ -345,30 +470,25 @@ else
     {
         if (_projection is null) return;
 
-        // Projection chart
-        _chartLabels = _projection.MonthlyProjections.Select(p => p.Month.ToString("MMM")).ToArray();
-        _chartSeries =
-        [
-            new ChartSeries
-            {
-                Name = "Projected",
-                Data = _projection.MonthlyProjections.Select(p => (double)p.ProjectedUsd).ToArray()
-            },
-            new ChartSeries
-            {
-                Name = "Lower Bound",
-                Data = _projection.MonthlyProjections.Select(p => (double)p.LowerBoundUsd).ToArray()
-            },
-            new ChartSeries
-            {
-                Name = "Upper Bound",
-                Data = _projection.MonthlyProjections.Select(p => (double)p.UpperBoundUsd).ToArray()
-            }
-        ];
+        // Projection series
+        _projectedSeries = _projection.MonthlyProjections
+            .Select(p => new ProjectionChartPoint { Month = p.Month.ToString("MMM yy"), Amount = p.ProjectedUsd })
+            .ToList();
+
+        _upperBoundSeries = _projection.MonthlyProjections
+            .Select(p => new ProjectionChartPoint { Month = p.Month.ToString("MMM yy"), Amount = p.UpperBoundUsd })
+            .ToList();
+
+        _lowerBoundSeries = _projection.MonthlyProjections
+            .Select(p => new ProjectionChartPoint { Month = p.Month.ToString("MMM yy"), Amount = p.LowerBoundUsd })
+            .ToList();
 
         // Composition donut
-        _compositionLabels = ["Fixed Income", "Variable Income"];
-        _compositionData = [(double)_projection.FixedComponentUsd, (double)_projection.VariableComponentUsd];
+        _compositionDonutData =
+        [
+            new CompositionPoint { Label = "Fixed Income", Value = _projection.FixedComponentUsd },
+            new CompositionPoint { Label = "Variable Income", Value = _projection.VariableComponentUsd }
+        ];
     }
 
     private void OnGoalAmountChanged(decimal value)

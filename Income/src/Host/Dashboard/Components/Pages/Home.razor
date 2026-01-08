@@ -40,7 +40,8 @@ else
             @if (_sparklineData.Count > 0)
             {
                 <div class="sparkline-container">
-                    <ApexChart TItem="SparklinePoint"
+                    <ApexChart @key="@($"sparkline_{IsDarkMode}")"
+                               TItem="SparklinePoint"
                                Options="_sparklineOptions"
                                Height="40">
                         <ApexPointSeries TItem="SparklinePoint"
@@ -117,7 +118,8 @@ else
             }
             else if (_stackedTimeSeries?.Points.Count > 0)
             {
-                <ApexChart TItem="ChartDataPoint"
+                <ApexChart @key="@($"main_{_selectedGranularity}_{IsDarkMode}")"
+                           TItem="ChartDataPoint"
                            Options="_areaChartOptions"
                            Height="320"
                            @ref="_mainChart">
@@ -155,7 +157,8 @@ else
 
             @if (_donutData.Count > 0)
             {
-                <ApexChart TItem="DonutDataPoint"
+                <ApexChart @key="@($"donut_{IsDarkMode}")"
+                           TItem="DonutDataPoint"
                            Options="_donutChartOptions"
                            Height="280">
                     <ApexPointSeries TItem="DonutDataPoint"
@@ -703,6 +706,9 @@ else
 </style>
 
 @code {
+    [CascadingParameter(Name = "IsDarkMode")]
+    private bool IsDarkMode { get; set; } = true;
+
     private bool _isLoading = true;
     private bool _isLoadingChart = false;
     private string? _error;
@@ -719,122 +725,137 @@ else
     private List<DonutDataPoint> _donutData = [];
     private Dictionary<string, string> _streamColorMap = [];
 
-    private static readonly string[] ChartColors = [
-        "#818cf8", "#34d399", "#fbbf24", "#f472b6", "#60a5fa",
-        "#2dd4bf", "#a78bfa", "#fb923c", "#4ade80", "#38bdf8"
-    ];
+    // Theme-aware colors
+    private string AxisLabelColor => IsDarkMode ? "#94a3b8" : "#64748b";
+    private string GridColor => IsDarkMode ? "#334155" : "#e2e8f0";
+    private Mode TooltipTheme => IsDarkMode ? Mode.Dark : Mode.Light;
+    private string[] ChartColors => IsDarkMode
+        ? ["#818cf8", "#34d399", "#fbbf24", "#f472b6", "#60a5fa", "#2dd4bf", "#a78bfa", "#fb923c", "#4ade80", "#38bdf8"]
+        : ["#6366f1", "#10b981", "#f59e0b", "#ec4899", "#3b82f6", "#14b8a6", "#8b5cf6", "#f97316", "#22c55e", "#0ea5e9"];
 
-    // Chart options
-    private ApexChartOptions<ChartDataPoint> _areaChartOptions = new()
+    // Chart options - built dynamically
+    private ApexChartOptions<ChartDataPoint> _areaChartOptions = null!;
+    private ApexChartOptions<SparklinePoint> _sparklineOptions = null!;
+    private ApexChartOptions<DonutDataPoint> _donutChartOptions = null!;
+
+    private void BuildChartOptions()
     {
-        Chart = new Chart
+        _areaChartOptions = new ApexChartOptions<ChartDataPoint>
         {
-            Stacked = true,
-            Toolbar = new Toolbar { Show = false },
-            Animations = new Animations
+            Chart = new Chart
             {
-                Enabled = true,
-                Speed = 400,
-                AnimateGradually = new AnimateGradually { Enabled = true, Delay = 50 }
-            }
-        },
-        PlotOptions = new PlotOptions
-        {
-            Bar = new PlotOptionsBar
-            {
-                BorderRadius = 4,
-                ColumnWidth = "60%"
-            }
-        },
-        Xaxis = new XAxis
-        {
-            Labels = new XAxisLabels
-            {
-                Style = new AxisLabelStyle { Colors = new List<string> { "#94a3b8" } }
-            }
-        },
-        Yaxis =
-        [
-            new YAxis
-            {
-                Labels = new YAxisLabels
+                Stacked = true,
+                Toolbar = new Toolbar { Show = false },
+                Background = "transparent",
+                Animations = new Animations
                 {
-                    Style = new AxisLabelStyle { Colors = new List<string> { "#94a3b8" } },
-                    Formatter = "function(val) { return '$' + val.toLocaleString(); }"
+                    Enabled = true,
+                    Speed = 400,
+                    AnimateGradually = new AnimateGradually { Enabled = true, Delay = 50 }
                 }
-            }
-        ],
-        DataLabels = new DataLabels { Enabled = false },
-        Legend = new Legend { Show = true, Position = LegendPosition.Top },
-        Grid = new Grid
-        {
-            BorderColor = "#334155",
-            StrokeDashArray = 4
-        },
-        Tooltip = new Tooltip
-        {
-            Theme = Mode.Dark,
-            Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" }
-        },
-        Colors = ChartColors.ToList()
-    };
-
-    private ApexChartOptions<SparklinePoint> _sparklineOptions = new()
-    {
-        Chart = new Chart
-        {
-            Sparkline = new ChartSparkline { Enabled = true }
-        },
-        Stroke = new Stroke { Curve = Curve.Smooth, Width = 2 },
-        Fill = new Fill
-        {
-            Type = new List<FillType> { FillType.Gradient },
-            Gradient = new FillGradient
+            },
+            PlotOptions = new PlotOptions
             {
-                ShadeIntensity = 1,
-                OpacityFrom = 0.4,
-                OpacityTo = 0.1
-            }
-        },
-        Colors = ["#ffffff"],
-        Tooltip = new Tooltip { Enabled = false }
-    };
-
-    private ApexChartOptions<DonutDataPoint> _donutChartOptions = new()
-    {
-        Chart = new Chart
-        {
-            Toolbar = new Toolbar { Show = false }
-        },
-        Legend = new Legend { Show = false },
-        DataLabels = new DataLabels { Enabled = false },
-        PlotOptions = new PlotOptions
-        {
-            Pie = new PlotOptionsPie
-            {
-                Donut = new PlotOptionsDonut
+                Bar = new PlotOptionsBar
                 {
-                    Size = "70%",
-                    Labels = new DonutLabels
+                    BorderRadius = 4,
+                    ColumnWidth = "60%"
+                }
+            },
+            Xaxis = new XAxis
+            {
+                Labels = new XAxisLabels
+                {
+                    Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } }
+                }
+            },
+            Yaxis =
+            [
+                new YAxis
+                {
+                    Labels = new YAxisLabels
                     {
-                        Show = true,
-                        Total = new DonutLabelTotal
+                        Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } },
+                        Formatter = "function(val) { return '$' + val.toLocaleString(); }"
+                    }
+                }
+            ],
+            DataLabels = new DataLabels { Enabled = false },
+            Legend = new Legend { Show = true, Position = LegendPosition.Top, Labels = new LegendLabels { Colors = new ApexCharts.Color(AxisLabelColor) } },
+            Grid = new Grid
+            {
+                BorderColor = GridColor,
+                StrokeDashArray = 4
+            },
+            Tooltip = new Tooltip
+            {
+                Theme = TooltipTheme,
+                Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" }
+            },
+            Colors = ChartColors.ToList()
+        };
+
+        _sparklineOptions = new ApexChartOptions<SparklinePoint>
+        {
+            Chart = new Chart
+            {
+                Sparkline = new ChartSparkline { Enabled = true },
+                Background = "transparent"
+            },
+            Stroke = new Stroke { Curve = Curve.Smooth, Width = 2 },
+            Fill = new Fill
+            {
+                Type = new List<FillType> { FillType.Gradient },
+                Gradient = new FillGradient
+                {
+                    ShadeIntensity = 1,
+                    OpacityFrom = 0.4,
+                    OpacityTo = 0.1
+                }
+            },
+            Colors = ["#ffffff"],
+            Tooltip = new Tooltip { Enabled = false }
+        };
+
+        _donutChartOptions = new ApexChartOptions<DonutDataPoint>
+        {
+            Chart = new Chart
+            {
+                Toolbar = new Toolbar { Show = false },
+                Background = "transparent"
+            },
+            Legend = new Legend { Show = false },
+            DataLabels = new DataLabels { Enabled = false },
+            PlotOptions = new PlotOptions
+            {
+                Pie = new PlotOptionsPie
+                {
+                    Donut = new PlotOptionsDonut
+                    {
+                        Size = "70%",
+                        Labels = new DonutLabels
                         {
                             Show = true,
-                            Label = "Total",
-                            Formatter = "function(w) { return '$' + w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString(); }"
+                            Total = new DonutLabelTotal
+                            {
+                                Show = true,
+                                Label = "Total",
+                                Color = AxisLabelColor,
+                                Formatter = "function(w) { return '$' + w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString(); }"
+                            },
+                            Value = new DonutLabelValue { Color = IsDarkMode ? "#f1f5f9" : "#0f172a" }
                         }
                     }
                 }
-            }
-        },
-        Tooltip = new Tooltip
-        {
-            Theme = Mode.Dark,
-            Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" }
-        },
-        Colors = ChartColors.ToList()
-    };
+            },
+            Tooltip = new Tooltip
+            {
+                Theme = TooltipTheme,
+                Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" }
+            },
+            Colors = ChartColors.ToList()
+        };
+    }
 
     // Data classes
     public class ChartDataPoint
@@ -863,7 +884,13 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        BuildChartOptions();
         await LoadDataAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        BuildChartOptions();
     }
 
     private async Task LoadDataAsync()
