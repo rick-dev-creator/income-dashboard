@@ -74,46 +74,112 @@ else
 
     <!-- Time to Goal Calculator -->
     <MudPaper Class="pa-4 mb-4" Elevation="2">
-        <MudText Typo="Typo.h6" Class="mb-3">Time to Goal</MudText>
-        <MudGrid>
-            <MudItem xs="12" md="4">
-                <MudTextField T="decimal" Value="_goalAmount" ValueChanged="OnGoalAmountChanged"
-                              Label="Target Amount (USD)"
-                              Variant="Variant.Outlined" Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.AttachMoney"
-                              Immediate="true" DebounceInterval="300" />
-            </MudItem>
-            <MudItem xs="12" md="8">
-                @if (_goalAmount > 0 && _projection is not null && _projection.ProjectedMonthlyIncomeUsd > 0)
-                {
-                    var monthsToGoal = _goalAmount / _projection.ProjectedMonthlyIncomeUsd;
-                    var targetDate = DateTime.UtcNow.AddMonths((int)Math.Ceiling(monthsToGoal));
-                    <MudPaper Class="pa-4" Elevation="0" Style="background-color: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.3); border-radius: 8px;">
-                        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                            <div>
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">At your current rate, you'll reach</MudText>
-                                <MudText Typo="Typo.h5" Color="Color.Success">@FormatCurrency(_goalAmount)</MudText>
-                            </div>
-                            <div style="text-align: right;">
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">in approximately</MudText>
-                                <MudText Typo="Typo.h5" Color="Color.Primary">
-                                    @Math.Ceiling(monthsToGoal) months
-                                </MudText>
-                                <MudText Typo="Typo.caption" Color="Color.Secondary">
-                                    (@targetDate.ToString("MMMM yyyy"))
-                                </MudText>
-                            </div>
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+            <MudText Typo="Typo.h6">Time to Goal</MudText>
+            <MudTextField T="decimal" Value="_goalAmount" ValueChanged="OnGoalAmountChanged"
+                          Label="Target Amount"
+                          Variant="Variant.Outlined" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.AttachMoney"
+                          Immediate="true" DebounceInterval="300"
+                          Style="max-width: 200px;" />
+        </MudStack>
+
+        @if (_goalAmount > 0 && _projection is not null && _projection.ProjectedMonthlyIncomeUsd > 0)
+        {
+            var scenarios = CalculateGoalScenarios(_goalAmount);
+
+            <MudGrid Spacing="3">
+                <!-- Pessimistic Scenario -->
+                <MudItem xs="12" md="4">
+                    <MudPaper Class="pa-4 scenario-card" Elevation="0"
+                              Style="background: linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(239,68,68,0.05) 100%); border: 1px solid rgba(239,68,68,0.3);">
+                        <MudStack Spacing="2">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.TrendingDown" Color="Color.Error" Size="Size.Small" />
+                                <MudText Typo="Typo.overline" Color="Color.Error">PESSIMISTIC</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h4" Style="font-weight: 600;">@scenarios.Pessimistic.Months months</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">@scenarios.Pessimistic.TargetDate.ToString("MMMM yyyy")</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">@FormatCurrency(scenarios.Pessimistic.MonthlyRate)/mo</MudText>
                         </MudStack>
                     </MudPaper>
-                }
-                else
-                {
-                    <MudPaper Class="pa-4" Elevation="0" Style="background-color: rgba(158, 158, 158, 0.1); border-radius: 8px;">
-                        <MudText Color="Color.Secondary">Enter a target amount to see when you'll reach it</MudText>
+                </MudItem>
+
+                <!-- Realistic Scenario -->
+                <MudItem xs="12" md="4">
+                    <MudPaper Class="pa-4 scenario-card" Elevation="0"
+                              Style="background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.05) 100%); border: 2px solid rgba(99,102,241,0.5);">
+                        <MudStack Spacing="2">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.TrendingFlat" Color="Color.Primary" Size="Size.Small" />
+                                <MudText Typo="Typo.overline" Color="Color.Primary">REALISTIC</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h4" Color="Color.Primary" Style="font-weight: 700;">@scenarios.Realistic.Months months</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">@scenarios.Realistic.TargetDate.ToString("MMMM yyyy")</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">@FormatCurrency(scenarios.Realistic.MonthlyRate)/mo</MudText>
+                        </MudStack>
                     </MudPaper>
+                </MudItem>
+
+                <!-- Optimistic Scenario -->
+                <MudItem xs="12" md="4">
+                    <MudPaper Class="pa-4 scenario-card" Elevation="0"
+                              Style="background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0.05) 100%); border: 1px solid rgba(16,185,129,0.3);">
+                        <MudStack Spacing="2">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Color="Color.Success" Size="Size.Small" />
+                                <MudText Typo="Typo.overline" Color="Color.Success">OPTIMISTIC</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h4" Style="font-weight: 600;">@scenarios.Optimistic.Months months</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">@scenarios.Optimistic.TargetDate.ToString("MMMM yyyy")</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">@FormatCurrency(scenarios.Optimistic.MonthlyRate)/mo</MudText>
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+
+            <!-- Goal Progress Chart -->
+            <MudPaper Class="pa-4 mt-4" Elevation="0" Style="@($"background-color: {(IsDarkMode ? "rgba(30,41,59,0.5)" : "rgba(241,245,249,0.8)")}; border-radius: 8px;")">
+                <MudText Typo="Typo.subtitle2" Class="mb-3">Path to @FormatCurrency(_goalAmount)</MudText>
+                @if (_goalProgressData.Count > 0)
+                {
+                    <ApexChart @key="@($"goal_{_goalAmount}_{IsDarkMode}")"
+                               TItem="GoalProgressPoint"
+                               Options="_goalChartOptions"
+                               Height="200">
+                        <ApexPointSeries TItem="GoalProgressPoint"
+                                         Items="_goalProgressData"
+                                         Name="Projected"
+                                         SeriesType="SeriesType.Area"
+                                         XValue="@(p => p.Month)"
+                                         YValue="@(p => p.Cumulative)" />
+                        <ApexPointSeries TItem="GoalProgressPoint"
+                                         Items="_goalProgressData"
+                                         Name="Goal"
+                                         SeriesType="SeriesType.Line"
+                                         XValue="@(p => p.Month)"
+                                         YValue="@(p => _goalAmount)" />
+                    </ApexChart>
                 }
-            </MudItem>
-        </MudGrid>
+
+                <!-- Probability Insight -->
+                <MudStack Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center" Spacing="2" Class="mt-3">
+                    <MudIcon Icon="@Icons.Material.Filled.QueryStats" Color="Color.Info" />
+                    <MudText Typo="Typo.body2">
+                        Based on your income variability, you have a
+                        <strong style="color: var(--mud-palette-primary);">@CalculateGoalProbability(scenarios)%</strong>
+                        chance of reaching this goal within @scenarios.Realistic.Months months.
+                    </MudText>
+                </MudStack>
+            </MudPaper>
+        }
+        else
+        {
+            <MudPaper Class="pa-6" Elevation="0" Style="@($"background-color: {(IsDarkMode ? "rgba(30,41,59,0.5)" : "rgba(241,245,249,0.8)")}; border-radius: 8px; text-align: center;")">
+                <MudIcon Icon="@Icons.Material.Filled.Flag" Size="Size.Large" Color="Color.Secondary" Class="mb-2" />
+                <MudText Color="Color.Secondary">Enter a target amount to see when you'll reach it</MudText>
+            </MudPaper>
+        }
     </MudPaper>
 
     <!-- Income Composition -->
@@ -312,6 +378,15 @@ else
             font-size: 1rem !important;
         }
     }
+
+    .scenario-card {
+        border-radius: 12px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .scenario-card:hover {
+        transform: translateY(-2px);
+    }
 </style>
 
 @code {
@@ -347,9 +422,23 @@ else
         public decimal Value { get; set; }
     }
 
+    public class GoalProgressPoint
+    {
+        public string Month { get; set; } = "";
+        public decimal Cumulative { get; set; }
+    }
+
+    // Goal scenario records
+    private record GoalScenarioResult(int Months, DateTime TargetDate, decimal MonthlyRate);
+    private record GoalScenarios(GoalScenarioResult Optimistic, GoalScenarioResult Realistic, GoalScenarioResult Pessimistic);
+
+    // Goal progress data
+    private List<GoalProgressPoint> _goalProgressData = [];
+
     // Chart options - built dynamically
     private ApexChartOptions<ProjectionChartPoint> _projectionChartOptions = null!;
     private ApexChartOptions<CompositionPoint> _donutChartOptions = null!;
+    private ApexChartOptions<GoalProgressPoint> _goalChartOptions = null!;
 
     private void BuildChartOptions()
     {
@@ -433,6 +522,53 @@ else
             },
             Colors = IsDarkMode ? ["#4ade80", "#fbbf24"] : ["#10b981", "#f59e0b"]
         };
+
+        _goalChartOptions = new ApexChartOptions<GoalProgressPoint>
+        {
+            Chart = new Chart
+            {
+                Toolbar = new Toolbar { Show = false },
+                Background = "transparent",
+                Animations = new Animations { Enabled = true, Speed = 500 }
+            },
+            Stroke = new Stroke
+            {
+                Curve = Curve.Smooth,
+                Width = new List<int> { 3, 2 },
+                DashArray = new List<int> { 0, 5 }
+            },
+            Fill = new Fill
+            {
+                Type = new List<FillType> { FillType.Gradient, FillType.Solid },
+                Gradient = new FillGradient
+                {
+                    ShadeIntensity = 0.3,
+                    OpacityFrom = 0.4,
+                    OpacityTo = 0.1
+                }
+            },
+            Xaxis = new XAxis
+            {
+                Labels = new XAxisLabels { Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } } }
+            },
+            Yaxis = [new YAxis
+            {
+                Labels = new YAxisLabels
+                {
+                    Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } },
+                    Formatter = "function(val) { return '$' + val.toLocaleString(); }"
+                }
+            }],
+            DataLabels = new DataLabels { Enabled = false },
+            Legend = new Legend { Show = true, Position = LegendPosition.Top, Labels = new LegendLabels { Colors = new ApexCharts.Color(AxisLabelColor) } },
+            Grid = new Grid { BorderColor = GridColor, StrokeDashArray = 4 },
+            Tooltip = new Tooltip
+            {
+                Theme = TooltipTheme,
+                Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" }
+            },
+            Colors = IsDarkMode ? ["#818cf8", "#fbbf24"] : ["#6366f1", "#f59e0b"]
+        };
     }
 
     protected override async Task OnInitializedAsync()
@@ -494,7 +630,77 @@ else
     private void OnGoalAmountChanged(decimal value)
     {
         _goalAmount = value;
+        UpdateGoalProgressData();
         StateHasChanged();
+    }
+
+    private void UpdateGoalProgressData()
+    {
+        if (_projection is null || _goalAmount <= 0) return;
+
+        decimal cumulative = 0;
+        _goalProgressData = _projection.MonthlyProjections
+            .Select(p =>
+            {
+                cumulative += p.ProjectedUsd;
+                return new GoalProgressPoint
+                {
+                    Month = p.Month.ToString("MMM yy"),
+                    Cumulative = cumulative
+                };
+            })
+            .ToList();
+    }
+
+    private GoalScenarios CalculateGoalScenarios(decimal goalAmount)
+    {
+        if (_projection is null || _projection.MonthlyProjections.Count == 0)
+        {
+            return new GoalScenarios(
+                new GoalScenarioResult(0, DateTime.UtcNow, 0),
+                new GoalScenarioResult(0, DateTime.UtcNow, 0),
+                new GoalScenarioResult(0, DateTime.UtcNow, 0));
+        }
+
+        // Calculate average monthly rates from projections
+        var avgProjected = _projection.MonthlyProjections.Average(p => p.ProjectedUsd);
+        var avgUpper = _projection.MonthlyProjections.Average(p => p.UpperBoundUsd);
+        var avgLower = _projection.MonthlyProjections.Average(p => p.LowerBoundUsd);
+
+        // Avoid division by zero
+        avgProjected = avgProjected > 0 ? avgProjected : 1;
+        avgUpper = avgUpper > 0 ? avgUpper : 1;
+        avgLower = avgLower > 0 ? avgLower : 1;
+
+        var monthsOptimistic = (int)Math.Ceiling(goalAmount / avgUpper);
+        var monthsRealistic = (int)Math.Ceiling(goalAmount / avgProjected);
+        var monthsPessimistic = (int)Math.Ceiling(goalAmount / avgLower);
+
+        return new GoalScenarios(
+            new GoalScenarioResult(monthsOptimistic, DateTime.UtcNow.AddMonths(monthsOptimistic), avgUpper),
+            new GoalScenarioResult(monthsRealistic, DateTime.UtcNow.AddMonths(monthsRealistic), avgProjected),
+            new GoalScenarioResult(monthsPessimistic, DateTime.UtcNow.AddMonths(monthsPessimistic), avgLower));
+    }
+
+    private int CalculateGoalProbability(GoalScenarios scenarios)
+    {
+        if (_projection is null) return 50;
+
+        // Base probability on confidence score and scenario spread
+        var baseProb = (int)(_projection.ConfidenceScore * 100);
+
+        // Adjust based on how tight the scenarios are
+        var spread = scenarios.Pessimistic.Months - scenarios.Optimistic.Months;
+        var spreadFactor = spread switch
+        {
+            <= 2 => 15,   // Very tight spread = higher confidence
+            <= 4 => 10,
+            <= 6 => 5,
+            <= 10 => 0,
+            _ => -10      // Wide spread = lower confidence
+        };
+
+        return Math.Clamp(baseProb + spreadFactor, 10, 95);
     }
 
     private List<MilestoneItem> GetMilestones()
