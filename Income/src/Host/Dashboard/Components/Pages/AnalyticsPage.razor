@@ -7,6 +7,7 @@
 @inject IGetTopPerformersHandler TopPerformersHandler
 @inject IGetTrendHandler TrendHandler
 @inject IGetIncomeTimeSeriesHandler TimeSeriesHandler
+@inject IGetSeasonalityHandler SeasonalityHandler
 @rendermode InteractiveServer
 
 <PageTitle>Analytics - FlowMetrics</PageTitle>
@@ -325,6 +326,138 @@ else
             </MudPaper>
         </MudItem>
     </MudGrid>
+
+    <!-- Section 5: Seasonality Analysis -->
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4">
+            <div>
+                <MudText Typo="Typo.h6">Seasonality Patterns</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary">Income patterns by day and month</MudText>
+            </div>
+            @if (_seasonality is not null)
+            {
+                <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">
+                    @_seasonality.TotalDaysAnalyzed days analyzed
+                </MudChip>
+            }
+        </MudStack>
+
+        @if (_seasonality is not null && _seasonality.TotalDaysAnalyzed > 0)
+        {
+            <MudGrid Spacing="3">
+                <!-- Day of Week Analysis -->
+                <MudItem xs="12" md="6">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2">Average Income by Day of Week</MudText>
+                    @if (_dayOfWeekChartData.Count > 0)
+                    {
+                        <ApexChart @key="@($"dow_{IsDarkMode}")"
+                                   TItem="SeasonalityChartPoint"
+                                   Options="_dayOfWeekChartOptions"
+                                   Height="250">
+                            <ApexPointSeries TItem="SeasonalityChartPoint"
+                                             Items="_dayOfWeekChartData"
+                                             Name="Average"
+                                             SeriesType="SeriesType.Bar"
+                                             XValue="@(p => p.Label)"
+                                             YValue="@(p => p.Amount)" />
+                        </ApexChart>
+                    }
+                </MudItem>
+
+                <!-- Month of Year Analysis -->
+                <MudItem xs="12" md="6">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2">Average Income by Month</MudText>
+                    @if (_monthOfYearChartData.Count > 0)
+                    {
+                        <ApexChart @key="@($"moy_{IsDarkMode}")"
+                                   TItem="SeasonalityChartPoint"
+                                   Options="_monthOfYearChartOptions"
+                                   Height="250">
+                            <ApexPointSeries TItem="SeasonalityChartPoint"
+                                             Items="_monthOfYearChartData"
+                                             Name="Average"
+                                             SeriesType="SeriesType.Bar"
+                                             XValue="@(p => p.Label)"
+                                             YValue="@(p => p.Amount)" />
+                        </ApexChart>
+                    }
+                </MudItem>
+            </MudGrid>
+
+            <!-- Insights -->
+            <MudGrid Class="mt-4" Spacing="3">
+                <MudItem xs="6" md="3">
+                    <MudPaper Class="pa-3" Elevation="0" Style="background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0.05) 100%); border: 1px solid rgba(16,185,129,0.3); border-radius: 8px;">
+                        <MudStack Spacing="1">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Color="Color.Success" Size="Size.Small" />
+                                <MudText Typo="Typo.caption" Color="Color.Success">Best Day</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h6">@_seasonality.BestDay.Name</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                @FormatCurrency(_seasonality.BestDay.AverageUsd) avg
+                                <span style="color: var(--mud-palette-success);">(@FormatSignedPercentage(_seasonality.BestDay.PercentageVsAverage))</span>
+                            </MudText>
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="6" md="3">
+                    <MudPaper Class="pa-3" Elevation="0" Style="background: linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(239,68,68,0.05) 100%); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px;">
+                        <MudStack Spacing="1">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.TrendingDown" Color="Color.Error" Size="Size.Small" />
+                                <MudText Typo="Typo.caption" Color="Color.Error">Slowest Day</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h6">@_seasonality.WorstDay.Name</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                @FormatCurrency(_seasonality.WorstDay.AverageUsd) avg
+                                <span style="color: var(--mud-palette-error);">(@FormatSignedPercentage(_seasonality.WorstDay.PercentageVsAverage))</span>
+                            </MudText>
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="6" md="3">
+                    <MudPaper Class="pa-3" Elevation="0" Style="background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0.05) 100%); border: 1px solid rgba(16,185,129,0.3); border-radius: 8px;">
+                        <MudStack Spacing="1">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Color="Color.Success" Size="Size.Small" />
+                                <MudText Typo="Typo.caption" Color="Color.Success">Best Month</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h6">@_seasonality.BestMonth.Name</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                @FormatCurrency(_seasonality.BestMonth.AverageUsd) avg
+                                <span style="color: var(--mud-palette-success);">(@FormatSignedPercentage(_seasonality.BestMonth.PercentageVsAverage))</span>
+                            </MudText>
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+
+                <MudItem xs="6" md="3">
+                    <MudPaper Class="pa-3" Elevation="0" Style="background: linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(239,68,68,0.05) 100%); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px;">
+                        <MudStack Spacing="1">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.CalendarMonth" Color="Color.Error" Size="Size.Small" />
+                                <MudText Typo="Typo.caption" Color="Color.Error">Slowest Month</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h6">@_seasonality.WorstMonth.Name</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                @FormatCurrency(_seasonality.WorstMonth.AverageUsd) avg
+                                <span style="color: var(--mud-palette-error);">(@FormatSignedPercentage(_seasonality.WorstMonth.PercentageVsAverage))</span>
+                            </MudText>
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        }
+        else
+        {
+            <MudAlert Severity="Severity.Info">
+                Not enough data to analyze seasonality patterns. Add more income entries to see patterns.
+            </MudAlert>
+        }
+    </MudPaper>
 }
 
 @code {
@@ -358,6 +491,11 @@ else
     // What-If
     private WhatIfResult? _whatIfResult;
 
+    // Seasonality
+    private SeasonalityDto? _seasonality;
+    private List<SeasonalityChartPoint> _dayOfWeekChartData = [];
+    private List<SeasonalityChartPoint> _monthOfYearChartData = [];
+
     // Theme colors
     private string AxisLabelColor => IsDarkMode ? "#94a3b8" : "#64748b";
     private string GridColor => IsDarkMode ? "#334155" : "#e2e8f0";
@@ -366,6 +504,8 @@ else
     // Chart Options - will be rebuilt when theme changes
     private ApexChartOptions<TimeSeriesChartPoint> _streamChartOptions = null!;
     private ApexChartOptions<CategoryChartPoint> _categoryChartOptions = null!;
+    private ApexChartOptions<SeasonalityChartPoint> _dayOfWeekChartOptions = null!;
+    private ApexChartOptions<SeasonalityChartPoint> _monthOfYearChartOptions = null!;
 
     private void BuildChartOptions()
     {
@@ -426,6 +566,52 @@ else
                 ? ["#818cf8", "#34d399", "#fbbf24", "#f472b6", "#60a5fa"]
                 : ["#6366f1", "#10b981", "#f59e0b", "#ec4899", "#3b82f6"]
         };
+
+        _dayOfWeekChartOptions = new ApexChartOptions<SeasonalityChartPoint>
+        {
+            Chart = new Chart
+            {
+                Toolbar = new Toolbar { Show = false },
+                Animations = new Animations { Enabled = true, Speed = 400 },
+                Background = "transparent"
+            },
+            PlotOptions = new PlotOptions
+            {
+                Bar = new PlotOptionsBar { ColumnWidth = "60%", BorderRadius = 4, Distributed = true }
+            },
+            Xaxis = new XAxis { Labels = new XAxisLabels { Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } } } },
+            Yaxis = [new YAxis { Labels = new YAxisLabels { Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } }, Formatter = "function(val) { return '$' + val.toLocaleString(); }" } }],
+            DataLabels = new DataLabels { Enabled = false },
+            Legend = new Legend { Show = false },
+            Grid = new Grid { BorderColor = GridColor, StrokeDashArray = 4 },
+            Tooltip = new Tooltip { Theme = TooltipTheme, Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" } },
+            Colors = IsDarkMode
+                ? ["#60a5fa", "#818cf8", "#a78bfa", "#c084fc", "#e879f9", "#f472b6", "#fb7185"]
+                : ["#3b82f6", "#6366f1", "#8b5cf6", "#a855f7", "#d946ef", "#ec4899", "#f43f5e"]
+        };
+
+        _monthOfYearChartOptions = new ApexChartOptions<SeasonalityChartPoint>
+        {
+            Chart = new Chart
+            {
+                Toolbar = new Toolbar { Show = false },
+                Animations = new Animations { Enabled = true, Speed = 400 },
+                Background = "transparent"
+            },
+            PlotOptions = new PlotOptions
+            {
+                Bar = new PlotOptionsBar { ColumnWidth = "60%", BorderRadius = 4, Distributed = true }
+            },
+            Xaxis = new XAxis { Labels = new XAxisLabels { Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } } } },
+            Yaxis = [new YAxis { Labels = new YAxisLabels { Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } }, Formatter = "function(val) { return '$' + val.toLocaleString(); }" } }],
+            DataLabels = new DataLabels { Enabled = false },
+            Legend = new Legend { Show = false },
+            Grid = new Grid { BorderColor = GridColor, StrokeDashArray = 4 },
+            Tooltip = new Tooltip { Theme = TooltipTheme, Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" } },
+            Colors = IsDarkMode
+                ? ["#34d399", "#2dd4bf", "#22d3ee", "#38bdf8", "#60a5fa", "#818cf8", "#a78bfa", "#c084fc", "#e879f9", "#f472b6", "#fb7185", "#fbbf24"]
+                : ["#10b981", "#14b8a6", "#06b6d4", "#0ea5e9", "#3b82f6", "#6366f1", "#8b5cf6", "#a855f7", "#d946ef", "#ec4899", "#f43f5e", "#f59e0b"]
+        };
     }
 
     // Data Classes
@@ -436,6 +622,7 @@ else
     public class StabilityMetrics { public decimal FixedUsd; public decimal VariableUsd; public decimal FixedPercentage; public decimal TopStreamPercentage; public decimal Top3StreamsPercentage; public int ActiveStreamCount; }
     public class WhatIfResult { public decimal MonthlyLossUsd; public decimal NewMonthlyTotalUsd; public decimal ReductionPercentage; public decimal NewDailyRateUsd; }
     public class RankedStream { public int Rank; public string Id = ""; public string Name = ""; public string Category = ""; public string ProviderName = ""; public decimal TotalUsd; public decimal AvgPerSnapshot; public decimal Contribution; public decimal ChangePercentage; public string Direction = "Stable"; }
+    public class SeasonalityChartPoint { public string Label { get; set; } = ""; public decimal Amount { get; set; } }
 
     protected override async Task OnInitializedAsync()
     {
@@ -482,7 +669,37 @@ else
         // Calculate Stability Metrics
         CalculateStabilityMetrics();
 
+        // Load Seasonality
+        await LoadSeasonalityAsync();
+
         _isLoading = false;
+    }
+
+    private async Task LoadSeasonalityAsync()
+    {
+        var monthsBack = _selectedPeriod switch
+        {
+            "1M" => 1,
+            "3M" => 3,
+            "6M" => 6,
+            "1Y" => 12,
+            _ => 12
+        };
+
+        var result = await SeasonalityHandler.HandleAsync(new GetSeasonalityQuery(monthsBack));
+        if (!result.IsSuccess) return;
+
+        _seasonality = result.Value;
+
+        // Build day of week chart data
+        _dayOfWeekChartData = _seasonality.DayOfWeekAnalysis
+            .Select(d => new SeasonalityChartPoint { Label = d.DayName[..3], Amount = d.AverageUsd })
+            .ToList();
+
+        // Build month of year chart data
+        _monthOfYearChartData = _seasonality.MonthOfYearAnalysis
+            .Select(m => new SeasonalityChartPoint { Label = m.MonthName[..3], Amount = m.AverageUsd })
+            .ToList();
     }
 
     private void BuildRankedStreams()

@@ -21,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<IGetDailyRateHandler, GetDailyRateHandler>();
         services.AddScoped<IGetStackedTimeSeriesHandler, GetStackedTimeSeriesHandler>();
         services.AddScoped<IGetStreamTrendsHandler, GetStreamTrendsHandler>();
+        services.AddScoped<IGetSeasonalityHandler, GetSeasonalityHandler>();
 
         // Application Services (for Blazor/Frontend consumption)
         services.AddScoped<IDashboardService, DashboardService>();
