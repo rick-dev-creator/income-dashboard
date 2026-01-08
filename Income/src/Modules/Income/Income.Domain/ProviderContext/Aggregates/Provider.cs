@@ -20,12 +20,19 @@ internal enum SyncFrequency
     Manual
 }
 
+internal enum ConnectorKind
+{
+    Recurring,  // Auto-generates snapshots based on schedule (Salary, Rent)
+    Syncable    // Pulls data from external APIs (future: Binance, Patreon)
+}
+
 internal sealed class Provider : AggregateRoot<ProviderId>
 {
     private Provider(
         ProviderId id,
         string name,
         ProviderType type,
+        ConnectorKind connectorKind,
         string defaultCurrency,
         SyncFrequency syncFrequency,
         string? configSchema)
@@ -33,6 +40,7 @@ internal sealed class Provider : AggregateRoot<ProviderId>
         Id = id;
         _name = name;
         Type = type;
+        ConnectorKind = connectorKind;
         DefaultCurrency = defaultCurrency;
         SyncFrequency = syncFrequency;
         ConfigSchema = configSchema;
@@ -48,6 +56,7 @@ internal sealed class Provider : AggregateRoot<ProviderId>
     }
 
     public ProviderType Type { get; private init; }
+    public ConnectorKind ConnectorKind { get; private init; }
     public string DefaultCurrency { get; private init; } = null!;
     public SyncFrequency SyncFrequency { get; private init; }
     public string? ConfigSchema { get; private init; }
@@ -55,6 +64,7 @@ internal sealed class Provider : AggregateRoot<ProviderId>
     internal static Result<Provider> Create(
         string name,
         ProviderType type,
+        ConnectorKind connectorKind,
         string defaultCurrency,
         SyncFrequency syncFrequency,
         string? configSchema = null)
@@ -69,6 +79,7 @@ internal sealed class Provider : AggregateRoot<ProviderId>
             id: ProviderId.New(),
             name: name,
             type: type,
+            connectorKind: connectorKind,
             defaultCurrency: defaultCurrency.ToUpperInvariant(),
             syncFrequency: syncFrequency,
             configSchema: configSchema);
@@ -80,13 +91,15 @@ internal sealed class Provider : AggregateRoot<ProviderId>
         ProviderId id,
         string name,
         ProviderType type,
+        ConnectorKind connectorKind,
         string defaultCurrency,
         SyncFrequency syncFrequency,
         string? configSchema)
     {
-        return new Provider(id, name, type, defaultCurrency, syncFrequency, configSchema);
+        return new Provider(id, name, type, connectorKind, defaultCurrency, syncFrequency, configSchema);
     }
 
-    public bool RequiresCredentials => Type != ProviderType.Manual;
-    public bool SupportsAutoSync => SyncFrequency != SyncFrequency.Manual;
+    public bool RequiresCredentials => ConnectorKind == ConnectorKind.Syncable;
+    public bool SupportsAutoSync => ConnectorKind == ConnectorKind.Syncable;
+    public bool IsRecurring => ConnectorKind == ConnectorKind.Recurring;
 }

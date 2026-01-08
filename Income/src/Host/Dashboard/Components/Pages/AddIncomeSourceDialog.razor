@@ -1,0 +1,210 @@
+@using Income.Application.Connectors
+@using Income.Application.Services.Streams
+@inject IConnectorRegistry ConnectorRegistry
+@inject IStreamService StreamService
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />
+            @GetDialogTitle()
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (_step == Step.SelectType)
+        {
+            <MudText Class="mb-4">What type of income do you want to track?</MudText>
+            <MudStack Spacing="3">
+                <MudCard Class="cursor-pointer hover-card" @onclick="SelectRecurring" Elevation="2">
+                    <MudCardContent>
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                            <MudAvatar Color="Color.Success" Size="Size.Large">
+                                <MudIcon Icon="@Icons.Material.Filled.EventRepeat" />
+                            </MudAvatar>
+                            <div>
+                                <MudText Typo="Typo.h6">Recurring Income</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                    Salary, rent, subscriptions - fixed amounts on a schedule
+                                </MudText>
+                            </div>
+                        </MudStack>
+                    </MudCardContent>
+                </MudCard>
+
+                <MudCard Class="cursor-pointer" Elevation="1" Style="opacity: 0.6;">
+                    <MudCardContent>
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                            <MudAvatar Color="Color.Default" Size="Size.Large">
+                                <MudIcon Icon="@Icons.Material.Filled.Sync" />
+                            </MudAvatar>
+                            <div>
+                                <MudText Typo="Typo.h6">API Integration</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                    Exchanges, platforms - sync automatically (coming soon)
+                                </MudText>
+                            </div>
+                        </MudStack>
+                    </MudCardContent>
+                </MudCard>
+            </MudStack>
+        }
+        else if (_step == Step.ConfigureRecurring)
+        {
+            <MudForm @ref="_form" @bind-IsValid="_formValid">
+                <MudStack Spacing="3">
+                    <MudTextField @bind-Value="_name" Label="Income Name" Required="true"
+                                  RequiredError="Name is required" Variant="Variant.Outlined"
+                                  Placeholder="e.g., Monthly Salary, Apartment Rent" />
+
+                    <MudSelect T="string" Label="Category" @bind-Value="_category" Required="true"
+                               RequiredError="Category is required" Variant="Variant.Outlined">
+                        <MudSelectItem Value="@("Salary")">Salary</MudSelectItem>
+                        <MudSelectItem Value="@("Rental")">Rental Income</MudSelectItem>
+                        <MudSelectItem Value="@("Dividend")">Dividend</MudSelectItem>
+                        <MudSelectItem Value="@("Subscription")">Subscription</MudSelectItem>
+                        <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                    </MudSelect>
+
+                    <MudNumericField T="decimal" @bind-Value="_amount" Label="Amount" Required="true"
+                                     RequiredError="Amount is required" Variant="Variant.Outlined"
+                                     Min="0.01m" Format="N2" Adornment="Adornment.Start"
+                                     AdornmentText="$" />
+
+                    <MudSelect T="string" Label="Currency" @bind-Value="_currency" Required="true"
+                               RequiredError="Currency is required" Variant="Variant.Outlined">
+                        <MudSelectItem Value="@("USD")">USD - US Dollar</MudSelectItem>
+                        <MudSelectItem Value="@("EUR")">EUR - Euro</MudSelectItem>
+                        <MudSelectItem Value="@("GBP")">GBP - British Pound</MudSelectItem>
+                        <MudSelectItem Value="@("MXN")">MXN - Mexican Peso</MudSelectItem>
+                    </MudSelect>
+
+                    <MudSelect T="int" Label="Frequency" @bind-Value="_frequency" Required="true"
+                               RequiredError="Frequency is required" Variant="Variant.Outlined">
+                        <MudSelectItem Value="0">Weekly</MudSelectItem>
+                        <MudSelectItem Value="1">Bi-Weekly</MudSelectItem>
+                        <MudSelectItem Value="2">Monthly</MudSelectItem>
+                        <MudSelectItem Value="3">Quarterly</MudSelectItem>
+                        <MudSelectItem Value="4">Yearly</MudSelectItem>
+                    </MudSelect>
+
+                    <MudDatePicker @bind-Date="_startDate" Label="First Payment Date" Required="true"
+                                   RequiredError="Start date is required" Variant="Variant.Outlined"
+                                   Placeholder="When did/will payments start?" />
+
+                    <MudAlert Severity="Severity.Info" Dense="true" Class="mt-2">
+                        Snapshots will be automatically generated on each payment date.
+                    </MudAlert>
+                </MudStack>
+            </MudForm>
+        }
+    </DialogContent>
+    <DialogActions>
+        @if (_step == Step.SelectType)
+        {
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+        }
+        else
+        {
+            <MudButton OnClick="GoBack">Back</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="CreateStream"
+                       Disabled="@(!_formValid || _isCreating)">
+                @if (_isCreating)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                }
+                Create
+            </MudButton>
+        }
+    </DialogActions>
+</MudDialog>
+
+<style>
+    .hover-card:hover {
+        background-color: var(--mud-palette-action-default-hover);
+    }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+</style>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    private enum Step { SelectType, ConfigureRecurring }
+    private Step _step = Step.SelectType;
+
+    private MudForm _form = null!;
+    private bool _formValid;
+    private bool _isCreating;
+
+    // Form fields
+    private string _name = "";
+    private string _category = "Salary";
+    private decimal _amount = 0;
+    private string _currency = "USD";
+    private int _frequency = 2; // Monthly
+    private DateTime? _startDate = DateTime.Today;
+
+    private string GetDialogTitle() => _step switch
+    {
+        Step.SelectType => "Add Income Source",
+        Step.ConfigureRecurring => "Configure Recurring Income",
+        _ => "Add Income Source"
+    };
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private void GoBack() => _step = Step.SelectType;
+
+    private void SelectRecurring() => _step = Step.ConfigureRecurring;
+
+    private async Task CreateStream()
+    {
+        if (!_formValid || _startDate is null) return;
+
+        _isCreating = true;
+
+        try
+        {
+            var request = new CreateStreamRequest(
+                ProviderId: BuiltInProviders.RecurringIncome,
+                Name: _name,
+                Category: _category,
+                OriginalCurrency: _currency,
+                IsFixed: true,
+                FixedPeriod: GetFrequencyLabel(_frequency),
+                Credentials: null,
+                RecurringAmount: _amount,
+                RecurringFrequency: _frequency,
+                RecurringStartDate: DateOnly.FromDateTime(_startDate.Value));
+
+            var result = await StreamService.CreateAsync(request);
+
+            if (result.IsSuccess)
+            {
+                Snackbar.Add($"Income stream '{_name}' created successfully!", Severity.Success);
+                MudDialog.Close(DialogResult.Ok(true));
+            }
+            else
+            {
+                Snackbar.Add($"Error: {result.Errors.FirstOrDefault()?.Message}", Severity.Error);
+            }
+        }
+        finally
+        {
+            _isCreating = false;
+        }
+    }
+
+    private static string GetFrequencyLabel(int frequency) => frequency switch
+    {
+        0 => "Weekly",
+        1 => "BiWeekly",
+        2 => "Monthly",
+        3 => "Quarterly",
+        4 => "Yearly",
+        _ => "Monthly"
+    };
+}

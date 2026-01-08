@@ -19,6 +19,7 @@ public class CreateStreamHandlerTests(PostgresFixture fixture)
         var providerResult = await createProviderHandler.HandleAsync(new CreateProviderCommand(
             Name: $"TestProvider_{uniqueSuffix}",
             Type: "Exchange",
+            ConnectorKind: "Syncable",
             DefaultCurrency: "USDT",
             SyncFrequency: "Daily",
             ConfigSchema: null));
@@ -78,6 +79,7 @@ public class CreateStreamHandlerTests(PostgresFixture fixture)
         var providerResult = await createProviderHandler.HandleAsync(new CreateProviderCommand(
             Name: $"CategoryTestProvider_{uniqueSuffix}",
             Type: "Manual",
+            ConnectorKind: "Recurring",
             DefaultCurrency: "USD",
             SyncFrequency: "Manual",
             ConfigSchema: null));

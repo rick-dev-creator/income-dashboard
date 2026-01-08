@@ -12,6 +12,7 @@ internal static class ProviderMappingExtensions
             id: new ProviderId(entity.Id),
             name: entity.Name,
             type: (ProviderType)entity.Type,
+            connectorKind: (ConnectorKind)entity.ConnectorKind,
             defaultCurrency: entity.DefaultCurrency,
             syncFrequency: (SyncFrequency)entity.SyncFrequency,
             configSchema: entity.ConfigSchema);
@@ -24,6 +25,7 @@ internal static class ProviderMappingExtensions
             Id = domain.Id.Value,
             Name = domain.Name,
             Type = (int)domain.Type,
+            ConnectorKind = (int)domain.ConnectorKind,
             DefaultCurrency = domain.DefaultCurrency,
             SyncFrequency = (int)domain.SyncFrequency,
             ConfigSchema = domain.ConfigSchema

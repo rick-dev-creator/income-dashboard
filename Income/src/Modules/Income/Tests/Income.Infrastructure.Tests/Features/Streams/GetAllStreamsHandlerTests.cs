@@ -53,6 +53,7 @@ public class GetAllStreamsHandlerTests(PostgresFixture fixture)
         var result = await handler.HandleAsync(new CreateProviderCommand(
             Name: $"GetAllStreamsTestProvider_{suffix}",
             Type: "Exchange",
+            ConnectorKind: "Syncable",
             DefaultCurrency: "USDT",
             SyncFrequency: "Daily",
             ConfigSchema: null));

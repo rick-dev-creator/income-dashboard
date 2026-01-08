@@ -109,6 +109,7 @@ public class RecordSnapshotHandlerTests(PostgresFixture fixture)
         var providerResult = await createProviderHandler.HandleAsync(new CreateProviderCommand(
             Name: $"SnapshotTestProvider_{uniqueSuffix}",
             Type: "Exchange",
+            ConnectorKind: "Syncable",
             DefaultCurrency: "USDT",
             SyncFrequency: "Daily",
             ConfigSchema: null));

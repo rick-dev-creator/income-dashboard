@@ -9,6 +9,7 @@ public class ProviderTests
         var result = Provider.Create(
             name: "Blofin",
             type: ProviderType.Exchange,
+            connectorKind: ConnectorKind.Syncable,
             defaultCurrency: "USDT",
             syncFrequency: SyncFrequency.Daily);
 
@@ -16,6 +17,7 @@ public class ProviderTests
         result.IsSuccess.ShouldBeTrue();
         result.Value.Name.ShouldBe("Blofin");
         result.Value.Type.ShouldBe(ProviderType.Exchange);
+        result.Value.ConnectorKind.ShouldBe(ConnectorKind.Syncable);
         result.Value.DefaultCurrency.ShouldBe("USDT");
     }
 
@@ -26,6 +28,7 @@ public class ProviderTests
         var result = Provider.Create(
             name: "",
             type: ProviderType.Exchange,
+            connectorKind: ConnectorKind.Syncable,
             defaultCurrency: "USD",
             syncFrequency: SyncFrequency.Daily);
 
@@ -40,6 +43,7 @@ public class ProviderTests
         var result = Provider.Create(
             name: "Test",
             type: ProviderType.Manual,
+            connectorKind: ConnectorKind.Recurring,
             defaultCurrency: "usd",
             syncFrequency: SyncFrequency.Manual);
 
@@ -49,46 +53,68 @@ public class ProviderTests
     }
 
     [Fact]
-    public void RequiresCredentials_ForExchange_ShouldBeTrue()
+    public void RequiresCredentials_ForSyncable_ShouldBeTrue()
     {
         // Arrange
         var provider = Provider.Create(
-            "Blofin", ProviderType.Exchange, "USD", SyncFrequency.Daily).Value;
+            "Blofin", ProviderType.Exchange, ConnectorKind.Syncable, "USD", SyncFrequency.Daily).Value;
 
         // Assert
         provider.RequiresCredentials.ShouldBeTrue();
     }
 
     [Fact]
-    public void RequiresCredentials_ForManual_ShouldBeFalse()
+    public void RequiresCredentials_ForRecurring_ShouldBeFalse()
     {
         // Arrange
         var provider = Provider.Create(
-            "Salary", ProviderType.Manual, "USD", SyncFrequency.Manual).Value;
+            "Salary", ProviderType.Manual, ConnectorKind.Recurring, "USD", SyncFrequency.Manual).Value;
 
         // Assert
         provider.RequiresCredentials.ShouldBeFalse();
     }
 
     [Fact]
-    public void SupportsAutoSync_ForDaily_ShouldBeTrue()
+    public void SupportsAutoSync_ForSyncable_ShouldBeTrue()
     {
         // Arrange
         var provider = Provider.Create(
-            "Blofin", ProviderType.Exchange, "USD", SyncFrequency.Daily).Value;
+            "Blofin", ProviderType.Exchange, ConnectorKind.Syncable, "USD", SyncFrequency.Daily).Value;
 
         // Assert
         provider.SupportsAutoSync.ShouldBeTrue();
     }
 
     [Fact]
-    public void SupportsAutoSync_ForManual_ShouldBeFalse()
+    public void SupportsAutoSync_ForRecurring_ShouldBeFalse()
     {
         // Arrange
         var provider = Provider.Create(
-            "Salary", ProviderType.Manual, "USD", SyncFrequency.Manual).Value;
+            "Salary", ProviderType.Manual, ConnectorKind.Recurring, "USD", SyncFrequency.Manual).Value;
 
         // Assert
         provider.SupportsAutoSync.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void IsRecurring_ForRecurringConnector_ShouldBeTrue()
+    {
+        // Arrange
+        var provider = Provider.Create(
+            "Salary", ProviderType.Manual, ConnectorKind.Recurring, "USD", SyncFrequency.Manual).Value;
+
+        // Assert
+        provider.IsRecurring.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void IsRecurring_ForSyncableConnector_ShouldBeFalse()
+    {
+        // Arrange
+        var provider = Provider.Create(
+            "Blofin", ProviderType.Exchange, ConnectorKind.Syncable, "USD", SyncFrequency.Daily).Value;
+
+        // Assert
+        provider.IsRecurring.ShouldBeFalse();
     }
 }

@@ -17,6 +17,7 @@ public class CreateProviderHandlerTests(PostgresFixture fixture)
         var command = new CreateProviderCommand(
             Name: "Blofin",
             Type: "Exchange",
+            ConnectorKind: "Syncable",
             DefaultCurrency: "USDT",
             SyncFrequency: "Daily",
             ConfigSchema: null);
@@ -28,6 +29,7 @@ public class CreateProviderHandlerTests(PostgresFixture fixture)
         result.IsSuccess.ShouldBeTrue();
         result.Value.Name.ShouldBe("Blofin");
         result.Value.Type.ShouldBe("Exchange");
+        result.Value.ConnectorKind.ShouldBe("Syncable");
         result.Value.DefaultCurrency.ShouldBe("USDT");
         result.Value.SyncFrequency.ShouldBe("Daily");
     }
@@ -42,6 +44,7 @@ public class CreateProviderHandlerTests(PostgresFixture fixture)
         var command = new CreateProviderCommand(
             Name: "DuplicateProvider",
             Type: "Manual",
+            ConnectorKind: "Recurring",
             DefaultCurrency: "USD",
             SyncFrequency: "Manual",
             ConfigSchema: null);
@@ -68,6 +71,7 @@ public class CreateProviderHandlerTests(PostgresFixture fixture)
         var command = new CreateProviderCommand(
             Name: "TestProvider",
             Type: "InvalidType",
+            ConnectorKind: "Recurring",
             DefaultCurrency: "USD",
             SyncFrequency: "Daily",
             ConfigSchema: null);

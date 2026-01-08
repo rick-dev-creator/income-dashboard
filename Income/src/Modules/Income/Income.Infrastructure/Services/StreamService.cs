@@ -82,7 +82,10 @@ internal sealed class StreamService(
             OriginalCurrency: request.OriginalCurrency,
             IsFixed: request.IsFixed,
             FixedPeriod: request.FixedPeriod,
-            EncryptedCredentials: encryptedCredentials);
+            EncryptedCredentials: encryptedCredentials,
+            RecurringAmount: request.RecurringAmount,
+            RecurringFrequency: request.RecurringFrequency,
+            RecurringStartDate: request.RecurringStartDate);
 
         var result = IncomeStream.Create(data);
         if (result.IsFailed)

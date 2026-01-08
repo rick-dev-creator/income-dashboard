@@ -14,6 +14,7 @@ public sealed record ProviderListItem(
     string Id,
     string Name,
     string Type,
+    string ConnectorKind,
     string DefaultCurrency,
     string SyncFrequency,
     string? ConfigSchema);
@@ -22,6 +23,7 @@ public sealed record ProviderDetail(
     string Id,
     string Name,
     string Type,
+    string ConnectorKind,
     string DefaultCurrency,
     string SyncFrequency,
     string? ConfigSchema);
@@ -29,6 +31,7 @@ public sealed record ProviderDetail(
 public sealed record CreateProviderRequest(
     string Name,
     string Type,
+    string ConnectorKind,
     string DefaultCurrency,
     string SyncFrequency,
     string? ConfigSchema = null);

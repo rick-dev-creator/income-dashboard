@@ -8,8 +8,8 @@ namespace Income.Infrastructure.Connectors.BuiltIn;
 /// </summary>
 internal sealed class FixedIncomeConnector : IRecurringConnector
 {
-    public string ProviderId => "fixed-income";
-    public string DisplayName => "Fixed Income (Salary, Rent, etc.)";
+    public string ProviderId => BuiltInProviders.RecurringIncome;
+    public string DisplayName => "Recurring Income";
     public string ProviderType => "Manual";
     public ConnectorKind Kind => ConnectorKind.Recurring;
     public string DefaultCurrency => "USD";

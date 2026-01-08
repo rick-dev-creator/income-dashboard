@@ -26,6 +26,10 @@ internal sealed class ProviderEntityConfiguration : IEntityTypeConfiguration<Pro
             .HasColumnName("type")
             .IsRequired();
 
+        builder.Property(x => x.ConnectorKind)
+            .HasColumnName("connector_kind")
+            .IsRequired();
+
         builder.Property(x => x.DefaultCurrency)
             .HasColumnName("default_currency")
             .HasMaxLength(10)
