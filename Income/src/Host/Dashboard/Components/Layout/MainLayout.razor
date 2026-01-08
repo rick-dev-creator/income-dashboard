@@ -6,6 +6,7 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
+<CascadingValue Value="_isDarkMode" Name="IsDarkMode">
 <MudLayout>
     <MudAppBar Elevation="1" Class="app-bar">
         <MudIconButton Icon="@Icons.Material.Rounded.Menu"
@@ -58,6 +59,7 @@
         </div>
     </MudMainContent>
 </MudLayout>
+</CascadingValue>
 
 <style>
     .app-bar {
