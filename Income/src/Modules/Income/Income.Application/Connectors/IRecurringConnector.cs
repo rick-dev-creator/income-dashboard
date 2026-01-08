@@ -1,6 +1,17 @@
 namespace Income.Application.Connectors;
 
 /// <summary>
+/// Well-known provider IDs for built-in connectors.
+/// </summary>
+public static class BuiltInProviders
+{
+    /// <summary>
+    /// Provider ID for recurring/fixed income (salary, rent, etc.)
+    /// </summary>
+    public const string RecurringIncome = "builtin-recurring";
+}
+
+/// <summary>
 /// Connector that generates income snapshots based on a recurring schedule.
 /// Used for fixed income like salary, rent, subscriptions, etc.
 /// No external API calls - snapshots are auto-generated on schedule.

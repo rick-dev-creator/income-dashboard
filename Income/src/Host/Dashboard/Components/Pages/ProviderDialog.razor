@@ -98,6 +98,7 @@
         var request = new CreateProviderRequest(
             Name: _name,
             Type: _type,
+            ConnectorKind: "Recurring", // Default to recurring for now
             DefaultCurrency: _currency,
             SyncFrequency: _syncFrequency,
             ConfigSchema: null);

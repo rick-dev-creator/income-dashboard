@@ -129,6 +129,7 @@ public class CredentialsTests(PostgresFixture fixture)
         var result = await handler.HandleAsync(new CreateProviderCommand(
             Name: $"CredTestProvider_{uniqueSuffix}",
             Type: "Exchange",
+            ConnectorKind: "Syncable",
             DefaultCurrency: "USDT",
             SyncFrequency: "Daily",
             ConfigSchema: """{"properties":{"apiKey":{"type":"string"},"apiSecret":{"type":"string"}}}"""));

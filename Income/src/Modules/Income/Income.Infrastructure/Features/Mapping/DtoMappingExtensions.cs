@@ -55,6 +55,7 @@ internal static class DtoMappingExtensions
             Id: provider.Id.Value,
             Name: provider.Name,
             Type: provider.Type.ToString(),
+            ConnectorKind: provider.ConnectorKind.ToString(),
             DefaultCurrency: provider.DefaultCurrency,
             SyncFrequency: provider.SyncFrequency.ToString(),
             ConfigSchema: provider.ConfigSchema);

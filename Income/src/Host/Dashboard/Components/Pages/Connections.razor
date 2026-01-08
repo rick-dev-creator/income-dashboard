@@ -1,8 +1,10 @@
 @page "/connections"
+@using Income.Application.Connectors
 @using Income.Application.Services.Providers
 @using Income.Application.Services.Streams
 @inject IProviderService ProviderService
 @inject IStreamService StreamService
+@inject IConnectorRegistry ConnectorRegistry
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 @rendermode InteractiveServer
@@ -12,11 +14,11 @@
 <div class="page-header page-header-flex">
     <div>
         <h1 class="page-title">Connections</h1>
-        <p class="page-subtitle">Manage your income providers</p>
+        <p class="page-subtitle">Manage your income sources</p>
     </div>
     <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="btn-modern btn-mobile-full"
-               StartIcon="@Icons.Material.Rounded.Add" OnClick="OpenCreateDialog">
-        Add Provider
+               StartIcon="@Icons.Material.Rounded.Add" OnClick="OpenAddIncomeDialog">
+        Add Income Source
     </MudButton>
 </div>
 
@@ -27,11 +29,11 @@
 else if (_providers.Count == 0)
 {
     <MudPaper Class="pa-8 text-center" Elevation="2">
-        <MudIcon Icon="@Icons.Material.Filled.Cable" Size="Size.Large" Color="Color.Secondary" />
-        <MudText Typo="Typo.h6" Class="mt-4">No Providers Connected</MudText>
-        <MudText Color="Color.Secondary" Class="mb-4">Connect to income sources to start tracking</MudText>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialog">
-            Add Your First Provider
+        <MudIcon Icon="@Icons.Material.Filled.AccountBalanceWallet" Size="Size.Large" Color="Color.Secondary" />
+        <MudText Typo="Typo.h6" Class="mt-4">No Income Sources</MudText>
+        <MudText Color="Color.Secondary" Class="mb-4">Add recurring income like salary or rent to start tracking</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddIncomeDialog">
+            Add Your First Income Source
         </MudButton>
     </MudPaper>
 }
@@ -44,15 +46,15 @@ else
                 <MudCard Elevation="2">
                     <MudCardHeader>
                         <CardHeaderAvatar>
-                            <MudAvatar Color="@GetTypeColor(provider.Type)">
-                                <MudIcon Icon="@GetTypeIcon(provider.Type)" />
+                            <MudAvatar Color="@GetConnectorColor(provider.ConnectorKind)">
+                                <MudIcon Icon="@GetConnectorIcon(provider.ConnectorKind)" />
                             </MudAvatar>
                         </CardHeaderAvatar>
                         <CardHeaderContent>
                             <MudText Typo="Typo.h6">@provider.Name</MudText>
                             <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined"
-                                     Color="@GetTypeColor(provider.Type)">
-                                @provider.Type
+                                     Color="@GetConnectorColor(provider.ConnectorKind)">
+                                @GetConnectorLabel(provider.ConnectorKind)
                             </MudChip>
                         </CardHeaderContent>
                     </MudCardHeader>
@@ -63,21 +65,16 @@ else
                                 <MudText>@provider.DefaultCurrency</MudText>
                             </MudStack>
                             <MudStack Row="true" Justify="Justify.SpaceBetween">
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">Sync Frequency</MudText>
-                                <MudText>@provider.SyncFrequency</MudText>
-                            </MudStack>
-                            <MudStack Row="true" Justify="Justify.SpaceBetween">
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">Streams</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Income Streams</MudText>
                                 <MudText>@GetStreamCount(provider.Id)</MudText>
                             </MudStack>
-
-                            @if (!string.IsNullOrEmpty(provider.ConfigSchema))
+                            @if (provider.ConnectorKind == "Recurring")
                             {
                                 <MudDivider Class="my-2" />
                                 <MudStack Row="true" AlignItems="AlignItems.Center">
-                                    <MudIcon Icon="@Icons.Material.Filled.Settings" Size="Size.Small" Color="Color.Secondary" />
+                                    <MudIcon Icon="@Icons.Material.Filled.Schedule" Size="Size.Small" Color="Color.Success" />
                                     <MudText Typo="Typo.caption" Color="Color.Secondary">
-                                        Requires API configuration
+                                        Auto-generates snapshots on schedule
                                     </MudText>
                                 </MudStack>
                             }
@@ -94,33 +91,21 @@ else
         }
     </MudGrid>
 
-    <!-- Provider Types Legend -->
+    <!-- Connector Types Legend -->
     <MudPaper Class="pa-4 mt-4" Elevation="1">
-        <MudText Typo="Typo.subtitle2" Class="mb-3">Provider Types</MudText>
+        <MudText Typo="Typo.subtitle2" Class="mb-3">Income Source Types</MudText>
         <div class="provider-types-grid">
             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                <MudAvatar Size="Size.Small" Color="Color.Warning">
-                    <MudIcon Icon="@Icons.Material.Filled.CurrencyExchange" Size="Size.Small" />
+                <MudAvatar Size="Size.Small" Color="Color.Success">
+                    <MudIcon Icon="@Icons.Material.Filled.EventRepeat" Size="Size.Small" />
                 </MudAvatar>
-                <MudText Typo="Typo.body2">Exchange</MudText>
+                <MudText Typo="Typo.body2">Recurring - Salary, Rent (auto-tracked)</MudText>
             </MudStack>
             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                 <MudAvatar Size="Size.Small" Color="Color.Info">
-                    <MudIcon Icon="@Icons.Material.Filled.Create" Size="Size.Small" />
+                    <MudIcon Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
                 </MudAvatar>
-                <MudText Typo="Typo.body2">Creator</MudText>
-            </MudStack>
-            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                <MudAvatar Size="Size.Small" Color="Color.Success">
-                    <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Size="Size.Small" />
-                </MudAvatar>
-                <MudText Typo="Typo.body2">Bank</MudText>
-            </MudStack>
-            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                <MudAvatar Size="Size.Small" Color="Color.Default">
-                    <MudIcon Icon="@Icons.Material.Filled.Edit" Size="Size.Small" />
-                </MudAvatar>
-                <MudText Typo="Typo.body2">Manual</MudText>
+                <MudText Typo="Typo.body2">API Integration - Coming soon</MudText>
             </MudStack>
         </div>
     </MudPaper>
@@ -146,9 +131,15 @@ else
     private bool _isLoading = true;
     private List<ProviderListItem> _providers = [];
     private Dictionary<string, int> _streamCounts = [];
+    private HashSet<string> _availableConnectorIds = [];
 
     protected override async Task OnInitializedAsync()
     {
+        // Get available connector IDs
+        _availableConnectorIds = ConnectorRegistry.GetAll()
+            .Select(c => c.ProviderId)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
         await LoadDataAsync();
     }
 
@@ -160,7 +151,10 @@ else
 
         if (providersResult.IsSuccess)
         {
-            _providers = providersResult.Value.ToList();
+            // Only show providers that have matching connectors
+            _providers = providersResult.Value
+                .Where(p => _availableConnectorIds.Contains(p.Id))
+                .ToList();
 
             // Load stream counts for each provider
             foreach (var provider in _providers)
@@ -179,42 +173,36 @@ else
     private int GetStreamCount(string providerId) =>
         _streamCounts.TryGetValue(providerId, out var count) ? count : 0;
 
-    private static Color GetTypeColor(string type) => type.ToLower() switch
+    private static Color GetConnectorColor(string connectorKind) => connectorKind.ToLower() switch
     {
-        "exchange" => Color.Warning,
-        "creator" => Color.Info,
-        "bank" => Color.Success,
-        "manual" => Color.Default,
+        "recurring" => Color.Success,
+        "syncable" => Color.Info,
         _ => Color.Default
     };
 
-    private static string GetTypeIcon(string type) => type.ToLower() switch
+    private static string GetConnectorIcon(string connectorKind) => connectorKind.ToLower() switch
     {
-        "exchange" => Icons.Material.Filled.CurrencyExchange,
-        "creator" => Icons.Material.Filled.Create,
-        "bank" => Icons.Material.Filled.AccountBalance,
-        "manual" => Icons.Material.Filled.Edit,
-        _ => Icons.Material.Filled.Business
+        "recurring" => Icons.Material.Filled.EventRepeat,
+        "syncable" => Icons.Material.Filled.Sync,
+        _ => Icons.Material.Filled.QuestionMark
     };
 
-    private async Task OpenCreateDialog()
+    private static string GetConnectorLabel(string connectorKind) => connectorKind.ToLower() switch
     {
-        var dialog = await DialogService.ShowAsync<ProviderDialog>("Create Provider",
+        "recurring" => "Recurring Income",
+        "syncable" => "API Sync",
+        _ => connectorKind
+    };
+
+    private async Task OpenAddIncomeDialog()
+    {
+        var dialog = await DialogService.ShowAsync<AddIncomeSourceDialog>("Add Income Source",
             new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true });
 
         var result = await dialog.Result;
-        if (result is { Canceled: false, Data: CreateProviderRequest request })
+        if (result is { Canceled: false })
         {
-            var createResult = await ProviderService.CreateAsync(request);
-            if (createResult.IsSuccess)
-            {
-                Snackbar.Add("Provider created successfully!", Severity.Success);
-                await LoadDataAsync();
-            }
-            else
-            {
-                Snackbar.Add($"Error: {createResult.Errors.FirstOrDefault()?.Message}", Severity.Error);
-            }
+            await LoadDataAsync();
         }
     }
 }

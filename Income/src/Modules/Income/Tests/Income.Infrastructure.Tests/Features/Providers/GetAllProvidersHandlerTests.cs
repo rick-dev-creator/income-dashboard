@@ -19,6 +19,7 @@ public class GetAllProvidersHandlerTests(PostgresFixture fixture)
         await createHandler.HandleAsync(new CreateProviderCommand(
             Name: $"Provider1_{uniqueSuffix}",
             Type: "Exchange",
+            ConnectorKind: "Syncable",
             DefaultCurrency: "USD",
             SyncFrequency: "Hourly",
             ConfigSchema: null));
@@ -26,6 +27,7 @@ public class GetAllProvidersHandlerTests(PostgresFixture fixture)
         await createHandler.HandleAsync(new CreateProviderCommand(
             Name: $"Provider2_{uniqueSuffix}",
             Type: "Creator",
+            ConnectorKind: "Syncable",
             DefaultCurrency: "USD",
             SyncFrequency: "Daily",
             ConfigSchema: null));

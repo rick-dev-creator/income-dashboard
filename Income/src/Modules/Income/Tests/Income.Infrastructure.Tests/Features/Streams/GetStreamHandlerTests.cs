@@ -82,6 +82,7 @@ public class GetStreamHandlerTests(PostgresFixture fixture)
         var providerResult = await createProviderHandler.HandleAsync(new CreateProviderCommand(
             Name: $"GetStreamTestProvider_{uniqueSuffix}",
             Type: "Exchange",
+            ConnectorKind: "Syncable",
             DefaultCurrency: "USDT",
             SyncFrequency: "Daily",
             ConfigSchema: null));
