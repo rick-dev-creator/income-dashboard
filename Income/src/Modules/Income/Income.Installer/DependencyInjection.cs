@@ -1,9 +1,13 @@
+using Income.Application.Connectors;
 using Income.Application.Services;
 using Income.Application.Services.Providers;
 using Income.Application.Services.Streams;
 using Income.Contracts.Queries;
+using Income.Infrastructure.Connectors;
+using Income.Infrastructure.Connectors.BuiltIn;
 using Income.Infrastructure.Features.Providers.Handlers;
 using Income.Infrastructure.Features.Streams.Handlers;
+using Income.Infrastructure.Jobs;
 using Income.Infrastructure.Persistence;
 using Income.Infrastructure.Seeding;
 using Income.Infrastructure.Services;
@@ -36,6 +40,16 @@ public static class DependencyInjection
         // Application Services (for Blazor/Frontend consumption)
         services.AddScoped<IStreamService, StreamService>();
         services.AddScoped<IProviderService, ProviderService>();
+
+        // Connector Registry (Strategy pattern for connector resolution)
+        services.AddSingleton<IConnectorRegistry, ConnectorRegistry>();
+
+        // Built-in Connectors
+        services.AddSingleton<IRecurringConnector, FixedIncomeConnector>();
+
+        // Background Jobs
+        services.AddHostedService<SyncJob>();
+        services.AddHostedService<RecurringJob>();
 
         return services;
     }

@@ -8,7 +8,11 @@ public sealed record UpdateStreamCommand(
     string? Name,
     string? Category,
     bool? IsFixed = null,
-    string? FixedPeriod = null);
+    string? FixedPeriod = null,
+    decimal? RecurringAmount = null,
+    int? RecurringFrequency = null,
+    DateOnly? RecurringStartDate = null,
+    bool ClearRecurring = false);
 
 public interface IUpdateStreamHandler
 {

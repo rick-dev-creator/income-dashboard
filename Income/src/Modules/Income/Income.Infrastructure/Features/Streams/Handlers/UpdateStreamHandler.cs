@@ -36,6 +36,21 @@ internal sealed class UpdateStreamHandler(IDbContextFactory<IncomeDbContext> dbC
             stream.UpdateCategory(category);
         }
 
+        // Handle recurring settings
+        if (command.ClearRecurring)
+        {
+            stream.ClearRecurringSettings();
+        }
+        else if (command.RecurringAmount.HasValue &&
+                 command.RecurringFrequency.HasValue &&
+                 command.RecurringStartDate.HasValue)
+        {
+            stream.UpdateRecurringSettings(
+                command.RecurringAmount.Value,
+                command.RecurringFrequency.Value,
+                command.RecurringStartDate.Value);
+        }
+
         entity.UpdateFrom(stream);
         await dbContext.SaveChangesAsync(ct);
 

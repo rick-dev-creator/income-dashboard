@@ -89,6 +89,10 @@ internal sealed class SeedDataGenerator(IDbContextFactory<IncomeDbContext> dbCon
             LastError = null,
             NextScheduledAt = null,
             CreatedAt = now.AddMonths(-6),
+            // Recurring fields for automatic snapshot generation
+            RecurringAmount = 8500m,
+            RecurringFrequency = 2, // Monthly (RecurringFrequency.Monthly)
+            RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-6)).AddDays(14), // 15th of month
             Snapshots = GenerateMonthlySalarySnapshots(8500m, 6, 0.05m) // 5% annual raise
         };
         streams.Add(salaryStream);
@@ -110,6 +114,10 @@ internal sealed class SeedDataGenerator(IDbContextFactory<IncomeDbContext> dbCon
             LastError = null,
             NextScheduledAt = null,
             CreatedAt = now.AddMonths(-4),
+            // Recurring fields for automatic snapshot generation
+            RecurringAmount = 3500m,
+            RecurringFrequency = 2, // Monthly (RecurringFrequency.Monthly)
+            RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-4)).AddDays(0), // 1st of month
             Snapshots = GenerateMonthlySalarySnapshots(3500m, 4, 0.08m) // Growing contract
         };
         streams.Add(freelanceStream);

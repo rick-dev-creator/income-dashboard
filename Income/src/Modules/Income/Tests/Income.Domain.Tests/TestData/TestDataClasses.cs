@@ -7,7 +7,10 @@ internal record TestCreateStreamData(
     string OriginalCurrency,
     bool IsFixed,
     string? FixedPeriod,
-    string? EncryptedCredentials = null) : ICreateStreamData;
+    string? EncryptedCredentials = null,
+    decimal? RecurringAmount = null,
+    int? RecurringFrequency = null,
+    DateOnly? RecurringStartDate = null) : ICreateStreamData;
 
 internal record TestRecordSnapshotData(
     DateOnly Date,

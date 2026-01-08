@@ -22,7 +22,10 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
         string? fixedPeriod,
         string? encryptedCredentials,
         SyncStatus syncStatus,
-        DateTime createdAt)
+        DateTime createdAt,
+        decimal? recurringAmount = null,
+        int? recurringFrequency = null,
+        DateOnly? recurringStartDate = null)
     {
         Id = id;
         ProviderId = providerId;
@@ -34,6 +37,9 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
         EncryptedCredentials = encryptedCredentials;
         SyncStatus = syncStatus;
         CreatedAt = createdAt;
+        RecurringAmount = recurringAmount;
+        RecurringFrequency = recurringFrequency;
+        RecurringStartDate = recurringStartDate;
     }
 
     public ProviderId ProviderId { get; private init; }
@@ -55,6 +61,16 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
     public SyncStatus SyncStatus { get; private set; } = null!;
     public DateTime CreatedAt { get; private init; }
     public IReadOnlyList<DailySnapshot> Snapshots => _snapshots.AsReadOnly();
+
+    // Recurring stream properties (for schedule-based income)
+    public decimal? RecurringAmount { get; private set; }
+    public int? RecurringFrequency { get; private set; }
+    public DateOnly? RecurringStartDate { get; private set; }
+
+    /// <summary>
+    /// Whether this stream is a recurring (schedule-based) stream vs a syncable (API-based) stream.
+    /// </summary>
+    public bool IsRecurring => RecurringAmount.HasValue && RecurringFrequency.HasValue && RecurringStartDate.HasValue;
 
     internal static Result<IncomeStream> Create(ICreateStreamData data)
     {
@@ -85,7 +101,10 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
             fixedPeriod: data.FixedPeriod,
             encryptedCredentials: data.EncryptedCredentials,
             syncStatus: SyncStatus.Initial(),
-            createdAt: DateTime.UtcNow);
+            createdAt: DateTime.UtcNow,
+            recurringAmount: data.RecurringAmount,
+            recurringFrequency: data.RecurringFrequency,
+            recurringStartDate: data.RecurringStartDate);
 
         stream.RaiseDomainEvent(new StreamCreatedDomainEvent(
             stream.Id,
@@ -108,7 +127,10 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
             fixedPeriod: data.FixedPeriod,
             encryptedCredentials: data.EncryptedCredentials,
             syncStatus: data.SyncStatus,
-            createdAt: data.CreatedAt);
+            createdAt: data.CreatedAt,
+            recurringAmount: data.RecurringAmount,
+            recurringFrequency: data.RecurringFrequency,
+            recurringStartDate: data.RecurringStartDate);
 
         stream._snapshots.AddRange(snapshots);
         return Result.Ok(stream);
@@ -186,6 +208,20 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
     internal void UpdateCredentials(string? encryptedCredentials)
     {
         EncryptedCredentials = encryptedCredentials;
+    }
+
+    internal void UpdateRecurringSettings(decimal amount, int frequency, DateOnly startDate)
+    {
+        RecurringAmount = amount;
+        RecurringFrequency = frequency;
+        RecurringStartDate = startDate;
+    }
+
+    internal void ClearRecurringSettings()
+    {
+        RecurringAmount = null;
+        RecurringFrequency = null;
+        RecurringStartDate = null;
     }
 
     public bool HasCredentials => !string.IsNullOrEmpty(EncryptedCredentials);
