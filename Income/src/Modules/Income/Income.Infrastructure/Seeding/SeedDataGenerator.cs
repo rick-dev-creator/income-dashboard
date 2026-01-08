@@ -72,7 +72,7 @@ internal sealed class SeedDataGenerator(IDbContextFactory<IncomeDbContext> dbCon
         var streams = new List<StreamEntity>();
         var now = DateTime.UtcNow;
 
-        // Salary stream - Monthly recurring $5,000 USD
+        // Salary stream - Monthly recurring $8,500 USD (Senior Developer salary)
         var salaryStream = new StreamEntity
         {
             Id = "stream-salary-main",
@@ -89,16 +89,16 @@ internal sealed class SeedDataGenerator(IDbContextFactory<IncomeDbContext> dbCon
             LastError = null,
             NextScheduledAt = null,
             CreatedAt = now.AddMonths(-6),
-            Snapshots = GenerateMonthlySalarySnapshots(5000m, 6)
+            Snapshots = GenerateMonthlySalarySnapshots(8500m, 6, 0.05m) // 5% annual raise
         };
         streams.Add(salaryStream);
 
-        // Freelance salary - Monthly recurring $2,000 USD
+        // Freelance/Consulting - Monthly recurring $3,500 USD
         var freelanceStream = new StreamEntity
         {
             Id = "stream-salary-freelance",
             ProviderId = manualProvider.Id,
-            Name = "Freelance Contract",
+            Name = "Consulting Contract",
             Category = "Salary",
             OriginalCurrency = "USD",
             IsFixed = true,
@@ -110,7 +110,7 @@ internal sealed class SeedDataGenerator(IDbContextFactory<IncomeDbContext> dbCon
             LastError = null,
             NextScheduledAt = null,
             CreatedAt = now.AddMonths(-4),
-            Snapshots = GenerateMonthlySalarySnapshots(2000m, 4)
+            Snapshots = GenerateMonthlySalarySnapshots(3500m, 4, 0.08m) // Growing contract
         };
         streams.Add(freelanceStream);
 
@@ -228,29 +228,28 @@ internal sealed class SeedDataGenerator(IDbContextFactory<IncomeDbContext> dbCon
         var startDate = DateOnly.FromDateTime(now.AddMonths(-months));
         var endDate = DateOnly.FromDateTime(now);
 
-        // Trading income: daily P&L with trend and volatility
-        var baseDailyIncome = 50m; // Base expected daily income
-        var volatility = 80m; // Daily volatility
-        var monthlyGrowthRate = 0.08m; // 8% monthly improvement in trading skills
+        // Trading income: consistent profitable strategy
+        var baseDailyIncome = 120m; // Base expected daily income
+        var volatility = 40m; // Lower volatility (more consistent)
+        var monthlyGrowthRate = 0.12m; // 12% monthly improvement (growing account)
 
         for (var date = startDate; date <= endDate; date = date.AddDays(1))
         {
-            // Skip weekends (markets closed for some assets)
+            // Skip some weekends (crypto trades 24/7 but less on weekends)
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
             {
-                if (random.NextDouble() > 0.3) continue; // 70% chance of no trading on weekends
+                if (random.NextDouble() > 0.5) continue; // 50% weekend trading
             }
 
             var monthsElapsed = (date.DayNumber - startDate.DayNumber) / 30.0m;
             var skillGrowth = 1 + (monthlyGrowthRate * monthsElapsed);
 
-            // Daily P&L: base income with growth + random variation
-            // Some days are losses, some are big wins
-            var dailyFactor = (decimal)(random.NextDouble() * 2 - 0.5); // -0.5 to 1.5
+            // More positive bias: 0.3 to 1.8 range (mostly positive days)
+            var dailyFactor = (decimal)(random.NextDouble() * 1.5 + 0.3);
             var dailyPnL = Math.Round((baseDailyIncome * skillGrowth * dailyFactor) +
-                                      (decimal)(random.NextGaussian() * (double)volatility), 2);
+                                      (decimal)(random.NextGaussian() * (double)volatility * 0.5), 2);
 
-            // Only record positive income days (losses are absorbed by capital)
+            // Record all positive days (which is most of them now)
             if (dailyPnL > 0)
             {
                 snapshots.Add(new SnapshotEntity
@@ -276,9 +275,9 @@ internal sealed class SeedDataGenerator(IDbContextFactory<IncomeDbContext> dbCon
         var now = DateTime.UtcNow;
         var random = new Random(123);
 
-        var baseSubscribers = 30; // Starting subscribers
-        var monthlyGrowthRate = 0.15m; // 15% monthly subscriber growth
-        var avgRevenuePerUser = 5.5m; // $5.50 average per patron
+        var baseSubscribers = 85; // Starting with established audience
+        var monthlyGrowthRate = 0.18m; // 18% monthly subscriber growth (viral growth)
+        var avgRevenuePerUser = 8.5m; // $8.50 average per patron (premium tiers)
 
         for (var i = months; i >= 0; i--)
         {
@@ -289,12 +288,12 @@ internal sealed class SeedDataGenerator(IDbContextFactory<IncomeDbContext> dbCon
             {
                 var monthsElapsed = months - i;
 
-                // Exponential subscriber growth with some randomness
+                // Strong exponential subscriber growth
                 var growthMultiplier = (decimal)Math.Pow(1 + (double)monthlyGrowthRate, monthsElapsed);
-                var subscribers = (int)(baseSubscribers * growthMultiplier * (decimal)(0.9 + random.NextDouble() * 0.2));
+                var subscribers = (int)(baseSubscribers * growthMultiplier * (decimal)(0.95 + random.NextDouble() * 0.1));
 
-                // Revenue = subscribers * ARPU with seasonal variation
-                var seasonalFactor = 1 + 0.1m * (decimal)Math.Sin(monthsElapsed * Math.PI / 6); // Seasonal wave
+                // Revenue = subscribers * ARPU with positive seasonal trend
+                var seasonalFactor = 1 + 0.05m * (decimal)Math.Sin(monthsElapsed * Math.PI / 6);
                 var amount = Math.Round(subscribers * avgRevenuePerUser * seasonalFactor, 2);
 
                 snapshots.Add(new SnapshotEntity
@@ -323,9 +322,9 @@ internal sealed class SeedDataGenerator(IDbContextFactory<IncomeDbContext> dbCon
         var startDate = DateOnly.FromDateTime(now.AddMonths(-months));
         var endDate = DateOnly.FromDateTime(now);
 
-        // Referral frequency increases over time as network grows
-        var baseChance = 0.08m; // 8% base daily chance
-        var growthFactor = 0.02m; // Increases 2% per month
+        // Strong referral network - high frequency
+        var baseChance = 0.15m; // 15% base daily chance
+        var growthFactor = 0.04m; // Increases 4% per month (growing influence)
 
         for (var date = startDate; date <= endDate; date = date.AddDays(1))
         {
@@ -334,11 +333,11 @@ internal sealed class SeedDataGenerator(IDbContextFactory<IncomeDbContext> dbCon
 
             if (random.NextDouble() < currentChance)
             {
-                // Referral amounts: mix of small and occasional large bonuses
-                var isLargeBonus = random.NextDouble() > 0.85; // 15% chance of large bonus
+                // Higher referral amounts with more large bonuses
+                var isLargeBonus = random.NextDouble() > 0.75; // 25% chance of large bonus
                 var amount = isLargeBonus
-                    ? (decimal)(random.NextDouble() * 200 + 100) // $100-$300 large bonus
-                    : (decimal)(random.NextDouble() * 50 + 15);   // $15-$65 regular referral
+                    ? (decimal)(random.NextDouble() * 350 + 150) // $150-$500 large bonus
+                    : (decimal)(random.NextDouble() * 80 + 35);   // $35-$115 regular referral
 
                 snapshots.Add(new SnapshotEntity
                 {
