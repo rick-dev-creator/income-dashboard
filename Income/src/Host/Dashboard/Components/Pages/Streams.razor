@@ -94,7 +94,14 @@ else
             var dailyRate = monthlyIncome / 30m;
             var contribution = _totalMonthlyIncome > 0 ? (monthlyIncome / _totalMonthlyIncome * 100) : 0;
 
-            <div class="stream-card hover-lift">
+            <div class="stream-card hover-lift @(stream.SyncState == StreamSyncState.Disabled ? "stream-disabled" : "")">
+                @if (stream.SyncState == StreamSyncState.Disabled)
+                {
+                    <div class="disabled-badge">
+                        <MudIcon Icon="@Icons.Material.Rounded.PauseCircle" Size="Size.Small" />
+                        Disabled
+                    </div>
+                }
                 <!-- Header: Name + Provider + Trend -->
                 <div class="stream-card-header">
                     <div class="stream-avatar @GetCategoryClass(stream.Category)">
@@ -117,8 +124,13 @@ else
                         <MudMenuItem Icon="@Icons.Material.Rounded.Edit" OnClick="@(() => OpenEditDialog(stream))">
                             Edit
                         </MudMenuItem>
-                        <MudMenuItem Icon="@Icons.Material.Rounded.AddChart" OnClick="@(() => OpenSnapshotDialog(stream))">
+                        <MudMenuItem Icon="@Icons.Material.Rounded.AddChart" OnClick="@(() => OpenSnapshotDialog(stream))" Disabled="@(stream.SyncState == StreamSyncState.Disabled)">
                             Record Income
+                        </MudMenuItem>
+                        <MudMenuItem Icon="@(stream.SyncState == StreamSyncState.Disabled ? Icons.Material.Rounded.PlayArrow : Icons.Material.Rounded.Pause)"
+                                     IconColor="@(stream.SyncState == StreamSyncState.Disabled ? Color.Success : Color.Warning)"
+                                     OnClick="@(() => ToggleStreamStatus(stream))">
+                            @(stream.SyncState == StreamSyncState.Disabled ? "Enable" : "Disable")
                         </MudMenuItem>
                         <MudDivider Class="my-1" />
                         <MudMenuItem Icon="@Icons.Material.Rounded.Delete" IconColor="Color.Error" OnClick="@(() => DeleteStream(stream))">
@@ -291,6 +303,28 @@ else
         overflow: hidden;
         display: flex;
         flex-direction: column;
+        position: relative;
+    }
+
+    .stream-card.stream-disabled {
+        opacity: 0.6;
+        border-color: var(--mud-palette-warning);
+    }
+
+    .disabled-badge {
+        position: absolute;
+        top: 12px;
+        right: 50px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        background: rgba(245, 158, 11, 0.2);
+        color: var(--mud-palette-warning);
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        z-index: 1;
     }
 
     .stream-card-header {
@@ -763,6 +797,23 @@ else
             {
                 Snackbar.Add($"Error: {deleteResult.Errors.FirstOrDefault()?.Message}", Severity.Error);
             }
+        }
+    }
+
+    private async Task ToggleStreamStatus(StreamListItem stream)
+    {
+        var isDisabled = stream.SyncState == StreamSyncState.Disabled;
+        var action = isDisabled ? "enable" : "disable";
+
+        var toggleResult = await StreamService.ToggleStatusAsync(stream.Id);
+        if (toggleResult.IsSuccess)
+        {
+            Snackbar.Add($"Stream {(isDisabled ? "enabled" : "disabled")} successfully!", Severity.Success);
+            await LoadDataAsync();
+        }
+        else
+        {
+            Snackbar.Add($"Error: {toggleResult.Errors.FirstOrDefault()?.Message}", Severity.Error);
         }
     }
 }

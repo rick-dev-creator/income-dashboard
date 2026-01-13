@@ -8,6 +8,7 @@ internal sealed class IncomeDbContext(DbContextOptions<IncomeDbContext> options)
     public DbSet<StreamEntity> Streams => Set<StreamEntity>();
     public DbSet<SnapshotEntity> Snapshots => Set<SnapshotEntity>();
     public DbSet<ProviderEntity> Providers => Set<ProviderEntity>();
+    public DbSet<NotificationEntity> Notifications => Set<NotificationEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

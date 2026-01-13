@@ -24,16 +24,23 @@ internal sealed class SeedDataGenerator(
         // Always ensure all connector providers exist
         await EnsureConnectorProvidersExistAsync(dbContext, ct);
 
-        // Only seed demo data if no providers exist yet
-        if (!await dbContext.Providers.AnyAsync(p => p.Id == BuiltInProviders.RecurringIncome, ct))
+        // Only seed demo data if no streams exist yet
+        if (!await dbContext.Streams.AnyAsync(ct))
         {
-            var provider = CreateBuiltInProvider();
-            await dbContext.Providers.AddAsync(provider, ct);
-            await dbContext.SaveChangesAsync(ct);
+            // Ensure the recurring income provider exists
+            var provider = await dbContext.Providers.FirstOrDefaultAsync(p => p.Id == BuiltInProviders.RecurringIncome, ct);
+            if (provider == null)
+            {
+                provider = CreateBuiltInProvider();
+                await dbContext.Providers.AddAsync(provider, ct);
+                await dbContext.SaveChangesAsync(ct);
+            }
 
             var streams = CreateStreams(provider);
             await dbContext.Streams.AddRangeAsync(streams, ct);
             await dbContext.SaveChangesAsync(ct);
+
+            logger.LogInformation("Seeded {StreamCount} demo streams with snapshots", streams.Count);
         }
     }
 
