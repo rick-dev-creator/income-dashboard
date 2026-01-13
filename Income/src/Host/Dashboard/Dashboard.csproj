@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\Modules\Analytics\Analytics.Contracts\Analytics.Contracts.csproj" />
     <ProjectReference Include="..\..\Modules\Analytics\Analytics.Installer\Analytics.Installer.csproj" />
     <ProjectReference Include="..\..\Connectors\Connectors.Blofin\Connectors.Blofin.csproj" />
+    <ProjectReference Include="..\..\Connectors\Connectors.Toobit\Connectors.Toobit.csproj" />
   </ItemGroup>
 
   <ItemGroup>
