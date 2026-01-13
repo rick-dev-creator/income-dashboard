@@ -41,8 +41,12 @@ The result? Simple questions become impossible to answer:
 | **Real-Time Sync** | Background jobs sync data every 5 minutes with live Activity Log |
 | **Daily Normalization** | Convert all income to daily rates for fair comparison |
 | **Stacked Area Charts** | Azure Cost Explorer-style visualization of income streams |
-| **Statistical Analysis** | Mean, median, standard deviation, trend detection |
+| **Statistical Analysis** | Daily rate, trends, standard deviation, stream health |
 | **Financial Projections** | 6-month projections with confidence scoring |
+| **Seasonality Detection** | Day-of-week and month-of-year income patterns |
+| **What-If Analysis** | Simulate impact of losing an income stream |
+| **Stream Performance** | Ranking, contribution percentages, trend indicators |
+| **Income Stability** | Fixed vs variable income ratio, concentration risk |
 | **Live Dashboard** | Auto-refresh UI updates every 10 seconds |
 
 ### Supported Connectors
@@ -119,15 +123,19 @@ Income/src/
 
 ### Phase 3: Analytics
 - [x] Statistical calculations (daily rate, trends)
-- [x] Stream health analysis
-- [x] 6-month projections with confidence
+- [x] Stream health analysis (growing/stable/declining)
+- [x] 6-month projections with confidence scoring
+- [x] Seasonality analysis (day-of-week, month-of-year patterns)
+- [x] What-If analysis (stream removal impact simulation)
+- [x] Stream performance ranking
+- [x] Income stability metrics (fixed vs variable, concentration risk)
 - [ ] Multi-currency support with live rates
 
 ### Phase 4: Expansion
-- [ ] Additional exchange connectors (Binance, Bybit)
+- [ ] Additional exchange connectors (Binance, Bybit, OKX)
 - [ ] Bank integrations (Plaid)
-- [ ] Advanced projections (Monte Carlo)
-- [ ] Alerts and notifications
+- [ ] Monte Carlo simulation for probabilistic projections
+- [ ] Email/webhook notifications for anomalies
 - [ ] Mobile PWA support
 
 ## Getting Started
