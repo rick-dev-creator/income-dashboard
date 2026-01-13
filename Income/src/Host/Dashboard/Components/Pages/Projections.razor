@@ -1,14 +1,33 @@
 @page "/projections"
 @using Analytics.Application.Services
+@using Dashboard.Services
 @inject IGetProjectionHandler ProjectionHandler
 @inject IDashboardService DashboardService
+@inject AppState AppState
+@implements IDisposable
 @rendermode InteractiveServer
 
 <PageTitle>Projections - FlowMetrics</PageTitle>
 
 <div class="page-header">
-    <h1 class="page-title">Where Will I Be?</h1>
-    <p class="page-subtitle">Income projections and goal planning</p>
+    <div class="page-header-row">
+        <h1 class="page-title">@GetPageTitle()</h1>
+        @if (AppState.CurrentMode == AppMode.Outcome)
+        {
+            <div class="mode-legend outcome">
+                <MudIcon Icon="@Icons.Material.Rounded.RemoveCircleOutline" Size="Size.Small" />
+                <span>Expense projections</span>
+            </div>
+        }
+        else if (AppState.CurrentMode == AppMode.Divergence)
+        {
+            <div class="mode-legend divergence">
+                <MudIcon Icon="@Icons.Material.Rounded.SwapVert" Size="Size.Small" />
+                <span>Net flow projections</span>
+            </div>
+        }
+    </div>
+    <p class="page-subtitle">@GetPageSubtitle()</p>
 </div>
 
 @if (_isLoading)
@@ -340,6 +359,41 @@ else
 }
 
 <style>
+    .page-header-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .mode-legend {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .mode-legend.outcome {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .mode-legend.divergence {
+        background: rgba(139, 92, 246, 0.1);
+        color: #8b5cf6;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateX(-10px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
     .projection-big-number {
         font-size: 2rem;
     }
@@ -573,8 +627,18 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        AppState.OnModeChanged += OnModeChanged;
         BuildChartOptions();
         await LoadDataAsync();
+    }
+
+    private async void OnModeChanged()
+    {
+        await InvokeAsync(async () =>
+        {
+            await LoadDataAsync();
+            StateHasChanged();
+        });
     }
 
     protected override void OnParametersSet()
@@ -586,14 +650,22 @@ else
     {
         _isLoading = true;
 
-        var projectionResult = await ProjectionHandler.HandleAsync(new GetProjectionQuery(12));
+        // Get stream type filter based on current mode
+        var streamTypeFilter = AppState.CurrentStreamType switch
+        {
+            Income.Application.Services.Streams.StreamTypeDto.Income => 0,
+            Income.Application.Services.Streams.StreamTypeDto.Outcome => 1,
+            _ => (int?)null // Divergence shows both
+        };
+
+        var projectionResult = await ProjectionHandler.HandleAsync(new GetProjectionQuery(12, StreamType: streamTypeFilter));
         if (projectionResult.IsSuccess)
         {
             _projection = projectionResult.Value;
             PrepareCharts();
         }
 
-        var kpisResult = await DashboardService.GetKpisAsync();
+        var kpisResult = await DashboardService.GetKpisAsync(streamTypeFilter);
         if (kpisResult.IsSuccess)
         {
             _kpis = kpisResult.Value;
@@ -770,4 +842,23 @@ else
         >= 0.4m => "Your income is reasonably predictable with some variability. Consider building an emergency fund.",
         _ => "High variability in your income. Projections are uncertain. Focus on increasing fixed income sources."
     };
+
+    private string GetPageTitle() => AppState.CurrentMode switch
+    {
+        AppMode.Outcome => "Expense Forecast",
+        AppMode.Divergence => "Net Flow Forecast",
+        _ => "Where Will I Be?"
+    };
+
+    private string GetPageSubtitle() => AppState.CurrentMode switch
+    {
+        AppMode.Outcome => "Expense projections and budget planning",
+        AppMode.Divergence => "Combined income and expense projections",
+        _ => "Income projections and goal planning"
+    };
+
+    public void Dispose()
+    {
+        AppState.OnModeChanged -= OnModeChanged;
+    }
 }

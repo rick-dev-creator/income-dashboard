@@ -15,13 +15,33 @@ internal sealed class StreamService(
     IDbContextFactory<IncomeDbContext> dbContextFactory,
     ICredentialEncryptor credentialEncryptor) : IStreamService
 {
-    public async Task<Result<IReadOnlyList<StreamListItem>>> GetAllAsync(CancellationToken ct = default)
+    public async Task<Result<IReadOnlyList<StreamListItem>>> GetAllAsync(int? streamType = null, CancellationToken ct = default)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
+        var query = dbContext.Streams
+            .Include(x => x.Snapshots)
+            .AsNoTracking();
+
+        if (streamType.HasValue)
+        {
+            query = query.Where(x => x.StreamType == streamType.Value);
+        }
+
+        var entities = await query.ToListAsync(ct);
+
+        var items = entities.Select(MapToListItem).ToList();
+        return Result.Ok<IReadOnlyList<StreamListItem>>(items);
+    }
+
+    public async Task<Result<IReadOnlyList<StreamListItem>>> GetByTypeAsync(StreamTypeDto streamType, CancellationToken ct = default)
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
 
         var entities = await dbContext.Streams
             .Include(x => x.Snapshots)
             .AsNoTracking()
+            .Where(x => x.StreamType == (int)streamType)
             .ToListAsync(ct);
 
         var items = entities.Select(MapToListItem).ToList();
@@ -40,7 +60,17 @@ internal sealed class StreamService(
         if (entity is null)
             return Result.Fail<StreamDetail>($"Stream with id '{streamId}' not found");
 
-        return Result.Ok(MapToDetail(entity));
+        // Get linked income stream name if applicable
+        string? linkedIncomeStreamName = null;
+        if (entity.LinkedIncomeStreamId is not null)
+        {
+            linkedIncomeStreamName = await dbContext.Streams
+                .Where(x => x.Id == entity.LinkedIncomeStreamId)
+                .Select(x => x.Name)
+                .FirstOrDefaultAsync(ct);
+        }
+
+        return Result.Ok(MapToDetail(entity, linkedIncomeStreamName));
     }
 
     public async Task<Result<IReadOnlyList<StreamListItem>>> GetByProviderAsync(string providerId, CancellationToken ct = default)
@@ -75,6 +105,19 @@ internal sealed class StreamService(
             ? credentialEncryptor.Encrypt(request.Credentials)
             : null;
 
+        // Validate linked income stream if provided
+        if (request.LinkedIncomeStreamId is not null)
+        {
+            if (request.StreamType != StreamTypeDto.Outcome)
+                return Result.Fail<StreamDetail>("Only outcome streams can be linked to income streams");
+
+            var linkedStream = await dbContext.Streams
+                .FirstOrDefaultAsync(x => x.Id == request.LinkedIncomeStreamId && x.StreamType == 0, ct);
+
+            if (linkedStream is null)
+                return Result.Fail<StreamDetail>($"Income stream with id '{request.LinkedIncomeStreamId}' not found");
+        }
+
         var data = new CreateStreamData(
             ProviderId: new ProviderId(request.ProviderId),
             Name: request.Name,
@@ -83,6 +126,8 @@ internal sealed class StreamService(
             IsFixed: request.IsFixed,
             FixedPeriod: request.FixedPeriod,
             EncryptedCredentials: encryptedCredentials,
+            StreamType: (StreamType)(int)request.StreamType,
+            LinkedIncomeStreamId: request.LinkedIncomeStreamId is not null ? new StreamId(request.LinkedIncomeStreamId) : null,
             RecurringAmount: request.RecurringAmount,
             RecurringFrequency: request.RecurringFrequency,
             RecurringStartDate: request.RecurringStartDate);
@@ -243,6 +288,40 @@ internal sealed class StreamService(
         return Result.Ok();
     }
 
+    public async Task<Result> LinkToIncomeStreamAsync(string outcomeStreamId, string? incomeStreamId, CancellationToken ct = default)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
+        var entity = await dbContext.Streams
+            .FirstOrDefaultAsync(x => x.Id == outcomeStreamId, ct);
+
+        if (entity is null)
+            return Result.Fail($"Stream with id '{outcomeStreamId}' not found");
+
+        if (entity.StreamType != (int)StreamTypeDto.Outcome)
+            return Result.Fail("Only outcome streams can be linked to income streams");
+
+        // Validate linked income stream exists if provided
+        if (incomeStreamId is not null)
+        {
+            var incomeStream = await dbContext.Streams
+                .FirstOrDefaultAsync(x => x.Id == incomeStreamId && x.StreamType == (int)StreamTypeDto.Income, ct);
+
+            if (incomeStream is null)
+                return Result.Fail($"Income stream with id '{incomeStreamId}' not found");
+        }
+
+        var stream = entity.ToDomain();
+        var linkResult = stream.LinkToIncomeStream(incomeStreamId is not null ? new StreamId(incomeStreamId) : null);
+        if (linkResult.IsFailed)
+            return linkResult;
+
+        entity.UpdateFrom(stream);
+        await dbContext.SaveChangesAsync(ct);
+
+        return Result.Ok();
+    }
+
     private static StreamListItem MapToListItem(Persistence.Entities.StreamEntity entity)
     {
         var lastSnapshot = entity.Snapshots
@@ -260,10 +339,12 @@ internal sealed class StreamService(
             HasCredentials: !string.IsNullOrEmpty(entity.EncryptedCredentials),
             SnapshotCount: entity.Snapshots.Count,
             LastSnapshot: lastSnapshot is not null ? MapSnapshotEntityToItem(lastSnapshot) : null,
-            SyncState: (StreamSyncState)entity.SyncState);
+            SyncState: (StreamSyncState)entity.SyncState,
+            StreamType: (StreamTypeDto)entity.StreamType,
+            LinkedIncomeStreamId: entity.LinkedIncomeStreamId);
     }
 
-    private static StreamDetail MapToDetail(Persistence.Entities.StreamEntity entity)
+    private StreamDetail MapToDetail(Persistence.Entities.StreamEntity entity, string? linkedIncomeStreamName = null)
     {
         return new StreamDetail(
             Id: entity.Id,
@@ -278,7 +359,10 @@ internal sealed class StreamService(
                 .OrderByDescending(s => s.Date)
                 .Select(MapSnapshotEntityToItem)
                 .ToList(),
-            SyncState: (StreamSyncState)entity.SyncState);
+            SyncState: (StreamSyncState)entity.SyncState,
+            StreamType: (StreamTypeDto)entity.StreamType,
+            LinkedIncomeStreamId: entity.LinkedIncomeStreamId,
+            LinkedIncomeStreamName: linkedIncomeStreamName);
     }
 
     private static SnapshotItem MapSnapshotEntityToItem(Persistence.Entities.SnapshotEntity entity)
@@ -313,6 +397,8 @@ internal sealed class StreamService(
         bool IsFixed,
         string? FixedPeriod,
         string? EncryptedCredentials,
+        StreamType StreamType = StreamType.Income,
+        StreamId? LinkedIncomeStreamId = null,
         decimal? RecurringAmount = null,
         int? RecurringFrequency = null,
         DateOnly? RecurringStartDate = null) : ICreateStreamData;

@@ -11,7 +11,7 @@ internal sealed class GetIncomeTimeSeriesHandler(
 {
     public async Task<Result<TimeSeriesDto>> HandleAsync(GetIncomeTimeSeriesQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<TimeSeriesDto>();
 

@@ -1,4 +1,5 @@
 using FluentResults;
+using Income.Application.Connectors;
 using Income.Application.Services.Providers;
 using Income.Domain.ProviderContext.Aggregates;
 using Income.Infrastructure.Persistence;
@@ -48,7 +49,7 @@ internal sealed class ProviderService(IDbContextFactory<IncomeDbContext> dbConte
         if (!Enum.TryParse<ProviderType>(request.Type, true, out var providerType))
             return Result.Fail<ProviderDetail>($"Invalid provider type: {request.Type}");
 
-        if (!Enum.TryParse<ConnectorKind>(request.ConnectorKind, true, out var connectorKind))
+        if (!Enum.TryParse<Domain.ProviderContext.Aggregates.ConnectorKind>(request.ConnectorKind, true, out var connectorKind))
             return Result.Fail<ProviderDetail>($"Invalid connector kind: {request.ConnectorKind}");
 
         if (!Enum.TryParse<SyncFrequency>(request.SyncFrequency, true, out var syncFrequency))
@@ -78,10 +79,11 @@ internal sealed class ProviderService(IDbContextFactory<IncomeDbContext> dbConte
             Id: entity.Id,
             Name: entity.Name,
             Type: ((ProviderType)entity.Type).ToString(),
-            ConnectorKind: ((ConnectorKind)entity.ConnectorKind).ToString(),
+            ConnectorKind: ((Domain.ProviderContext.Aggregates.ConnectorKind)entity.ConnectorKind).ToString(),
             DefaultCurrency: entity.DefaultCurrency,
             SyncFrequency: ((SyncFrequency)entity.SyncFrequency).ToString(),
-            ConfigSchema: entity.ConfigSchema);
+            ConfigSchema: entity.ConfigSchema,
+            SupportedStreamTypes: (SupportedStreamTypes)entity.SupportedStreamTypes);
     }
 
     private static ProviderDetail MapToDetail(Persistence.Entities.ProviderEntity entity)
@@ -90,9 +92,10 @@ internal sealed class ProviderService(IDbContextFactory<IncomeDbContext> dbConte
             Id: entity.Id,
             Name: entity.Name,
             Type: ((ProviderType)entity.Type).ToString(),
-            ConnectorKind: ((ConnectorKind)entity.ConnectorKind).ToString(),
+            ConnectorKind: ((Domain.ProviderContext.Aggregates.ConnectorKind)entity.ConnectorKind).ToString(),
             DefaultCurrency: entity.DefaultCurrency,
             SyncFrequency: ((SyncFrequency)entity.SyncFrequency).ToString(),
-            ConfigSchema: entity.ConfigSchema);
+            ConfigSchema: entity.ConfigSchema,
+            SupportedStreamTypes: (SupportedStreamTypes)entity.SupportedStreamTypes);
     }
 }

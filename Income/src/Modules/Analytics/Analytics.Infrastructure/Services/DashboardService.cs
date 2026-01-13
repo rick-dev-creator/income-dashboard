@@ -16,14 +16,14 @@ internal sealed class DashboardService(
     IGetProjectionHandler projectionHandler,
     IGetTrendHandler trendHandler) : IDashboardService
 {
-    public async Task<Result<DashboardSummary>> GetSummaryAsync(CancellationToken ct = default)
+    public async Task<Result<DashboardSummary>> GetSummaryAsync(int? streamType = null, CancellationToken ct = default)
     {
-        var summaryResult = await summaryHandler.HandleAsync(new GetPortfolioSummaryQuery(), ct);
+        var summaryResult = await summaryHandler.HandleAsync(new GetPortfolioSummaryQuery(StreamType: streamType), ct);
         if (summaryResult.IsFailed)
             return summaryResult.ToResult<DashboardSummary>();
 
         var momResult = await periodComparisonHandler.HandleAsync(
-            new GetPeriodComparisonQuery("MoM", null), ct);
+            new GetPeriodComparisonQuery("MoM", null, StreamType: streamType), ct);
 
         var summary = summaryResult.Value;
         PeriodComparison? mom = null;
@@ -55,9 +55,10 @@ internal sealed class DashboardService(
         DateOnly endDate,
         string granularity,
         string? category = null,
+        int? streamType = null,
         CancellationToken ct = default)
     {
-        var query = new GetIncomeTimeSeriesQuery(startDate, endDate, granularity)
+        var query = new GetIncomeTimeSeriesQuery(startDate, endDate, granularity, StreamType: streamType)
         {
             Category = category
         };
@@ -80,9 +81,10 @@ internal sealed class DashboardService(
         string groupBy,
         DateOnly? startDate = null,
         DateOnly? endDate = null,
+        int? streamType = null,
         CancellationToken ct = default)
     {
-        var query = new GetDistributionQuery(groupBy)
+        var query = new GetDistributionQuery(groupBy, StreamType: streamType)
         {
             StartDate = startDate,
             EndDate = endDate
@@ -101,9 +103,10 @@ internal sealed class DashboardService(
 
     public async Task<Result<IReadOnlyList<TopPerformerItem>>> GetTopPerformersAsync(
         int topN = 5,
+        int? streamType = null,
         CancellationToken ct = default)
     {
-        var query = new GetTopPerformersQuery(topN);
+        var query = new GetTopPerformersQuery(topN, StreamType: streamType);
         var result = await topPerformersHandler.HandleAsync(query, ct);
         if (result.IsFailed)
             return result.ToResult<IReadOnlyList<TopPerformerItem>>();
@@ -122,9 +125,10 @@ internal sealed class DashboardService(
 
     public async Task<Result<PeriodComparison>> GetPeriodComparisonAsync(
         string comparisonType,
+        int? streamType = null,
         CancellationToken ct = default)
     {
-        var query = new GetPeriodComparisonQuery(comparisonType, null);
+        var query = new GetPeriodComparisonQuery(comparisonType, null, StreamType: streamType);
         var result = await periodComparisonHandler.HandleAsync(query, ct);
         if (result.IsFailed)
             return result.ToResult<PeriodComparison>();
@@ -141,17 +145,17 @@ internal sealed class DashboardService(
             Trend: data.Trend));
     }
 
-    public async Task<Result<DashboardKpis>> GetKpisAsync(CancellationToken ct = default)
+    public async Task<Result<DashboardKpis>> GetKpisAsync(int? streamType = null, CancellationToken ct = default)
     {
-        var dailyRateResult = await dailyRateHandler.HandleAsync(new GetDailyRateQuery(30), ct);
+        var dailyRateResult = await dailyRateHandler.HandleAsync(new GetDailyRateQuery(30, StreamType: streamType), ct);
         if (dailyRateResult.IsFailed)
             return dailyRateResult.ToResult<DashboardKpis>();
 
-        var trendResult = await trendHandler.HandleAsync(new GetTrendQuery("Monthly", 2), ct);
+        var trendResult = await trendHandler.HandleAsync(new GetTrendQuery("Monthly", 2, StreamType: streamType), ct);
         if (trendResult.IsFailed)
             return trendResult.ToResult<DashboardKpis>();
 
-        var projectionResult = await projectionHandler.HandleAsync(new GetProjectionQuery(6), ct);
+        var projectionResult = await projectionHandler.HandleAsync(new GetProjectionQuery(6, StreamType: streamType), ct);
         if (projectionResult.IsFailed)
             return projectionResult.ToResult<DashboardKpis>();
 
@@ -178,9 +182,10 @@ internal sealed class DashboardService(
     public async Task<Result<StackedTimeSeries>> GetStackedTimeSeriesAsync(
         string granularity = "Daily",
         int periodsBack = 180,
+        int? streamType = null,
         CancellationToken ct = default)
     {
-        var query = new GetStackedTimeSeriesQuery(granularity, periodsBack);
+        var query = new GetStackedTimeSeriesQuery(granularity, periodsBack, StreamType: streamType);
         var result = await stackedTimeSeriesHandler.HandleAsync(query, ct);
         if (result.IsFailed)
             return result.ToResult<StackedTimeSeries>();
@@ -203,9 +208,10 @@ internal sealed class DashboardService(
 
     public async Task<Result<StreamHealthSummary>> GetStreamHealthAsync(
         string comparisonType = "MoM",
+        int? streamType = null,
         CancellationToken ct = default)
     {
-        var query = new GetStreamTrendsQuery(comparisonType);
+        var query = new GetStreamTrendsQuery(comparisonType, StreamType: streamType);
         var result = await streamTrendsHandler.HandleAsync(query, ct);
         if (result.IsFailed)
             return result.ToResult<StreamHealthSummary>();

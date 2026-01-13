@@ -6,7 +6,8 @@ namespace Analytics.Contracts.Queries;
 public sealed record GetTopPerformersQuery(
     int TopN = 10,
     DateOnly? StartDate = null,
-    DateOnly? EndDate = null);
+    DateOnly? EndDate = null,
+    int? StreamType = null);
 
 public interface IGetTopPerformersHandler
 {

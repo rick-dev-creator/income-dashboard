@@ -147,10 +147,15 @@ internal sealed class RecurringJob : BackgroundService
                         streamEntity.Id, errorMsg);
                     _activityLog.LogError(streamEntity.Id, streamEntity.Name, "Failed to record snapshot", errorMsg);
 
-                    // Create error notification
+                    // Create error notification (contextual based on stream type)
+                    var isExpense = streamEntity.StreamType == 1;
+                    var failedTitle = isExpense
+                        ? $"Recurring expense failed: {streamEntity.Name}"
+                        : $"Recurring payment failed: {streamEntity.Name}";
+
                     await notificationService.CreateAsync(new CreateNotificationRequest(
                         Type: NotificationTypes.RecurringError,
-                        Title: $"Recurring payment failed for {streamEntity.Name}",
+                        Title: failedTitle,
                         Message: errorMsg,
                         StreamId: streamEntity.Id,
                         StreamName: streamEntity.Name), ct);
@@ -174,11 +179,19 @@ internal sealed class RecurringJob : BackgroundService
                     $"Recurring snapshot recorded. Next: {nextPaymentDate:yyyy-MM-dd}",
                     amount);
 
-                // Create success notification
+                // Create success notification (contextual based on stream type)
+                var isOutcome = streamEntity.StreamType == 1;
+                var successTitle = isOutcome
+                    ? $"Recurring expense processed: {streamEntity.Name}"
+                    : $"Recurring payment received: {streamEntity.Name}";
+                var successMessage = isOutcome
+                    ? $"Expense of ${amount:N2} {streamEntity.OriginalCurrency} recorded. Next expense: {nextPaymentDate:yyyy-MM-dd}"
+                    : $"Payment of ${amount:N2} {streamEntity.OriginalCurrency} recorded. Next payment: {nextPaymentDate:yyyy-MM-dd}";
+
                 await notificationService.CreateAsync(new CreateNotificationRequest(
                     Type: NotificationTypes.RecurringSuccess,
-                    Title: $"Recurring payment received: {streamEntity.Name}",
-                    Message: $"Payment of ${amount:N2} {streamEntity.OriginalCurrency} recorded. Next payment: {nextPaymentDate:yyyy-MM-dd}",
+                    Title: successTitle,
+                    Message: successMessage,
                     StreamId: streamEntity.Id,
                     StreamName: streamEntity.Name), ct);
             }
@@ -187,10 +200,15 @@ internal sealed class RecurringJob : BackgroundService
                 _logger.LogError(ex, "Error processing recurring stream {StreamId}", streamEntity.Id);
                 _activityLog.LogError(streamEntity.Id, streamEntity.Name, "Error processing recurring stream", ex.Message);
 
-                // Create error notification
+                // Create error notification (contextual based on stream type)
+                var isExpenseError = streamEntity.StreamType == 1;
+                var errorTitle = isExpenseError
+                    ? $"Recurring expense error: {streamEntity.Name}"
+                    : $"Recurring payment error: {streamEntity.Name}";
+
                 await notificationService.CreateAsync(new CreateNotificationRequest(
                     Type: NotificationTypes.RecurringError,
-                    Title: $"Recurring payment error: {streamEntity.Name}",
+                    Title: errorTitle,
                     Message: ex.Message,
                     StreamId: streamEntity.Id,
                     StreamName: streamEntity.Name), ct);

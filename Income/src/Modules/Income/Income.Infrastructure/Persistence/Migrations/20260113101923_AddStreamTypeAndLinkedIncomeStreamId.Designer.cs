@@ -3,6 +3,7 @@ using System;
 using Income.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Income.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(IncomeDbContext))]
-    partial class IncomeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260113101923_AddStreamTypeAndLinkedIncomeStreamId")]
+    partial class AddStreamTypeAndLinkedIncomeStreamId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,12 +113,6 @@ namespace Income.Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
-
-                    b.Property<int>("SupportedStreamTypes")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(3)
-                        .HasColumnName("supported_stream_types");
 
                     b.Property<int>("SyncFrequency")
                         .HasColumnType("integer")

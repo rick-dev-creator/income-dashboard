@@ -11,7 +11,7 @@ internal sealed class GetStackedTimeSeriesHandler(
 {
     public async Task<Result<StackedTimeSeriesDto>> HandleAsync(GetStackedTimeSeriesQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<StackedTimeSeriesDto>();
 

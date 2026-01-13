@@ -11,7 +11,7 @@ internal sealed class GetStreamTrendsHandler(
 {
     public async Task<Result<StreamTrendsDto>> HandleAsync(GetStreamTrendsQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<StreamTrendsDto>();
 

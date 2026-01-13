@@ -12,7 +12,7 @@ internal sealed class GetDistributionHandler(
 {
     public async Task<Result<DistributionDto>> HandleAsync(GetDistributionQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<DistributionDto>();
 

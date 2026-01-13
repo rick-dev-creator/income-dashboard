@@ -1,0 +1,847 @@
+@page "/divergence"
+@using Income.Application.Services.Streams
+@using Analytics.Application.Services
+@using Dashboard.Services
+@implements IDisposable
+@inject IStreamService StreamService
+@inject IDashboardService DashboardService
+@inject AppState AppState
+@rendermode InteractiveServer
+
+<PageTitle>Divergence - FlowMetrics</PageTitle>
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Divergence</h1>
+        <p class="page-subtitle">Net flow analysis: Income minus Expenses</p>
+    </div>
+</div>
+
+@if (_isLoading)
+{
+    <div class="loading-container">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+        <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-3">Calculating your financial flow...</MudText>
+    </div>
+}
+else
+{
+    <!-- KEY METRICS ROW -->
+    <div class="kpi-grid animate-slide-up">
+        <!-- NET FLOW -->
+        <div class="stat-card @(_netDailyRate >= 0 ? "gradient-success" : "gradient-error") hover-lift">
+            <div class="stat-card-icon">
+                <MudIcon Icon="@(_netDailyRate >= 0 ? Icons.Material.Rounded.TrendingUp : Icons.Material.Rounded.TrendingDown)" Size="Size.Large" />
+            </div>
+            <div class="stat-card-label">Net Daily Rate</div>
+            <div class="stat-card-value">
+                @FormatSignedCurrency(_netDailyRate)<span class="stat-card-unit">/day</span>
+            </div>
+            <div class="stat-card-subtitle">
+                @(_netDailyRate >= 0 ? "You're in the green!" : "Spending exceeds income")
+            </div>
+        </div>
+
+        <!-- BURN RATIO -->
+        <div class="stat-card @GetBurnRatioGradient() hover-lift">
+            <div class="stat-card-icon">
+                <MudIcon Icon="@Icons.Material.Rounded.LocalFireDepartment" Size="Size.Large" />
+            </div>
+            <div class="stat-card-label">Burn Ratio</div>
+            <div class="stat-card-value">
+                @(_burnRatio.ToString("F0"))%
+            </div>
+            <div class="stat-card-subtitle">
+                of income goes to expenses
+            </div>
+            <div class="burn-bar">
+                <div class="burn-track">
+                    <div class="burn-fill @GetBurnRatioClass()" style="width: @Math.Min(_burnRatio, 100).ToString("F0")%"></div>
+                </div>
+                <span class="burn-status">@GetBurnRatioLabel()</span>
+            </div>
+        </div>
+
+        <!-- MONTHLY NET -->
+        <div class="stat-card gradient-purple hover-lift">
+            <div class="stat-card-icon">
+                <MudIcon Icon="@Icons.Material.Rounded.Savings" Size="Size.Large" />
+            </div>
+            <div class="stat-card-label">Monthly Net</div>
+            <div class="stat-card-value">
+                @FormatSignedCurrency(_netMonthly)
+            </div>
+            <div class="stat-card-subtitle">
+                projected savings this month
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOW COMPARISON -->
+    <div class="card-modern mt-6 animate-slide-up" style="animation-delay: 0.1s;">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Flow Comparison</h2>
+                <p class="page-subtitle" style="margin-top: 4px;">Income vs Expenses over time</p>
+            </div>
+        </div>
+
+        <div class="flow-comparison">
+            <div class="flow-bar income-bar">
+                <div class="flow-bar-fill" style="width: @GetIncomeBarWidth()%"></div>
+                <div class="flow-bar-content">
+                    <span class="flow-bar-label">Income</span>
+                    <span class="flow-bar-value">@FormatCurrency(_totalIncomeDaily)/day</span>
+                </div>
+            </div>
+            <div class="flow-bar expense-bar">
+                <div class="flow-bar-fill" style="width: @GetExpenseBarWidth()%"></div>
+                <div class="flow-bar-content">
+                    <span class="flow-bar-label">Expenses</span>
+                    <span class="flow-bar-value">@FormatCurrency(_totalExpenseDaily)/day</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="net-flow-indicator @(_netDailyRate >= 0 ? "positive" : "negative")">
+            <MudIcon Icon="@(_netDailyRate >= 0 ? Icons.Material.Rounded.ArrowUpward : Icons.Material.Rounded.ArrowDownward)" />
+            <span>Net: @FormatSignedCurrency(_netDailyRate)/day (@FormatSignedCurrency(_netMonthly)/month)</span>
+        </div>
+    </div>
+
+    <!-- STREAMS BREAKDOWN -->
+    <div class="streams-breakdown mt-6">
+        <!-- INCOME STREAMS -->
+        <div class="card-modern animate-slide-up" style="animation-delay: 0.15s;">
+            <div class="section-header">
+                <div class="stream-type-header income">
+                    <div class="stream-type-icon">
+                        <MudIcon Icon="@Icons.Material.Rounded.TrendingUp" Size="Size.Small" />
+                    </div>
+                    <h2 class="section-title">Income Streams</h2>
+                </div>
+                <span class="stream-total income">@FormatCurrency(_totalIncomeDaily)/day</span>
+            </div>
+
+            @if (_incomeStreams.Count > 0)
+            {
+                <div class="mini-stream-list">
+                    @foreach (var stream in _incomeStreams.OrderByDescending(s => s.DailyRate).Take(5))
+                    {
+                        <div class="mini-stream-item">
+                            <div class="mini-stream-info">
+                                <span class="mini-stream-name">@stream.Name</span>
+                                <span class="mini-stream-category">@stream.Category</span>
+                            </div>
+                            <div class="mini-stream-amount income">
+                                @FormatCurrency(stream.DailyRate)/day
+                            </div>
+                        </div>
+                    }
+                </div>
+                @if (_incomeStreams.Count > 5)
+                {
+                    <div class="more-streams">
+                        <MudButton Variant="Variant.Text" Color="Color.Primary" Size="Size.Small" Href="/streams">
+                            +@(_incomeStreams.Count - 5) more streams
+                        </MudButton>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-mini-state">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">No income streams</MudText>
+                </div>
+            }
+        </div>
+
+        <!-- EXPENSE STREAMS -->
+        <div class="card-modern animate-slide-up" style="animation-delay: 0.2s;">
+            <div class="section-header">
+                <div class="stream-type-header expense">
+                    <div class="stream-type-icon">
+                        <MudIcon Icon="@Icons.Material.Rounded.TrendingDown" Size="Size.Small" />
+                    </div>
+                    <h2 class="section-title">Expense Streams</h2>
+                </div>
+                <span class="stream-total expense">@FormatCurrency(_totalExpenseDaily)/day</span>
+            </div>
+
+            @if (_expenseStreams.Count > 0)
+            {
+                <div class="mini-stream-list">
+                    @foreach (var stream in _expenseStreams.OrderByDescending(s => s.DailyRate).Take(5))
+                    {
+                        <div class="mini-stream-item">
+                            <div class="mini-stream-info">
+                                <span class="mini-stream-name">@stream.Name</span>
+                                <span class="mini-stream-category">@stream.Category</span>
+                            </div>
+                            <div class="mini-stream-amount expense">
+                                @FormatCurrency(stream.DailyRate)/day
+                            </div>
+                        </div>
+                    }
+                </div>
+                @if (_expenseStreams.Count > 5)
+                {
+                    <div class="more-streams">
+                        <MudButton Variant="Variant.Text" Color="Color.Error" Size="Size.Small" Href="/streams">
+                            +@(_expenseStreams.Count - 5) more streams
+                        </MudButton>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-mini-state">
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">No expense streams</MudText>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- WHAT-IF SCENARIOS -->
+    <div class="card-modern mt-6 animate-slide-up" style="animation-delay: 0.25s;">
+        <div class="section-header">
+            <h2 class="section-title">What-If Scenarios</h2>
+        </div>
+
+        <div class="scenarios-grid">
+            <!-- Income Drop Scenario -->
+            <div class="scenario-card">
+                <div class="scenario-header">
+                    <MudIcon Icon="@Icons.Material.Rounded.RemoveCircle" Color="Color.Warning" />
+                    <span>If income drops by @_incomeDropPercent%</span>
+                </div>
+                <MudSlider @bind-Value="_incomeDropPercent" Min="0" Max="50" Step="5" Color="Color.Warning" Class="mt-2" />
+                <div class="scenario-result">
+                    <span class="scenario-label">New daily net:</span>
+                    <span class="scenario-value @(GetScenarioNetIncomeDrop() >= 0 ? "positive" : "negative")">
+                        @FormatSignedCurrency(GetScenarioNetIncomeDrop())/day
+                    </span>
+                </div>
+                <div class="scenario-impact @(GetScenarioNetIncomeDrop() >= 0 ? "safe" : "danger")">
+                    @if (GetScenarioNetIncomeDrop() >= 0)
+                    {
+                        <MudIcon Icon="@Icons.Material.Rounded.CheckCircle" Size="Size.Small" />
+                        <span>Still sustainable</span>
+                    }
+                    else
+                    {
+                        <MudIcon Icon="@Icons.Material.Rounded.Warning" Size="Size.Small" />
+                        <span>Would be in deficit</span>
+                    }
+                </div>
+            </div>
+
+            <!-- Expense Increase Scenario -->
+            <div class="scenario-card">
+                <div class="scenario-header">
+                    <MudIcon Icon="@Icons.Material.Rounded.AddCircle" Color="Color.Error" />
+                    <span>If expenses increase by @_expenseIncreasePercent%</span>
+                </div>
+                <MudSlider @bind-Value="_expenseIncreasePercent" Min="0" Max="50" Step="5" Color="Color.Error" Class="mt-2" />
+                <div class="scenario-result">
+                    <span class="scenario-label">New daily net:</span>
+                    <span class="scenario-value @(GetScenarioNetExpenseIncrease() >= 0 ? "positive" : "negative")">
+                        @FormatSignedCurrency(GetScenarioNetExpenseIncrease())/day
+                    </span>
+                </div>
+                <div class="scenario-impact @(GetScenarioNetExpenseIncrease() >= 0 ? "safe" : "danger")">
+                    @if (GetScenarioNetExpenseIncrease() >= 0)
+                    {
+                        <MudIcon Icon="@Icons.Material.Rounded.CheckCircle" Size="Size.Small" />
+                        <span>Still sustainable</span>
+                    }
+                    else
+                    {
+                        <MudIcon Icon="@Icons.Material.Rounded.Warning" Size="Size.Small" />
+                        <span>Would be in deficit</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Sustainability Threshold -->
+        <div class="sustainability-section mt-4">
+            <div class="sustainability-header">
+                <MudIcon Icon="@Icons.Material.Rounded.Security" Color="Color.Primary" />
+                <span>Sustainability Threshold</span>
+            </div>
+            <div class="sustainability-content">
+                <div class="sustainability-item">
+                    <span class="sustainability-label">Max sustainable expense increase:</span>
+                    <span class="sustainability-value">@GetMaxExpenseIncrease().ToString("F0")%</span>
+                </div>
+                <div class="sustainability-item">
+                    <span class="sustainability-label">Max income drop you can handle:</span>
+                    <span class="sustainability-value">@GetMaxIncomeDrop().ToString("F0")%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
+    }
+
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .stat-card {
+        position: relative;
+        padding: 28px;
+        border-radius: 20px;
+        color: white;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    .stat-card-icon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        opacity: 0.3;
+    }
+
+    .stat-card-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.85;
+        margin-bottom: 12px;
+    }
+
+    .stat-card-value {
+        font-size: 2.25rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 4px;
+    }
+
+    .stat-card-unit {
+        font-size: 0.5em;
+        opacity: 0.75;
+        font-weight: 500;
+    }
+
+    .stat-card-subtitle {
+        font-size: 0.875rem;
+        opacity: 0.75;
+        margin-bottom: 16px;
+    }
+
+    .burn-bar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .burn-track {
+        flex: 1;
+        height: 8px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .burn-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.5s ease;
+    }
+
+    .burn-fill.burn-healthy { background: #34d399; }
+    .burn-fill.burn-moderate { background: #fbbf24; }
+    .burn-fill.burn-high { background: #f87171; }
+
+    .burn-status {
+        font-size: 0.75rem;
+        font-weight: 500;
+        min-width: 80px;
+        text-align: right;
+    }
+
+    /* Flow Comparison */
+    .flow-comparison {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin: 24px 0;
+    }
+
+    .flow-bar {
+        position: relative;
+        height: 56px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .income-bar {
+        background: rgba(16, 185, 129, 0.15);
+    }
+
+    .expense-bar {
+        background: rgba(239, 68, 68, 0.15);
+    }
+
+    .flow-bar-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        border-radius: 12px;
+        transition: width 0.5s ease;
+    }
+
+    .income-bar .flow-bar-fill {
+        background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+    }
+
+    .expense-bar .flow-bar-fill {
+        background: linear-gradient(90deg, #ef4444 0%, #f87171 100%);
+    }
+
+    .flow-bar-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        padding: 0 20px;
+    }
+
+    .flow-bar-label {
+        font-weight: 600;
+        font-size: 0.9375rem;
+    }
+
+    .flow-bar-value {
+        font-weight: 700;
+        font-size: 1.125rem;
+    }
+
+    .net-flow-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 16px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .net-flow-indicator.positive {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+    }
+
+    .net-flow-indicator.negative {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+    }
+
+    /* Streams Breakdown */
+    .streams-breakdown {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .stream-type-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .stream-type-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    .stream-type-header.income .stream-type-icon {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .stream-type-header.expense .stream-type-icon {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+
+    .stream-total {
+        font-weight: 700;
+        font-size: 1.125rem;
+    }
+
+    .stream-total.income { color: #10b981; }
+    .stream-total.expense { color: #ef4444; }
+
+    .mini-stream-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .mini-stream-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        background: var(--mud-palette-background);
+        border-radius: 10px;
+    }
+
+    .mini-stream-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mini-stream-name {
+        font-weight: 500;
+        font-size: 0.9375rem;
+    }
+
+    .mini-stream-category {
+        font-size: 0.75rem;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .mini-stream-amount {
+        font-weight: 600;
+        font-size: 0.9375rem;
+    }
+
+    .mini-stream-amount.income { color: #10b981; }
+    .mini-stream-amount.expense { color: #ef4444; }
+
+    .more-streams {
+        text-align: center;
+        padding-top: 8px;
+    }
+
+    .empty-mini-state {
+        padding: 32px;
+        text-align: center;
+    }
+
+    /* What-If Scenarios */
+    .scenarios-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .scenario-card {
+        padding: 20px;
+        background: var(--mud-palette-background);
+        border-radius: 16px;
+        border: 1px solid var(--mud-palette-divider);
+    }
+
+    .scenario-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        font-size: 0.9375rem;
+        margin-bottom: 8px;
+    }
+
+    .scenario-result {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--mud-palette-divider);
+    }
+
+    .scenario-label {
+        font-size: 0.875rem;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .scenario-value {
+        font-weight: 700;
+        font-size: 1.125rem;
+    }
+
+    .scenario-value.positive { color: #10b981; }
+    .scenario-value.negative { color: #ef4444; }
+
+    .scenario-impact {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 12px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+    }
+
+    .scenario-impact.safe {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+    }
+
+    .scenario-impact.danger {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+    }
+
+    /* Sustainability Section */
+    .sustainability-section {
+        padding: 20px;
+        background: var(--mud-palette-background);
+        border-radius: 16px;
+        border: 1px solid var(--mud-palette-divider);
+    }
+
+    .sustainability-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+
+    .sustainability-content {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .sustainability-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .sustainability-label {
+        font-size: 0.8125rem;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .sustainability-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--mud-palette-primary);
+    }
+
+    @@media (max-width: 1279px) {
+        .kpi-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 959px) {
+        .streams-breakdown,
+        .scenarios-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sustainability-content {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 767px) {
+        .kpi-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+@code {
+    private bool _isLoading = true;
+    private List<StreamWithRate> _incomeStreams = [];
+    private List<StreamWithRate> _expenseStreams = [];
+    private decimal _totalIncomeDaily;
+    private decimal _totalExpenseDaily;
+    private decimal _netDailyRate;
+    private decimal _netMonthly;
+    private decimal _burnRatio;
+
+    private double _incomeDropPercent = 20;
+    private double _expenseIncreasePercent = 20;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        _isLoading = true;
+
+        try
+        {
+            // Get income streams
+            var incomeResult = await StreamService.GetByTypeAsync(StreamTypeDto.Income);
+            if (incomeResult.IsSuccess)
+            {
+                _incomeStreams = incomeResult.Value.Select(s => new StreamWithRate
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Category = s.Category,
+                    DailyRate = CalculateDailyRate(s)
+                }).ToList();
+            }
+
+            // Get expense streams
+            var expenseResult = await StreamService.GetByTypeAsync(StreamTypeDto.Outcome);
+            if (expenseResult.IsSuccess)
+            {
+                _expenseStreams = expenseResult.Value.Select(s => new StreamWithRate
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Category = s.Category,
+                    DailyRate = CalculateDailyRate(s)
+                }).ToList();
+            }
+
+            // Calculate totals
+            _totalIncomeDaily = _incomeStreams.Sum(s => s.DailyRate);
+            _totalExpenseDaily = _expenseStreams.Sum(s => s.DailyRate);
+            _netDailyRate = _totalIncomeDaily - _totalExpenseDaily;
+            _netMonthly = _netDailyRate * 30;
+
+            // Calculate burn ratio (what % of income goes to expenses)
+            _burnRatio = _totalIncomeDaily > 0
+                ? (_totalExpenseDaily / _totalIncomeDaily) * 100
+                : (_totalExpenseDaily > 0 ? 100 : 0);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private static decimal CalculateDailyRate(StreamListItem stream)
+    {
+        // Use last snapshot amount as monthly estimate, convert to daily
+        if (stream.LastSnapshot?.UsdAmount > 0)
+        {
+            // Assume the snapshot represents the period's full amount
+            return stream.IsFixed && stream.FixedPeriod is not null
+                ? ConvertToDailyRate(stream.LastSnapshot.UsdAmount, stream.FixedPeriod)
+                : stream.LastSnapshot.UsdAmount / 30m; // Assume monthly for variable
+        }
+        return 0;
+    }
+
+    private static decimal ConvertToDailyRate(decimal amount, string period) => period switch
+    {
+        "Daily" => amount,
+        "Weekly" => amount / 7m,
+        "Biweekly" => amount / 14m,
+        "Monthly" => amount / 30m,
+        "Quarterly" => amount / 90m,
+        "Annually" => amount / 365m,
+        _ => amount / 30m
+    };
+
+    private double GetIncomeBarWidth() =>
+        _totalIncomeDaily + _totalExpenseDaily > 0
+            ? (double)(_totalIncomeDaily / (_totalIncomeDaily + _totalExpenseDaily) * 100)
+            : 50;
+
+    private double GetExpenseBarWidth() =>
+        _totalIncomeDaily + _totalExpenseDaily > 0
+            ? (double)(_totalExpenseDaily / (_totalIncomeDaily + _totalExpenseDaily) * 100)
+            : 50;
+
+    private string GetBurnRatioGradient()
+    {
+        if (_burnRatio < 50) return "gradient-success";
+        if (_burnRatio < 80) return "gradient-warning";
+        return "gradient-error";
+    }
+
+    private string GetBurnRatioClass()
+    {
+        if (_burnRatio < 50) return "burn-healthy";
+        if (_burnRatio < 80) return "burn-moderate";
+        return "burn-high";
+    }
+
+    private string GetBurnRatioLabel()
+    {
+        if (_burnRatio < 50) return "Excellent";
+        if (_burnRatio < 70) return "Good";
+        if (_burnRatio < 85) return "Moderate";
+        if (_burnRatio < 100) return "High";
+        return "Critical";
+    }
+
+    private decimal GetScenarioNetIncomeDrop() =>
+        (_totalIncomeDaily * (1 - (decimal)_incomeDropPercent / 100)) - _totalExpenseDaily;
+
+    private decimal GetScenarioNetExpenseIncrease() =>
+        _totalIncomeDaily - (_totalExpenseDaily * (1 + (decimal)_expenseIncreasePercent / 100));
+
+    private decimal GetMaxExpenseIncrease()
+    {
+        if (_totalExpenseDaily == 0) return 999;
+        var maxExpense = _totalIncomeDaily;
+        return ((maxExpense - _totalExpenseDaily) / _totalExpenseDaily) * 100;
+    }
+
+    private decimal GetMaxIncomeDrop()
+    {
+        if (_totalIncomeDaily == 0) return 0;
+        var minIncome = _totalExpenseDaily;
+        return ((_totalIncomeDaily - minIncome) / _totalIncomeDaily) * 100;
+    }
+
+    private static string FormatCurrency(decimal amount) =>
+        amount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+
+    private static string FormatSignedCurrency(decimal amount) =>
+        (amount >= 0 ? "+" : "") + amount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+
+    public void Dispose()
+    {
+        // Nothing to dispose currently
+    }
+
+    private class StreamWithRate
+    {
+        public string Id { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string Category { get; set; } = "";
+        public decimal DailyRate { get; set; }
+    }
+}

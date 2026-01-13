@@ -5,7 +5,8 @@ namespace Analytics.Contracts.Queries;
 
 public sealed record GetPeriodComparisonQuery(
     string ComparisonType,
-    DateOnly? ReferenceDate = null);
+    DateOnly? ReferenceDate = null,
+    int? StreamType = null);
 
 public interface IGetPeriodComparisonHandler
 {

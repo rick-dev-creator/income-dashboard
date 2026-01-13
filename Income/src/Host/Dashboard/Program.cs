@@ -1,4 +1,5 @@
 using Dashboard.Components;
+using Dashboard.Services;
 using Income.Installer;
 using Analytics.Installer;
 using Connectors.Blofin;
@@ -129,7 +130,8 @@ builder.Services
         config.SnackbarConfiguration.ShowTransitionDuration = 300;
         config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
     })
-    .AddSingleton(theme);
+    .AddSingleton(theme)
+    .AddScoped<AppState>(); // App-wide state for mode switching
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents(options =>

@@ -85,7 +85,8 @@ internal sealed class SeedDataGenerator(
             ConnectorKind = (int)connector.Kind,
             DefaultCurrency = connector.DefaultCurrency,
             SyncFrequency = syncFrequency,
-            ConfigSchema = connector is ISyncableConnector syncable ? syncable.ConfigSchema : null
+            ConfigSchema = connector is ISyncableConnector syncable ? syncable.ConfigSchema : null,
+            SupportedStreamTypes = (int)connector.SupportedStreamTypes
         };
     }
 
@@ -99,7 +100,8 @@ internal sealed class SeedDataGenerator(
             ConnectorKind = 0, // ConnectorKind.Recurring
             DefaultCurrency = "USD",
             SyncFrequency = 3, // SyncFrequency.Manual
-            ConfigSchema = null
+            ConfigSchema = null,
+            SupportedStreamTypes = 3 // Both Income and Outcome
         };
     }
 
@@ -121,6 +123,8 @@ internal sealed class SeedDataGenerator(
             FixedPeriod = "Daily",
             EncryptedCredentials = null,
             SyncState = 0, // Active
+            StreamType = 0, // Income
+            LinkedIncomeStreamId = null,
             LastSuccessAt = null,
             LastAttemptAt = null,
             LastError = null,
@@ -145,6 +149,8 @@ internal sealed class SeedDataGenerator(
             FixedPeriod = "Monthly",
             EncryptedCredentials = null,
             SyncState = 0, // Active
+            StreamType = 0, // Income
+            LinkedIncomeStreamId = null,
             LastSuccessAt = now,
             LastAttemptAt = now,
             LastError = null,
@@ -169,6 +175,8 @@ internal sealed class SeedDataGenerator(
             FixedPeriod = "Monthly",
             EncryptedCredentials = null,
             SyncState = 0,
+            StreamType = 0, // Income
+            LinkedIncomeStreamId = null,
             LastSuccessAt = now,
             LastAttemptAt = now,
             LastError = null,
@@ -193,6 +201,8 @@ internal sealed class SeedDataGenerator(
             FixedPeriod = "Monthly",
             EncryptedCredentials = null,
             SyncState = 0,
+            StreamType = 0, // Income
+            LinkedIncomeStreamId = null,
             LastSuccessAt = now,
             LastAttemptAt = now,
             LastError = null,
@@ -217,6 +227,8 @@ internal sealed class SeedDataGenerator(
             FixedPeriod = null,
             EncryptedCredentials = null,
             SyncState = 0,
+            StreamType = 0, // Income
+            LinkedIncomeStreamId = null,
             LastSuccessAt = now,
             LastAttemptAt = now,
             LastError = null,
@@ -228,6 +240,192 @@ internal sealed class SeedDataGenerator(
             Snapshots = GenerateVariableIncomeSnapshots(2000m, 6, 0.40m)
         };
         streams.Add(gigsStream);
+
+        // ============================
+        // OUTCOME STREAMS (Expenses)
+        // ============================
+
+        // Rent payment - Monthly $2,200 USD
+        var rentExpenseStream = new StreamEntity
+        {
+            Id = "stream-expense-rent",
+            ProviderId = provider.Id,
+            Name = "Apartment Rent",
+            Category = "Housing",
+            OriginalCurrency = "USD",
+            IsFixed = true,
+            FixedPeriod = "Monthly",
+            EncryptedCredentials = null,
+            SyncState = 0,
+            StreamType = 1, // Outcome
+            LinkedIncomeStreamId = null, // Draws from global pool
+            LastSuccessAt = now,
+            LastAttemptAt = now,
+            LastError = null,
+            NextScheduledAt = null,
+            CreatedAt = now.AddMonths(-6),
+            RecurringAmount = 2200m,
+            RecurringFrequency = (int)RecurringFrequency.Monthly,
+            RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-6)).AddDays(0),
+            Snapshots = GenerateMonthlySalarySnapshots(2200m, 6, 0.0m)
+        };
+        streams.Add(rentExpenseStream);
+
+        // Utilities - Monthly ~$150 USD (variable)
+        var utilitiesStream = new StreamEntity
+        {
+            Id = "stream-expense-utilities",
+            ProviderId = provider.Id,
+            Name = "Utilities (Electric/Gas/Water)",
+            Category = "Utilities",
+            OriginalCurrency = "USD",
+            IsFixed = true,
+            FixedPeriod = "Monthly",
+            EncryptedCredentials = null,
+            SyncState = 0,
+            StreamType = 1, // Outcome
+            LinkedIncomeStreamId = null,
+            LastSuccessAt = now,
+            LastAttemptAt = now,
+            LastError = null,
+            NextScheduledAt = null,
+            CreatedAt = now.AddMonths(-6),
+            RecurringAmount = 150m,
+            RecurringFrequency = (int)RecurringFrequency.Monthly,
+            RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-6)).AddDays(15),
+            Snapshots = GenerateMonthlySalarySnapshots(150m, 6, 0.15m) // 15% variance
+        };
+        streams.Add(utilitiesStream);
+
+        // Netflix subscription - Monthly $15.99
+        var netflixStream = new StreamEntity
+        {
+            Id = "stream-expense-netflix",
+            ProviderId = provider.Id,
+            Name = "Netflix",
+            Category = "Subscription",
+            OriginalCurrency = "USD",
+            IsFixed = true,
+            FixedPeriod = "Monthly",
+            EncryptedCredentials = null,
+            SyncState = 0,
+            StreamType = 1, // Outcome
+            LinkedIncomeStreamId = null,
+            LastSuccessAt = now,
+            LastAttemptAt = now,
+            LastError = null,
+            NextScheduledAt = null,
+            CreatedAt = now.AddMonths(-6),
+            RecurringAmount = 15.99m,
+            RecurringFrequency = (int)RecurringFrequency.Monthly,
+            RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-6)).AddDays(5),
+            Snapshots = GenerateMonthlySalarySnapshots(15.99m, 6, 0.0m)
+        };
+        streams.Add(netflixStream);
+
+        // GitHub Pro - Monthly $4
+        var githubStream = new StreamEntity
+        {
+            Id = "stream-expense-github",
+            ProviderId = provider.Id,
+            Name = "GitHub Pro",
+            Category = "Software",
+            OriginalCurrency = "USD",
+            IsFixed = true,
+            FixedPeriod = "Monthly",
+            EncryptedCredentials = null,
+            SyncState = 0,
+            StreamType = 1, // Outcome
+            LinkedIncomeStreamId = null,
+            LastSuccessAt = now,
+            LastAttemptAt = now,
+            LastError = null,
+            NextScheduledAt = null,
+            CreatedAt = now.AddMonths(-4),
+            RecurringAmount = 4m,
+            RecurringFrequency = (int)RecurringFrequency.Monthly,
+            RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-4)).AddDays(10),
+            Snapshots = GenerateMonthlySalarySnapshots(4m, 4, 0.0m)
+        };
+        streams.Add(githubStream);
+
+        // Cloud Services (Azure/AWS) - Monthly ~$85 (variable)
+        var cloudStream = new StreamEntity
+        {
+            Id = "stream-expense-cloud",
+            ProviderId = provider.Id,
+            Name = "Azure Cloud Services",
+            Category = "Software",
+            OriginalCurrency = "USD",
+            IsFixed = true,
+            FixedPeriod = "Monthly",
+            EncryptedCredentials = null,
+            SyncState = 0,
+            StreamType = 1, // Outcome
+            LinkedIncomeStreamId = null,
+            LastSuccessAt = now,
+            LastAttemptAt = now,
+            LastError = null,
+            NextScheduledAt = null,
+            CreatedAt = now.AddMonths(-5),
+            RecurringAmount = 85m,
+            RecurringFrequency = (int)RecurringFrequency.Monthly,
+            RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-5)).AddDays(1),
+            Snapshots = GenerateMonthlySalarySnapshots(85m, 5, 0.20m) // 20% variance
+        };
+        streams.Add(cloudStream);
+
+        // Car Insurance - Monthly $180
+        var carInsuranceStream = new StreamEntity
+        {
+            Id = "stream-expense-car-insurance",
+            ProviderId = provider.Id,
+            Name = "Car Insurance",
+            Category = "Insurance",
+            OriginalCurrency = "USD",
+            IsFixed = true,
+            FixedPeriod = "Monthly",
+            EncryptedCredentials = null,
+            SyncState = 0,
+            StreamType = 1, // Outcome
+            LinkedIncomeStreamId = null,
+            LastSuccessAt = now,
+            LastAttemptAt = now,
+            LastError = null,
+            NextScheduledAt = null,
+            CreatedAt = now.AddMonths(-6),
+            RecurringAmount = 180m,
+            RecurringFrequency = (int)RecurringFrequency.Monthly,
+            RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-6)).AddDays(20),
+            Snapshots = GenerateMonthlySalarySnapshots(180m, 6, 0.0m)
+        };
+        streams.Add(carInsuranceStream);
+
+        // Gym membership - Monthly $50
+        var gymStream = new StreamEntity
+        {
+            Id = "stream-expense-gym",
+            ProviderId = provider.Id,
+            Name = "Gym Membership",
+            Category = "Services",
+            OriginalCurrency = "USD",
+            IsFixed = true,
+            FixedPeriod = "Monthly",
+            EncryptedCredentials = null,
+            SyncState = 0,
+            StreamType = 1, // Outcome
+            LinkedIncomeStreamId = null,
+            LastSuccessAt = now,
+            LastAttemptAt = now,
+            LastError = null,
+            NextScheduledAt = null,
+            CreatedAt = now.AddMonths(-3),
+            RecurringAmount = 50m,
+            RecurringFrequency = (int)RecurringFrequency.Monthly,
+            RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-3)).AddDays(1),
+            Snapshots = GenerateMonthlySalarySnapshots(50m, 3, 0.0m)
+        };
+        streams.Add(gymStream);
 
         return streams;
     }

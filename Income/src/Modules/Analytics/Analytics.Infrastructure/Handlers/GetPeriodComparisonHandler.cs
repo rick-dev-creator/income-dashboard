@@ -10,7 +10,7 @@ internal sealed class GetPeriodComparisonHandler(
 {
     public async Task<Result<PeriodComparisonDto>> HandleAsync(GetPeriodComparisonQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<PeriodComparisonDto>();
 

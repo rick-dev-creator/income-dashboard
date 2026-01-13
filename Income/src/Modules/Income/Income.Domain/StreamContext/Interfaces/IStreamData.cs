@@ -13,6 +13,13 @@ internal interface ICreateStreamData
     string? FixedPeriod { get; }
     string? EncryptedCredentials { get; }
 
+    // Stream type (Income or Outcome)
+    StreamType StreamType { get; }
+
+    // For Outcome streams: optionally link to a specific Income stream
+    // If null, the outcome draws from the global pool (sum of all incomes)
+    StreamId? LinkedIncomeStreamId { get; }
+
     // Recurring stream fields (for schedule-based income like salary)
     decimal? RecurringAmount { get; }
     int? RecurringFrequency { get; } // Maps to RecurringFrequency enum

@@ -43,6 +43,11 @@ internal sealed class ProviderEntityConfiguration : IEntityTypeConfiguration<Pro
             .HasColumnName("config_schema")
             .HasColumnType("jsonb");
 
+        builder.Property(x => x.SupportedStreamTypes)
+            .HasColumnName("supported_stream_types")
+            .HasDefaultValue(3) // Both by default
+            .IsRequired();
+
         builder.HasIndex(x => x.Name)
             .IsUnique()
             .HasDatabaseName("ix_providers_name");

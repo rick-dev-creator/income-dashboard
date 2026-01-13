@@ -9,7 +9,8 @@ public sealed record GetIncomeTimeSeriesQuery(
     string Granularity = "Daily",
     string? StreamId = null,
     string? ProviderId = null,
-    string? Category = null);
+    string? Category = null,
+    int? StreamType = null);
 
 public interface IGetIncomeTimeSeriesHandler
 {

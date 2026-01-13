@@ -1,6 +1,7 @@
 @page "/analytics"
 @using Analytics.Application.Services
 @using Income.Application.Services.Streams
+@using Dashboard.Services
 @inject IDashboardService DashboardService
 @inject IAnalyticsService AnalyticsService
 @inject IStreamService StreamService
@@ -8,14 +9,32 @@
 @inject IGetTrendHandler TrendHandler
 @inject IGetIncomeTimeSeriesHandler TimeSeriesHandler
 @inject IGetSeasonalityHandler SeasonalityHandler
+@inject AppState AppState
+@implements IDisposable
 @rendermode InteractiveServer
 
 <PageTitle>Analytics - FlowMetrics</PageTitle>
 
 <div class="page-header page-header-flex">
     <div>
-        <h1 class="page-title">Deep Analytics</h1>
-        <p class="page-subtitle">Zoom into your income streams behavior</p>
+        <div class="page-header-row">
+            <h1 class="page-title">@GetPageTitle()</h1>
+            @if (AppState.CurrentMode == AppMode.Outcome)
+            {
+                <div class="mode-legend outcome">
+                    <MudIcon Icon="@Icons.Material.Rounded.RemoveCircleOutline" Size="Size.Small" />
+                    <span>Expense analytics</span>
+                </div>
+            }
+            else if (AppState.CurrentMode == AppMode.Divergence)
+            {
+                <div class="mode-legend divergence">
+                    <MudIcon Icon="@Icons.Material.Rounded.SwapVert" Size="Size.Small" />
+                    <span>Combined analytics</span>
+                </div>
+            }
+        </div>
+        <p class="page-subtitle">@GetPageSubtitle()</p>
     </div>
     <MudToggleGroup T="string" Value="_selectedPeriod" ValueChanged="OnPeriodChangedAsync" Color="Color.Primary" CheckMark="false" Class="toggle-rounded">
         <MudToggleItem Value="@("1M")">1M</MudToggleItem>
@@ -460,6 +479,43 @@ else
     </MudPaper>
 }
 
+<style>
+    .page-header-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .mode-legend {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .mode-legend.outcome {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .mode-legend.divergence {
+        background: rgba(139, 92, 246, 0.1);
+        color: #8b5cf6;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateX(-10px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+</style>
+
 @code {
     [CascadingParameter(Name = "IsDarkMode")]
     private bool IsDarkMode { get; set; } = true;
@@ -626,8 +682,18 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        AppState.OnModeChanged += OnModeChanged;
         BuildChartOptions();
         await LoadDataAsync();
+    }
+
+    private async void OnModeChanged()
+    {
+        await InvokeAsync(async () =>
+        {
+            await LoadDataAsync();
+            StateHasChanged();
+        });
     }
 
     protected override void OnParametersSet()
@@ -641,20 +707,28 @@ else
         _isLoading = true;
         var (startDate, endDate) = GetDateRange();
 
-        // Load streams list
-        var streamsResult = await StreamService.GetAllAsync();
+        // Get stream type filter based on current mode
+        var streamTypeFilter = AppState.CurrentStreamType switch
+        {
+            Income.Application.Services.Streams.StreamTypeDto.Income => 0,
+            Income.Application.Services.Streams.StreamTypeDto.Outcome => 1,
+            _ => (int?)null // Divergence shows both
+        };
+
+        // Load streams list (filtered by mode)
+        var streamsResult = await StreamService.GetAllAsync(streamTypeFilter);
         if (streamsResult.IsSuccess) _streams = streamsResult.Value.ToList();
 
         // Load KPIs
-        var kpisResult = await DashboardService.GetKpisAsync();
+        var kpisResult = await DashboardService.GetKpisAsync(streamTypeFilter);
         if (kpisResult.IsSuccess) _kpis = kpisResult.Value;
 
         // Load Top Performers
-        var topResult = await TopPerformersHandler.HandleAsync(new GetTopPerformersQuery(20, startDate, endDate));
+        var topResult = await TopPerformersHandler.HandleAsync(new GetTopPerformersQuery(20, startDate, endDate, StreamType: streamTypeFilter));
         if (topResult.IsSuccess) _topPerformers = topResult.Value;
 
         // Load Stream Trends
-        var trendsResult = await DashboardService.GetStreamHealthAsync("MoM");
+        var trendsResult = await DashboardService.GetStreamHealthAsync("MoM", streamTypeFilter);
         if (trendsResult.IsSuccess) _streamTrends = new StreamTrendsDto(
             trendsResult.Value.Streams.Select(s => new StreamTrendItemDto(s.StreamId, s.StreamName, s.Category, s.ProviderName, s.CurrentPeriodUsd, s.PreviousPeriodUsd, s.ChangeUsd, s.ChangePercentage, s.Direction)).ToList(),
             trendsResult.Value.GrowingCount, trendsResult.Value.DecliningCount, trendsResult.Value.StableCount);
@@ -919,4 +993,23 @@ else
         > 30 => "Moderate concentration. Your top stream represents a significant portion.",
         _ => "Good diversification. Your income is well distributed across streams."
     };
+
+    private string GetPageTitle() => AppState.CurrentMode switch
+    {
+        AppMode.Outcome => "Expense Analytics",
+        AppMode.Divergence => "Combined Analytics",
+        _ => "Deep Analytics"
+    };
+
+    private string GetPageSubtitle() => AppState.CurrentMode switch
+    {
+        AppMode.Outcome => "Zoom into your expense streams behavior",
+        AppMode.Divergence => "Combined income and expense analysis",
+        _ => "Zoom into your income streams behavior"
+    };
+
+    public void Dispose()
+    {
+        AppState.OnModeChanged -= OnModeChanged;
+    }
 }

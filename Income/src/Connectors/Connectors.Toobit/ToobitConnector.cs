@@ -24,6 +24,11 @@ internal sealed class ToobitConnector(ToobitApiClient apiClient) : ISyncableConn
 
     public string DefaultCurrency => "USD";
 
+    /// <summary>
+    /// Exchange connectors only support Income (tracking wallet balances).
+    /// </summary>
+    public SupportedStreamTypes SupportedStreamTypes => SupportedStreamTypes.Income;
+
     public string ConfigSchema => """
         {
           "type": "object",

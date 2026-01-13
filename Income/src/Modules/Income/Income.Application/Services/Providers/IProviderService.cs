@@ -1,4 +1,5 @@
 using FluentResults;
+using Income.Application.Connectors;
 
 namespace Income.Application.Services.Providers;
 
@@ -17,7 +18,15 @@ public sealed record ProviderListItem(
     string ConnectorKind,
     string DefaultCurrency,
     string SyncFrequency,
-    string? ConfigSchema);
+    string? ConfigSchema,
+    SupportedStreamTypes SupportedStreamTypes)
+{
+    /// <summary>
+    /// Checks if this provider supports the given stream type.
+    /// </summary>
+    public bool SupportsStreamType(SupportedStreamTypes streamType) =>
+        (SupportedStreamTypes & streamType) == streamType;
+}
 
 public sealed record ProviderDetail(
     string Id,
@@ -26,7 +35,8 @@ public sealed record ProviderDetail(
     string ConnectorKind,
     string DefaultCurrency,
     string SyncFrequency,
-    string? ConfigSchema);
+    string? ConfigSchema,
+    SupportedStreamTypes SupportedStreamTypes);
 
 public sealed record CreateProviderRequest(
     string Name,
