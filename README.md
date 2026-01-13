@@ -105,23 +105,153 @@ Income/src/
 - Pattern matching
 - Records for DTOs and Value Objects
 
+## Phase 2 Vision: Outcome Streams
+
+### The Missing Half
+
+Phase 1 answers **"How much am I generating?"** - but financial clarity requires understanding both sides of the equation. Phase 2 introduces **Outcome Streams**: the mirror image of Income Streams, tracking where money flows out.
+
+> **Important:** This is NOT budgeting. Traditional budgeting apps track individual transactions (groceries, coffee, subscriptions). FlowMetrics tracks **flows** - high-level recurring financial commitments that drain your income over time.
+
+### The Azure Billing Analogy
+
+Just as Azure Billing shows each resource consuming money per minute/day/month:
+
+| Azure Resource | Cost Model |
+|----------------|------------|
+| Virtual Machine | $X per hour |
+| Storage Account | $X per GB/month |
+| App Service | $X per day |
+
+FlowMetrics Outcome Streams work the same way:
+
+| Outcome Stream | Cost Model |
+|----------------|------------|
+| Rent/Mortgage | $X per month |
+| Car Lease | $X per month |
+| Netflix | $X per month |
+| Gym Membership | $X per month |
+| Insurance | $X per year (normalized to daily) |
+
+Every outcome has a **burn rate** - a cost per time unit that continuously drains from your income.
+
+### Flow Connection
+
+The key innovation is **linking Outcome Streams to Income Streams**:
+
+```mermaid
+flowchart TB
+    subgraph income["INCOME STREAMS"]
+        salary["Main Salary<br/>$8,500/mo"]
+        consulting["Consulting<br/>$3,500/mo"]
+        rental["Rental Income<br/>$1,200/mo"]
+    end
+
+    subgraph linked["LINKED OUTCOMES"]
+        tax["Property Tax<br/>$200/mo"]
+    end
+
+    subgraph pool["GLOBAL POOL"]
+        total["$13,200/mo - $200/mo = $13,000/mo"]
+    end
+
+    subgraph outcomes["OUTCOME STREAMS (from global pool)"]
+        rent["Rent<br/>$2,000/mo"]
+        car["Car Lease<br/>$450/mo"]
+        subs["Subscriptions<br/>$150/mo"]
+    end
+
+    subgraph net["NET FLOW"]
+        result["$13,000/mo - $2,600/mo = $10,400/mo<br/>~$347/day"]
+    end
+
+    salary --> pool
+    consulting --> pool
+    rental -.->|linked| tax
+    rental --> pool
+    tax -.->|deducted| pool
+    pool --> outcomes
+    rent --> net
+    car --> net
+    subs --> net
+
+    style income fill:#10b981,color:#fff
+    style linked fill:#f59e0b,color:#fff
+    style pool fill:#6366f1,color:#fff
+    style outcomes fill:#ef4444,color:#fff
+    style net fill:#8b5cf6,color:#fff
+```
+
+**Two connection modes:**
+
+1. **Linked to specific Income Stream** - Property Tax links to Rental Income because that outcome is directly tied to that income source
+2. **Global Pool (default)** - General living expenses draw from the combined total of all income streams
+
+### What Phase 2 Enables
+
+| Question | Answer |
+|----------|--------|
+| What's my true daily net rate? | Income rate minus outcome rate |
+| Which income stream is most "loaded"? | Streams with many linked outcomes |
+| What if I lose a stream? | See both income loss AND freed outcomes |
+| When will I reach $X saved? | Project based on net flow rate |
+| What's my burn rate? | Total outcome streams normalized to daily |
+
+### Outcome Stream Features (Planned)
+
+| Feature | Description |
+|---------|-------------|
+| **Recurring Outcomes** | Fixed costs: rent, subscriptions, insurance |
+| **Variable Outcomes** | Estimated averages: utilities, groceries |
+| **Flow Linking** | Connect outcomes to specific income sources |
+| **Burn Rate Analysis** | Daily/monthly outcome totals |
+| **Net Flow Dashboard** | Income - Outcomes visualization |
+| **Sustainability Score** | How long can current lifestyle sustain? |
+| **What-If (Outcomes)** | Simulate adding/removing outcomes |
+
+### Architecture Extension
+
+```
+Income/src/
+├── Modules/
+│   ├── Income/                    # Existing - money flowing IN
+│   │   ├── Income.Application/
+│   │   ├── Income.Domain/
+│   │   ├── Income.Infrastructure/
+│   │   └── Income.Contracts/
+│   │
+│   ├── Outcome/                   # NEW - money flowing OUT (mirrors Income)
+│   │   ├── Outcome.Application/   # Services, interfaces, DTOs
+│   │   ├── Outcome.Domain/        # OutcomeStream, BurnRate, FlowLink
+│   │   ├── Outcome.Infrastructure/# EF Core, outcome tracking
+│   │   └── Outcome.Contracts/     # Cross-module DTOs
+│   │
+│   └── Analytics/                 # Extended for net flow calculations
+│       ├── Analytics.Application/ # NetFlowAnalytics service
+│       └── Analytics.Infrastructure/
+```
+
+---
+
 ## Roadmap
 
-### Phase 1: Foundation
+### Phase 1: Foundation ✓
 - [x] Project structure setup (Clean Architecture)
 - [x] Database schema and EF Core configuration
 - [x] Domain entities and value objects
 - [x] Blazor Server UI with MudBlazor
 
-### Phase 2: Core Functionality
+### Phase 2: Income Streams ✓
 - [x] Provider and stream management
 - [x] Manual/recurring income entry
 - [x] Plugin-based connector architecture
 - [x] Blofin exchange integration
 - [x] Real-time Activity Log
 - [x] Auto-refresh dashboard
+- [x] Stream enable/disable toggle
+- [x] Notification system (sync success/failure)
 
-### Phase 3: Analytics
+### Phase 3: Analytics ✓
 - [x] Statistical calculations (daily rate, trends)
 - [x] Stream health analysis (growing/stable/declining)
 - [x] 6-month projections with confidence scoring
@@ -131,7 +261,24 @@ Income/src/
 - [x] Income stability metrics (fixed vs variable, concentration risk)
 - [ ] Multi-currency support with live rates
 
-### Phase 4: Expansion
+### Phase 4: Outcome Streams (Next)
+- [ ] Outcome module (mirror of Income module)
+- [ ] OutcomeStream entity with burn rate
+- [ ] Recurring outcomes (fixed costs)
+- [ ] Variable outcomes (estimated averages)
+- [ ] Flow linking (outcome → income stream)
+- [ ] Global pool calculation
+- [ ] Net flow dashboard
+- [ ] Burn rate analytics
+
+### Phase 5: Advanced Analytics
+- [ ] Net flow projections (income - outcomes)
+- [ ] Sustainability scoring
+- [ ] What-If for outcomes
+- [ ] Combined stacked charts (income vs outcome)
+- [ ] Financial runway calculator
+
+### Phase 6: Expansion
 - [ ] Additional exchange connectors (Binance, Bybit, OKX)
 - [ ] Bank integrations (Plaid)
 - [ ] Monte Carlo simulation for probabilistic projections
