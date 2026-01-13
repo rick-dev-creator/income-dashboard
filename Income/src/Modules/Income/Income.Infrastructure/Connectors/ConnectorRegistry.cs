@@ -1,38 +1,43 @@
 using Income.Application.Connectors;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Income.Infrastructure.Connectors;
 
 /// <summary>
 /// Registry for discovering and resolving income connectors.
-/// Uses Strategy pattern - connectors are injected via DI and resolved at runtime.
+/// Uses Strategy pattern - connectors are resolved lazily from DI at runtime.
+/// This ensures all connectors are available regardless of registration order.
 /// </summary>
 internal sealed class ConnectorRegistry : IConnectorRegistry
 {
-    private readonly IReadOnlyList<IIncomeConnector> _allConnectors;
-    private readonly IReadOnlyList<ISyncableConnector> _syncableConnectors;
-    private readonly IReadOnlyList<IRecurringConnector> _recurringConnectors;
+    private readonly IServiceProvider _serviceProvider;
+    private IReadOnlyList<ISyncableConnector>? _syncableConnectors;
+    private IReadOnlyList<IRecurringConnector>? _recurringConnectors;
 
-    public ConnectorRegistry(
-        IEnumerable<ISyncableConnector> syncableConnectors,
-        IEnumerable<IRecurringConnector> recurringConnectors)
+    public ConnectorRegistry(IServiceProvider serviceProvider)
     {
-        _syncableConnectors = syncableConnectors.ToList();
-        _recurringConnectors = recurringConnectors.ToList();
-        _allConnectors = [.. _syncableConnectors, .. _recurringConnectors];
+        _serviceProvider = serviceProvider;
     }
 
-    public IReadOnlyList<IIncomeConnector> GetAll() => _allConnectors;
+    private IReadOnlyList<ISyncableConnector> SyncableConnectors =>
+        _syncableConnectors ??= _serviceProvider.GetServices<ISyncableConnector>().ToList();
 
-    public IReadOnlyList<ISyncableConnector> GetSyncable() => _syncableConnectors;
+    private IReadOnlyList<IRecurringConnector> RecurringConnectors =>
+        _recurringConnectors ??= _serviceProvider.GetServices<IRecurringConnector>().ToList();
 
-    public IReadOnlyList<IRecurringConnector> GetRecurring() => _recurringConnectors;
+    public IReadOnlyList<IIncomeConnector> GetAll() =>
+        [.. SyncableConnectors, .. RecurringConnectors];
+
+    public IReadOnlyList<ISyncableConnector> GetSyncable() => SyncableConnectors;
+
+    public IReadOnlyList<IRecurringConnector> GetRecurring() => RecurringConnectors;
 
     public IIncomeConnector? GetById(string providerId) =>
-        _allConnectors.FirstOrDefault(c => c.ProviderId.Equals(providerId, StringComparison.OrdinalIgnoreCase));
+        GetAll().FirstOrDefault(c => c.ProviderId.Equals(providerId, StringComparison.OrdinalIgnoreCase));
 
     public ISyncableConnector? GetSyncableById(string providerId) =>
-        _syncableConnectors.FirstOrDefault(c => c.ProviderId.Equals(providerId, StringComparison.OrdinalIgnoreCase));
+        SyncableConnectors.FirstOrDefault(c => c.ProviderId.Equals(providerId, StringComparison.OrdinalIgnoreCase));
 
     public IRecurringConnector? GetRecurringById(string providerId) =>
-        _recurringConnectors.FirstOrDefault(c => c.ProviderId.Equals(providerId, StringComparison.OrdinalIgnoreCase));
+        RecurringConnectors.FirstOrDefault(c => c.ProviderId.Equals(providerId, StringComparison.OrdinalIgnoreCase));
 }

@@ -16,14 +16,17 @@ namespace Income.Infrastructure.Jobs;
 internal sealed class SyncJob : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IActivityLogService _activityLog;
     private readonly ILogger<SyncJob> _logger;
     private readonly TimeSpan _checkInterval = TimeSpan.FromMinutes(5);
 
     public SyncJob(
         IServiceScopeFactory scopeFactory,
+        IActivityLogService activityLog,
         ILogger<SyncJob> logger)
     {
         _scopeFactory = scopeFactory;
+        _activityLog = activityLog;
         _logger = logger;
     }
 
@@ -31,6 +34,8 @@ internal sealed class SyncJob : BackgroundService
     {
         _logger.LogInformation("SyncJob started. Checking for streams to sync every {Interval} minutes",
             _checkInterval.TotalMinutes);
+
+        _activityLog.LogInfo("system", "SyncJob", $"Background sync job started. Checking every {_checkInterval.TotalMinutes} minutes.");
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -41,6 +46,7 @@ internal sealed class SyncJob : BackgroundService
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 _logger.LogError(ex, "Error processing syncable streams");
+                _activityLog.LogError("system", "SyncJob", "Error processing syncable streams", ex.Message);
             }
 
             await Task.Delay(_checkInterval, stoppingToken);
@@ -68,10 +74,12 @@ internal sealed class SyncJob : BackgroundService
         if (streamsToSync.Count == 0)
         {
             _logger.LogDebug("No streams due for sync");
+            _activityLog.LogInfo("system", "SyncJob", "Sync check completed. No streams due for sync.");
             return;
         }
 
         _logger.LogInformation("Found {Count} streams due for sync", streamsToSync.Count);
+        _activityLog.LogInfo("system", "SyncJob", $"Found {streamsToSync.Count} stream(s) due for sync.");
 
         foreach (var streamEntity in streamsToSync)
         {
@@ -81,8 +89,11 @@ internal sealed class SyncJob : BackgroundService
                 if (connector is null)
                 {
                     _logger.LogWarning("No connector found for provider {ProviderId}", streamEntity.ProviderId);
+                    _activityLog.LogWarning(streamEntity.Id, streamEntity.Name, $"No connector found for provider '{streamEntity.ProviderId}'");
                     continue;
                 }
+
+                _activityLog.LogInfo(streamEntity.Id, streamEntity.Name, $"Starting sync via {connector.DisplayName}...");
 
                 // Decrypt credentials
                 var decryptedCredentials = credentialEncryptor.Decrypt(streamEntity.EncryptedCredentials!);
@@ -99,18 +110,22 @@ internal sealed class SyncJob : BackgroundService
 
                 if (result.IsFailed)
                 {
+                    var errorMsg = string.Join(", ", result.Errors.Select(e => e.Message));
                     _logger.LogWarning("Failed to fetch snapshots for stream {StreamId}: {Errors}",
-                        streamEntity.Id, string.Join(", ", result.Errors));
+                        streamEntity.Id, errorMsg);
+
+                    _activityLog.LogError(streamEntity.Id, streamEntity.Name, "Sync failed", errorMsg);
 
                     // Mark as failed
                     streamEntity.SyncState = (int)Domain.StreamContext.ValueObjects.SyncState.Failed;
                     streamEntity.LastAttemptAt = DateTime.UtcNow;
-                    streamEntity.LastError = string.Join(", ", result.Errors.Select(e => e.Message));
+                    streamEntity.LastError = errorMsg;
                     await dbContext.SaveChangesAsync(ct);
                     continue;
                 }
 
                 // Record each snapshot
+                decimal totalAmount = 0;
                 foreach (var snapshotData in result.Value)
                 {
                     await streamService.RecordSnapshotAsync(new RecordSnapshotRequest(
@@ -121,6 +136,7 @@ internal sealed class SyncJob : BackgroundService
                         UsdAmount: snapshotData.UsdAmount,
                         ExchangeRate: snapshotData.ExchangeRate,
                         RateSource: snapshotData.RateSource), ct);
+                    totalAmount = snapshotData.UsdAmount;
                 }
 
                 // Mark as success and schedule next sync
@@ -133,10 +149,17 @@ internal sealed class SyncJob : BackgroundService
 
                 _logger.LogInformation("Successfully synced stream {StreamId} ({StreamName}). Recorded {Count} snapshots",
                     streamEntity.Id, streamEntity.Name, result.Value.Count);
+
+                _activityLog.LogSuccess(
+                    streamEntity.Id,
+                    streamEntity.Name,
+                    $"Sync completed. Recorded {result.Value.Count} snapshot(s). Next sync: {streamEntity.NextScheduledAt:HH:mm:ss}",
+                    totalAmount);
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 _logger.LogError(ex, "Error syncing stream {StreamId}", streamEntity.Id);
+                _activityLog.LogError(streamEntity.Id, streamEntity.Name, "Sync error", ex.Message);
 
                 streamEntity.SyncState = (int)Domain.StreamContext.ValueObjects.SyncState.Failed;
                 streamEntity.LastAttemptAt = DateTime.UtcNow;

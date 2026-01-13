@@ -1,0 +1,252 @@
+@page "/activity"
+@using Income.Application.Services
+@implements IDisposable
+@inject IActivityLogService ActivityLogService
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
+<PageTitle>Activity Log - FlowMetrics</PageTitle>
+
+<div class="page-header page-header-flex">
+    <div>
+        <h1 class="page-title">Activity Log</h1>
+        <p class="page-subtitle">Real-time sync activity and connector status</p>
+    </div>
+    <MudStack Row="true" Spacing="2">
+        <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.ContentCopy"
+                   OnClick="CopyLogsToClipboard" Disabled="@(!_entries.Any())">
+            Copy Logs
+        </MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete"
+                   OnClick="ClearLogs" Disabled="@(!_entries.Any())">
+            Clear
+        </MudButton>
+    </MudStack>
+</div>
+
+<MudPaper Class="pa-4 mb-4" Elevation="1">
+    <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+            <MudIcon Icon="@Icons.Material.Filled.Circle" Size="Size.Small" Color="Color.Success" />
+            <MudText Typo="Typo.body2">@_entries.Count(e => e.Level == ActivityLevel.Success) Success</MudText>
+        </MudStack>
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+            <MudIcon Icon="@Icons.Material.Filled.Circle" Size="Size.Small" Color="Color.Info" />
+            <MudText Typo="Typo.body2">@_entries.Count(e => e.Level == ActivityLevel.Info) Info</MudText>
+        </MudStack>
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+            <MudIcon Icon="@Icons.Material.Filled.Circle" Size="Size.Small" Color="Color.Warning" />
+            <MudText Typo="Typo.body2">@_entries.Count(e => e.Level == ActivityLevel.Warning) Warning</MudText>
+        </MudStack>
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+            <MudIcon Icon="@Icons.Material.Filled.Circle" Size="Size.Small" Color="Color.Error" />
+            <MudText Typo="Typo.body2">@_entries.Count(e => e.Level == ActivityLevel.Error) Error</MudText>
+        </MudStack>
+        <MudSpacer />
+        <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">
+            @_entries.Count entries
+        </MudChip>
+        <MudSwitch @bind-Value="_autoRefresh" Label="Auto-refresh" Color="Color.Primary" />
+    </MudStack>
+</MudPaper>
+
+@if (!_entries.Any())
+{
+    <MudPaper Class="pa-8 text-center" Elevation="2">
+        <MudIcon Icon="@Icons.Material.Filled.History" Size="Size.Large" Color="Color.Secondary" />
+        <MudText Typo="Typo.h6" Class="mt-4">No Activity Yet</MudText>
+        <MudText Color="Color.Secondary" Class="mb-4">
+            Activity will appear here as streams sync. The SyncJob runs every 5 minutes.
+        </MudText>
+    </MudPaper>
+}
+else
+{
+    <MudPaper Class="activity-log-container" Elevation="2">
+        <MudList T="ActivityEntry" Dense="true">
+            @foreach (var entry in _entries)
+            {
+                <MudListItem Class="@($"activity-entry {GetEntryClass(entry.Level)}")">
+                    <div class="activity-entry-content">
+                        <div class="activity-entry-header">
+                            <MudIcon Icon="@GetLevelIcon(entry.Level)" Size="Size.Small" Color="@GetLevelColor(entry.Level)" />
+                            <MudText Typo="Typo.body2" Class="activity-timestamp">
+                                @entry.Timestamp.ToString("HH:mm:ss")
+                            </MudText>
+                            <MudChip T="string" Size="Size.Small" Variant="Variant.Text" Color="@GetLevelColor(entry.Level)">
+                                @entry.StreamName
+                            </MudChip>
+                            @if (entry.Amount.HasValue && entry.Amount.Value > 0)
+                            {
+                                <MudChip T="string" Size="Size.Small" Variant="Variant.Filled" Color="Color.Success">
+                                    $@entry.Amount.Value.ToString("N2")
+                                </MudChip>
+                            }
+                        </div>
+                        <MudText Typo="Typo.body2" Class="activity-message">
+                            @entry.Message
+                        </MudText>
+                        @if (!string.IsNullOrEmpty(entry.Details))
+                        {
+                            <MudText Typo="Typo.caption" Color="Color.Error" Class="activity-details">
+                                @entry.Details
+                            </MudText>
+                        }
+                    </div>
+                </MudListItem>
+            }
+        </MudList>
+    </MudPaper>
+}
+
+<style>
+    .activity-log-container {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+
+    .activity-entry {
+        border-bottom: 1px solid var(--mud-palette-divider);
+        padding: 8px 16px;
+    }
+
+    .activity-entry:last-child {
+        border-bottom: none;
+    }
+
+    .activity-entry-content {
+        width: 100%;
+    }
+
+    .activity-entry-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+
+    .activity-timestamp {
+        font-family: monospace;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .activity-message {
+        margin-left: 24px;
+    }
+
+    .activity-details {
+        margin-left: 24px;
+        margin-top: 4px;
+        padding: 4px 8px;
+        background-color: var(--mud-palette-error-lighten);
+        border-radius: 4px;
+        font-family: monospace;
+    }
+
+    .activity-entry.success {
+        border-left: 3px solid var(--mud-palette-success);
+    }
+
+    .activity-entry.info {
+        border-left: 3px solid var(--mud-palette-info);
+    }
+
+    .activity-entry.warning {
+        border-left: 3px solid var(--mud-palette-warning);
+    }
+
+    .activity-entry.error {
+        border-left: 3px solid var(--mud-palette-error);
+    }
+</style>
+
+@code {
+    private List<ActivityEntry> _entries = [];
+    private bool _autoRefresh = true;
+    private System.Threading.Timer? _refreshTimer;
+
+    protected override void OnInitialized()
+    {
+        LoadEntries();
+        ActivityLogService.OnNewEntry += OnNewEntry;
+
+        // Auto-refresh timer
+        _refreshTimer = new System.Threading.Timer(async _ =>
+        {
+            if (_autoRefresh)
+            {
+                await InvokeAsync(() =>
+                {
+                    LoadEntries();
+                    StateHasChanged();
+                });
+            }
+        }, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
+    }
+
+    private void LoadEntries()
+    {
+        _entries = ActivityLogService.GetEntries(100).ToList();
+    }
+
+    private void OnNewEntry(ActivityEntry entry)
+    {
+        InvokeAsync(() =>
+        {
+            _entries.Insert(0, entry);
+            if (_entries.Count > 100)
+            {
+                _entries.RemoveAt(_entries.Count - 1);
+            }
+            StateHasChanged();
+        });
+    }
+
+    private async Task CopyLogsToClipboard()
+    {
+        var logText = string.Join("\n", _entries.Select(e =>
+            $"[{e.Timestamp:yyyy-MM-dd HH:mm:ss}] [{e.Level}] [{e.StreamName}] {e.Message}" +
+            (string.IsNullOrEmpty(e.Details) ? "" : $"\n  Details: {e.Details}")));
+
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", logText);
+    }
+
+    private void ClearLogs()
+    {
+        ActivityLogService.Clear();
+        _entries.Clear();
+    }
+
+    private static string GetEntryClass(ActivityLevel level) => level switch
+    {
+        ActivityLevel.Success => "success",
+        ActivityLevel.Info => "info",
+        ActivityLevel.Warning => "warning",
+        ActivityLevel.Error => "error",
+        _ => ""
+    };
+
+    private static string GetLevelIcon(ActivityLevel level) => level switch
+    {
+        ActivityLevel.Success => Icons.Material.Filled.CheckCircle,
+        ActivityLevel.Info => Icons.Material.Filled.Info,
+        ActivityLevel.Warning => Icons.Material.Filled.Warning,
+        ActivityLevel.Error => Icons.Material.Filled.Error,
+        _ => Icons.Material.Filled.Circle
+    };
+
+    private static Color GetLevelColor(ActivityLevel level) => level switch
+    {
+        ActivityLevel.Success => Color.Success,
+        ActivityLevel.Info => Color.Info,
+        ActivityLevel.Warning => Color.Warning,
+        ActivityLevel.Error => Color.Error,
+        _ => Color.Default
+    };
+
+    public void Dispose()
+    {
+        ActivityLogService.OnNewEntry -= OnNewEntry;
+        _refreshTimer?.Dispose();
+    }
+}

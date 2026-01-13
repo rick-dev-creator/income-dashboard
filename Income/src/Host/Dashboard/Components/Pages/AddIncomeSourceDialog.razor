@@ -1,5 +1,6 @@
 @using Income.Application.Connectors
 @using Income.Application.Services.Streams
+@using System.Text.Json
 @inject IConnectorRegistry ConnectorRegistry
 @inject IStreamService StreamService
 @inject ISnackbar Snackbar
@@ -32,22 +33,107 @@
                     </MudCardContent>
                 </MudCard>
 
-                <MudCard Class="cursor-pointer" Elevation="1" Style="opacity: 0.6;">
+                <MudCard Class="cursor-pointer hover-card" @onclick="SelectApiIntegration" Elevation="2">
                     <MudCardContent>
                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
-                            <MudAvatar Color="Color.Default" Size="Size.Large">
+                            <MudAvatar Color="Color.Info" Size="Size.Large">
                                 <MudIcon Icon="@Icons.Material.Filled.Sync" />
                             </MudAvatar>
                             <div>
                                 <MudText Typo="Typo.h6">API Integration</MudText>
                                 <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                    Exchanges, platforms - sync automatically (coming soon)
+                                    Exchanges, platforms - sync automatically via API
                                 </MudText>
                             </div>
                         </MudStack>
                     </MudCardContent>
                 </MudCard>
             </MudStack>
+        }
+        else if (_step == Step.SelectConnector)
+        {
+            <MudText Class="mb-4">Select an integration:</MudText>
+            <MudStack Spacing="2">
+                @foreach (var connector in _syncableConnectors)
+                {
+                    <MudCard Class="cursor-pointer hover-card" @onclick="() => SelectConnector(connector)" Elevation="2">
+                        <MudCardContent>
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                                <MudAvatar Color="Color.Info">
+                                    <MudIcon Icon="@Icons.Material.Filled.AccountBalance" />
+                                </MudAvatar>
+                                <div>
+                                    <MudText Typo="Typo.subtitle1">@connector.DisplayName</MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                        @connector.ProviderType - @connector.DefaultCurrency
+                                    </MudText>
+                                </div>
+                            </MudStack>
+                        </MudCardContent>
+                    </MudCard>
+                }
+            </MudStack>
+            @if (!_syncableConnectors.Any())
+            {
+                <MudAlert Severity="Severity.Info">No API integrations available yet.</MudAlert>
+            }
+        }
+        else if (_step == Step.ConfigureConnector)
+        {
+            <MudForm @ref="_form" @bind-IsValid="_formValid">
+                <MudStack Spacing="3">
+                    <MudTextField @bind-Value="_name" Label="Stream Name" Required="true"
+                                  RequiredError="Name is required" Variant="Variant.Outlined"
+                                  Placeholder="e.g., My Blofin Account" />
+
+                    <MudSelect T="string" Label="Category" @bind-Value="_category" Required="true"
+                               RequiredError="Category is required" Variant="Variant.Outlined">
+                        <MudSelectItem Value="@("Trading")">Trading</MudSelectItem>
+                        <MudSelectItem Value="@("Investment")">Investment</MudSelectItem>
+                        <MudSelectItem Value="@("Staking")">Staking</MudSelectItem>
+                        <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                    </MudSelect>
+
+                    <MudDivider Class="my-2" />
+                    <MudText Typo="Typo.subtitle2" Color="Color.Primary">API Credentials</MudText>
+
+                    @* Dynamic credentials form based on ConfigSchema *@
+                    <MudTextField @bind-Value="_apiKey" Label="API Key" Required="true"
+                                  RequiredError="API Key is required" Variant="Variant.Outlined"
+                                  InputType="@(_showApiKey ? InputType.Text : InputType.Password)"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@(_showApiKey ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                                  OnAdornmentClick="() => _showApiKey = !_showApiKey" />
+
+                    <MudTextField @bind-Value="_secretKey" Label="Secret Key" Required="true"
+                                  RequiredError="Secret Key is required" Variant="Variant.Outlined"
+                                  InputType="@(_showSecretKey ? InputType.Text : InputType.Password)"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@(_showSecretKey ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                                  OnAdornmentClick="() => _showSecretKey = !_showSecretKey" />
+
+                    <MudTextField @bind-Value="_passphrase" Label="Passphrase" Required="true"
+                                  RequiredError="Passphrase is required" Variant="Variant.Outlined"
+                                  InputType="@(_showPassphrase ? InputType.Text : InputType.Password)"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@(_showPassphrase ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                                  OnAdornmentClick="() => _showPassphrase = !_showPassphrase" />
+
+                    <MudCheckBox @bind-Value="_isDemo" Label="Demo Mode (use demo trading environment)" Color="Color.Primary" />
+
+                    @if (!string.IsNullOrEmpty(_validationError))
+                    {
+                        <MudAlert Severity="Severity.Error" Dense="true">@_validationError</MudAlert>
+                    }
+
+                    <MudAlert Severity="Severity.Info" Dense="true" Class="mt-2">
+                        <MudStack>
+                            <MudText Typo="Typo.body2">Your credentials will be encrypted and stored securely.</MudText>
+                            <MudText Typo="Typo.body2">Balance will sync automatically every 24 hours.</MudText>
+                        </MudStack>
+                    </MudAlert>
+                </MudStack>
+            </MudForm>
         }
         else if (_step == Step.ConfigureRecurring)
         {
@@ -104,10 +190,35 @@
         {
             <MudButton OnClick="Cancel">Cancel</MudButton>
         }
+        else if (_step == Step.SelectConnector)
+        {
+            <MudButton OnClick="GoBackToType">Back</MudButton>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+        }
+        else if (_step == Step.ConfigureConnector)
+        {
+            <MudButton OnClick="GoBackToConnectorList">Back</MudButton>
+            <MudButton Color="Color.Secondary" Variant="Variant.Outlined" OnClick="ValidateCredentials"
+                       Disabled="@(!CanValidate() || _isValidating)">
+                @if (_isValidating)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                }
+                Test Connection
+            </MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="CreateSyncableStream"
+                       Disabled="@(!_formValid || _isCreating || !_credentialsValidated)">
+                @if (_isCreating)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                }
+                Create
+            </MudButton>
+        }
         else
         {
-            <MudButton OnClick="GoBack">Back</MudButton>
-            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="CreateStream"
+            <MudButton OnClick="GoBackToType">Back</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="CreateRecurringStream"
                        Disabled="@(!_formValid || _isCreating)">
                 @if (_isCreating)
                 {
@@ -132,35 +243,194 @@
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; } = null!;
 
-    private enum Step { SelectType, ConfigureRecurring }
+    private enum Step { SelectType, SelectConnector, ConfigureConnector, ConfigureRecurring }
     private Step _step = Step.SelectType;
 
     private MudForm _form = null!;
     private bool _formValid;
     private bool _isCreating;
+    private bool _isValidating;
+    private bool _credentialsValidated;
+    private string? _validationError;
 
-    // Form fields
+    // Available syncable connectors
+    private IReadOnlyList<ISyncableConnector> _syncableConnectors = [];
+    private ISyncableConnector? _selectedConnector;
+
+    // Form fields - Common
     private string _name = "";
-    private string _category = "Salary";
-    private decimal _amount = 0;
+    private string _category = "Trading";
     private string _currency = "USD";
+
+    // Form fields - Recurring
+    private decimal _amount = 0;
     private int _frequency = 2; // Monthly
     private DateTime? _startDate = DateTime.Today;
+
+    // Form fields - API Credentials
+    private string _apiKey = "";
+    private string _secretKey = "";
+    private string _passphrase = "";
+    private bool _isDemo = false;
+    private bool _showApiKey = false;
+    private bool _showSecretKey = false;
+    private bool _showPassphrase = false;
+
+    protected override void OnInitialized()
+    {
+        _syncableConnectors = ConnectorRegistry.GetSyncable();
+    }
 
     private string GetDialogTitle() => _step switch
     {
         Step.SelectType => "Add Income Source",
+        Step.SelectConnector => "Select Integration",
+        Step.ConfigureConnector => $"Configure {_selectedConnector?.DisplayName ?? "Integration"}",
         Step.ConfigureRecurring => "Configure Recurring Income",
         _ => "Add Income Source"
     };
 
     private void Cancel() => MudDialog.Cancel();
 
-    private void GoBack() => _step = Step.SelectType;
+    private void GoBackToType()
+    {
+        _step = Step.SelectType;
+        ResetForm();
+    }
 
-    private void SelectRecurring() => _step = Step.ConfigureRecurring;
+    private void GoBackToConnectorList()
+    {
+        _step = Step.SelectConnector;
+        ResetCredentialFields();
+    }
 
-    private async Task CreateStream()
+    private void SelectRecurring()
+    {
+        _category = "Salary";
+        _step = Step.ConfigureRecurring;
+    }
+
+    private void SelectApiIntegration()
+    {
+        _step = Step.SelectConnector;
+    }
+
+    private void SelectConnector(ISyncableConnector connector)
+    {
+        _selectedConnector = connector;
+        _name = $"My {connector.DisplayName}";
+        _currency = connector.DefaultCurrency;
+        _step = Step.ConfigureConnector;
+    }
+
+    private void ResetForm()
+    {
+        _name = "";
+        _category = "Trading";
+        _amount = 0;
+        _selectedConnector = null;
+        ResetCredentialFields();
+    }
+
+    private void ResetCredentialFields()
+    {
+        _apiKey = "";
+        _secretKey = "";
+        _passphrase = "";
+        _isDemo = false;
+        _credentialsValidated = false;
+        _validationError = null;
+    }
+
+    private bool CanValidate() =>
+        !string.IsNullOrWhiteSpace(_apiKey) &&
+        !string.IsNullOrWhiteSpace(_secretKey) &&
+        !string.IsNullOrWhiteSpace(_passphrase);
+
+    private string BuildCredentialsJson() => JsonSerializer.Serialize(new
+    {
+        apiKey = _apiKey,
+        secretKey = _secretKey,
+        passphrase = _passphrase,
+        isDemo = _isDemo
+    });
+
+    private async Task ValidateCredentials()
+    {
+        if (_selectedConnector is null) return;
+
+        _isValidating = true;
+        _validationError = null;
+        _credentialsValidated = false;
+
+        try
+        {
+            var credentials = BuildCredentialsJson();
+            var result = await _selectedConnector.ValidateCredentialsAsync(credentials);
+
+            if (result.IsSuccess)
+            {
+                _credentialsValidated = true;
+                Snackbar.Add("Connection successful! Credentials are valid.", Severity.Success);
+            }
+            else
+            {
+                _validationError = string.Join(", ", result.Errors.Select(e => e.Message));
+                Snackbar.Add("Connection failed. Please check your credentials.", Severity.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            _validationError = ex.Message;
+            Snackbar.Add($"Connection error: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            _isValidating = false;
+        }
+    }
+
+    private async Task CreateSyncableStream()
+    {
+        if (!_formValid || _selectedConnector is null || !_credentialsValidated) return;
+
+        _isCreating = true;
+
+        try
+        {
+            var credentials = BuildCredentialsJson();
+
+            var request = new CreateStreamRequest(
+                ProviderId: _selectedConnector.ProviderId,
+                Name: _name,
+                Category: _category,
+                OriginalCurrency: _selectedConnector.DefaultCurrency,
+                IsFixed: false,
+                FixedPeriod: null,
+                Credentials: credentials,
+                RecurringAmount: null,
+                RecurringFrequency: null,
+                RecurringStartDate: null);
+
+            var result = await StreamService.CreateAsync(request);
+
+            if (result.IsSuccess)
+            {
+                Snackbar.Add($"Stream '{_name}' created successfully! First sync will run shortly.", Severity.Success);
+                MudDialog.Close(DialogResult.Ok(true));
+            }
+            else
+            {
+                Snackbar.Add($"Error: {result.Errors.FirstOrDefault()?.Message}", Severity.Error);
+            }
+        }
+        finally
+        {
+            _isCreating = false;
+        }
+    }
+
+    private async Task CreateRecurringStream()
     {
         if (!_formValid || _startDate is null) return;
 
