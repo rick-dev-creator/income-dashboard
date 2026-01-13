@@ -167,11 +167,12 @@
 
                     <MudSelect T="int" Label="Frequency" @bind-Value="_frequency" Required="true"
                                RequiredError="Frequency is required" Variant="Variant.Outlined">
-                        <MudSelectItem Value="0">Weekly</MudSelectItem>
-                        <MudSelectItem Value="1">Bi-Weekly</MudSelectItem>
-                        <MudSelectItem Value="2">Monthly</MudSelectItem>
-                        <MudSelectItem Value="3">Quarterly</MudSelectItem>
-                        <MudSelectItem Value="4">Yearly</MudSelectItem>
+                        <MudSelectItem Value="0">Daily (Testing)</MudSelectItem>
+                        <MudSelectItem Value="1">Weekly</MudSelectItem>
+                        <MudSelectItem Value="2">Bi-Weekly</MudSelectItem>
+                        <MudSelectItem Value="3">Monthly</MudSelectItem>
+                        <MudSelectItem Value="4">Quarterly</MudSelectItem>
+                        <MudSelectItem Value="5">Yearly</MudSelectItem>
                     </MudSelect>
 
                     <MudDatePicker @bind-Date="_startDate" Label="First Payment Date" Required="true"
@@ -264,7 +265,7 @@
 
     // Form fields - Recurring
     private decimal _amount = 0;
-    private int _frequency = 2; // Monthly
+    private int _frequency = 3; // Monthly
     private DateTime? _startDate = DateTime.Today;
 
     // Form fields - API Credentials
@@ -470,11 +471,12 @@
 
     private static string GetFrequencyLabel(int frequency) => frequency switch
     {
-        0 => "Weekly",
-        1 => "BiWeekly",
-        2 => "Monthly",
-        3 => "Quarterly",
-        4 => "Yearly",
+        0 => "Daily",
+        1 => "Weekly",
+        2 => "BiWeekly",
+        3 => "Monthly",
+        4 => "Quarterly",
+        5 => "Yearly",
         _ => "Monthly"
     };
 }
