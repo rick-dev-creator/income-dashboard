@@ -15,6 +15,7 @@ public enum ConnectorKind
 
 public enum RecurringFrequency
 {
+    Daily,
     Weekly,
     BiWeekly,
     Monthly,

@@ -72,6 +72,7 @@ internal sealed class FixedIncomeConnector : IRecurringConnector
     {
         return frequency switch
         {
+            RecurringFrequency.Daily => date.AddDays(1),
             RecurringFrequency.Weekly => date.AddDays(7),
             RecurringFrequency.BiWeekly => date.AddDays(14),
             RecurringFrequency.Monthly => date.AddMonths(1),

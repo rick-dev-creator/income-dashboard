@@ -1,4 +1,5 @@
 using Income.Application.Connectors;
+using Income.Application.Services;
 using Income.Application.Services.Streams;
 using Income.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -10,26 +11,31 @@ namespace Income.Infrastructure.Jobs;
 
 /// <summary>
 /// Background job that generates snapshots for recurring income streams.
-/// Checks daily for payments that are due based on schedule (salary, rent, etc.).
+/// Checks for payments that are due based on schedule (salary, rent, etc.).
 /// </summary>
 internal sealed class RecurringJob : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IActivityLogService _activityLog;
     private readonly ILogger<RecurringJob> _logger;
-    private readonly TimeSpan _checkInterval = TimeSpan.FromHours(1);
+    private readonly TimeSpan _checkInterval = TimeSpan.FromMinutes(5); // Testing interval
 
     public RecurringJob(
         IServiceScopeFactory scopeFactory,
+        IActivityLogService activityLog,
         ILogger<RecurringJob> logger)
     {
         _scopeFactory = scopeFactory;
+        _activityLog = activityLog;
         _logger = logger;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("RecurringJob started. Checking for due payments every {Interval} hour(s)",
-            _checkInterval.TotalHours);
+        _logger.LogInformation("RecurringJob started. Checking for due payments every {Interval} minutes",
+            _checkInterval.TotalMinutes);
+
+        _activityLog.LogInfo("system", "RecurringJob", $"Background recurring job started. Checking every {_checkInterval.TotalMinutes} minutes.");
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -40,6 +46,7 @@ internal sealed class RecurringJob : BackgroundService
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 _logger.LogError(ex, "Error processing recurring streams");
+                _activityLog.LogError("system", "RecurringJob", "Error processing recurring streams", ex.Message);
             }
 
             await Task.Delay(_checkInterval, stoppingToken);
@@ -67,10 +74,12 @@ internal sealed class RecurringJob : BackgroundService
         if (recurringStreams.Count == 0)
         {
             _logger.LogDebug("No recurring streams configured");
+            _activityLog.LogInfo("system", "RecurringJob", "Recurring check completed. No recurring streams configured.");
             return;
         }
 
         _logger.LogDebug("Found {Count} recurring streams to check", recurringStreams.Count);
+        _activityLog.LogInfo("system", "RecurringJob", $"Found {recurringStreams.Count} recurring stream(s) to check.");
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
@@ -86,6 +95,7 @@ internal sealed class RecurringJob : BackgroundService
                     if (connector is null)
                     {
                         _logger.LogWarning("No recurring connector available for stream {StreamId}", streamEntity.Id);
+                        _activityLog.LogWarning(streamEntity.Id, streamEntity.Name, "No recurring connector available");
                         continue;
                     }
                 }
@@ -98,6 +108,7 @@ internal sealed class RecurringJob : BackgroundService
                 if (!connector.IsPaymentDue(startDate, frequency, today))
                 {
                     _logger.LogDebug("No payment due today for stream {StreamId}", streamEntity.Id);
+                    _activityLog.LogInfo(streamEntity.Id, streamEntity.Name, $"No payment due today ({frequency})");
                     continue;
                 }
 
@@ -106,11 +117,13 @@ internal sealed class RecurringJob : BackgroundService
                 if (existingSnapshot)
                 {
                     _logger.LogDebug("Snapshot already exists for today for stream {StreamId}", streamEntity.Id);
+                    _activityLog.LogInfo(streamEntity.Id, streamEntity.Name, "Snapshot already exists for today");
                     continue;
                 }
 
                 _logger.LogInformation("Generating recurring snapshot for stream {StreamId} ({StreamName})",
                     streamEntity.Id, streamEntity.Name);
+                _activityLog.LogInfo(streamEntity.Id, streamEntity.Name, $"Generating recurring snapshot ({frequency})...");
 
                 // Generate snapshot
                 var snapshotData = connector.GenerateSnapshot(amount, streamEntity.OriginalCurrency, today);
@@ -127,8 +140,10 @@ internal sealed class RecurringJob : BackgroundService
 
                 if (result.IsFailed)
                 {
+                    var errorMsg = string.Join(", ", result.Errors.Select(e => e.Message));
                     _logger.LogWarning("Failed to record recurring snapshot for stream {StreamId}: {Errors}",
-                        streamEntity.Id, string.Join(", ", result.Errors));
+                        streamEntity.Id, errorMsg);
+                    _activityLog.LogError(streamEntity.Id, streamEntity.Name, "Failed to record snapshot", errorMsg);
                     continue;
                 }
 
@@ -143,10 +158,16 @@ internal sealed class RecurringJob : BackgroundService
 
                 _logger.LogInformation("Successfully generated recurring snapshot for stream {StreamId}. Amount: {Amount} {Currency}",
                     streamEntity.Id, amount, streamEntity.OriginalCurrency);
+                _activityLog.LogSuccess(
+                    streamEntity.Id,
+                    streamEntity.Name,
+                    $"Recurring snapshot recorded. Next: {nextPaymentDate:yyyy-MM-dd}",
+                    amount);
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 _logger.LogError(ex, "Error processing recurring stream {StreamId}", streamEntity.Id);
+                _activityLog.LogError(streamEntity.Id, streamEntity.Name, "Error processing recurring stream", ex.Message);
             }
         }
     }
