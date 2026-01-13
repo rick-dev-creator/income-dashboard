@@ -32,87 +32,65 @@ The result? Simple questions become impossible to answer:
 - How long until reaching financial goals?
 - What happens if one stream disappears?
 
-### Current State (Where Am I?)
-- Income sources scattered across platforms
-- Manual tracking in spreadsheets (inconsistent, time-consuming)
-- No real-time visibility into combined earnings
-- Unable to spot trends or patterns
-
-### The Journey (Where Am I Going?)
-- A unified dashboard that aggregates all income streams
-- Automatic sync with exchanges and platforms
-- Statistical analysis to understand income stability
-- Projections based on historical data
-
-### Target State (Where Will I Be?)
-- Complete visibility of all income flows in one place
-- Daily normalized view for comparing different income types
-- Trend analysis showing momentum and growth
-- Financial projections with confidence intervals
-- Data-driven decisions about which streams to grow or drop
-
-## Project Scope
-
-### Core Features
+## Core Features
 
 | Feature | Description |
 |---------|-------------|
 | **Multi-Source Aggregation** | Connect multiple income sources (exchanges, platforms, manual entries) |
+| **Plugin-Based Connectors** | Extensible connector system for adding new integrations |
+| **Real-Time Sync** | Background jobs sync data every 5 minutes with live Activity Log |
 | **Daily Normalization** | Convert all income to daily rates for fair comparison |
 | **Stacked Area Charts** | Azure Cost Explorer-style visualization of income streams |
-| **Statistical Analysis** | Mean, median, standard deviation, coefficient of variation |
-| **Trend Detection** | Moving averages, MoM growth, seasonality analysis |
-| **Financial Projections** | Linear projections, percentile scenarios, time-to-goal |
-| **Connection Management** | Multiple accounts per provider, health checks, sync logs |
+| **Statistical Analysis** | Mean, median, standard deviation, trend detection |
+| **Financial Projections** | 6-month projections with confidence scoring |
+| **Live Dashboard** | Auto-refresh UI updates every 10 seconds |
 
-### Secondary Features (Future)
-- Monte Carlo simulation for confidence ranges
-- Alerts and notifications for anomalies
-- Goal tracking and milestones
-- Mobile PWA support
-- Report exports (PDF, CSV)
+### Supported Connectors
 
-## Technical Implementation
+| Connector | Type | Description |
+|-----------|------|-------------|
+| **Blofin Exchange** | Syncable | Crypto exchange - syncs total balance in USD |
+| **Recurring Income** | Recurring | Manual entry for salary, rent, subscriptions |
 
-### Stack
+## Technical Stack
 
 | Layer | Technology |
 |-------|------------|
-| **Frontend** | Blazor Server (.NET 10) |
-| **Backend** | ASP.NET Core 10 (Minimal APIs) |
-| **Database** | PostgreSQL (Neon Serverless) |
+| **Frontend** | Blazor Server (.NET 10) + MudBlazor |
+| **Charts** | ApexCharts.Blazor |
+| **Database** | PostgreSQL |
 | **ORM** | Entity Framework Core |
-| **Background Jobs** | IHostedService / Hangfire |
+| **Background Jobs** | Native BackgroundService (IHostedService) |
 | **Architecture** | Clean Architecture + Modular Monolith |
+| **Results** | FluentResults for railway-oriented programming |
 
-### Architecture Goals
+### Architecture
 
-This project serves a dual purpose:
-
-1. **Solve a real problem** - Build a functional income tracking dashboard
-2. **Demonstrate modern C# patterns** - Showcase Clean Architecture and Modular Monolith in a real-world application
-
-#### Clean Architecture Layers
 ```
-src/
-├── FlowMetrics.Domain/           # Entities, Value Objects, Domain Events
-├── FlowMetrics.Application/      # Use Cases, DTOs, Interfaces
-├── FlowMetrics.Infrastructure/   # EF Core, External APIs, Services
-└── FlowMetrics.Web/              # Blazor Server UI
+Income/src/
+├── Connectors/                    # Plugin-based connector system
+│   └── Connectors.Blofin/         # Blofin exchange connector
+├── Host/
+│   └── Dashboard/                 # Blazor Server UI
+└── Modules/
+    ├── Income/                    # Income streams, snapshots, providers
+    │   ├── Income.Application/    # Services, interfaces, DTOs
+    │   ├── Income.Domain/         # Entities, value objects
+    │   ├── Income.Infrastructure/ # EF Core, jobs, services
+    │   ├── Income.Contracts/      # Cross-module DTOs
+    │   └── Income.Installer/      # DI registration
+    └── Analytics/                 # Statistics and projections
+        ├── Analytics.Application/
+        └── Analytics.Infrastructure/
 ```
 
-#### Modular Monolith Structure
-```
-src/
-├── Modules/
-│   ├── Connections/              # Provider connections management
-│   ├── Income/                   # Income records and aggregation
-│   ├── Analytics/                # Statistics and projections
-│   └── Sync/                     # Background sync jobs
-└── Shared/
-    ├── Kernel/                   # Shared domain primitives
-    └── Infrastructure/           # Cross-cutting concerns
-```
+### Background Jobs
+
+| Job | Interval | Purpose |
+|-----|----------|---------|
+| **SyncJob** | 5 min | Syncs data from API-based connectors (Blofin) |
+| **RecurringJob** | 5 min | Generates snapshots for recurring income streams |
+| **TestDataGeneratorJob** | 5 min | Generates random test data (dev only) |
 
 ### Modern C# Features (.NET 10)
 
@@ -120,9 +98,8 @@ src/
 - Collection expressions
 - Required members
 - File-scoped types
-- Pattern matching enhancements
+- Pattern matching
 - Records for DTOs and Value Objects
-- Source generators where applicable
 
 ## Roadmap
 
@@ -130,25 +107,52 @@ src/
 - [x] Project structure setup (Clean Architecture)
 - [x] Database schema and EF Core configuration
 - [x] Domain entities and value objects
-- [x] Basic Blazor Server UI scaffold
+- [x] Blazor Server UI with MudBlazor
 
 ### Phase 2: Core Functionality
-- [x] Connection management module
-- [x] Manual income entry
-- [ ] First exchange integration (plugin architecture ready)
-- [x] Basic dashboard with charts
+- [x] Provider and stream management
+- [x] Manual/recurring income entry
+- [x] Plugin-based connector architecture
+- [x] Blofin exchange integration
+- [x] Real-time Activity Log
+- [x] Auto-refresh dashboard
 
 ### Phase 3: Analytics
-- [x] Statistical calculations
-- [x] Trend analysis
-- [x] Simple projections
-- [ ] Multi-currency support (basic conversion exists)
+- [x] Statistical calculations (daily rate, trends)
+- [x] Stream health analysis
+- [x] 6-month projections with confidence
+- [ ] Multi-currency support with live rates
 
-### Phase 4: Polish
-- [ ] Additional integrations
+### Phase 4: Expansion
+- [ ] Additional exchange connectors (Binance, Bybit)
+- [ ] Bank integrations (Plaid)
 - [ ] Advanced projections (Monte Carlo)
 - [ ] Alerts and notifications
-- [ ] Performance optimization
+- [ ] Mobile PWA support
+
+## Getting Started
+
+### Prerequisites
+- .NET 10 SDK
+- Docker & Docker Compose
+- PostgreSQL (or use Docker)
+
+### Running with Docker
+
+```bash
+cd Income
+docker-compose up -d
+```
+
+Access the dashboard at `http://localhost:5000`
+
+### Development
+
+```bash
+cd Income
+dotnet restore
+dotnet run --project src/Host/Dashboard
+```
 
 ## Target Audience
 
@@ -164,4 +168,4 @@ MIT License - See LICENSE file for details.
 
 ---
 
-*Built with Blazor Server, .NET 10, and Clean Architecture principles.*
+*Built with Blazor Server, .NET 10, MudBlazor, and Clean Architecture principles.*
