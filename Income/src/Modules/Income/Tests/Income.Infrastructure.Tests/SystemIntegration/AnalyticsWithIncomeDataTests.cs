@@ -1,5 +1,6 @@
 using Analytics.Contracts.Queries;
 using Analytics.Infrastructure.Handlers;
+using Income.Application.Connectors;
 using Income.Contracts.Queries;
 using Income.Infrastructure.Features.Streams.Handlers;
 using Income.Infrastructure.Features.Providers.Handlers;
@@ -7,6 +8,7 @@ using Income.Infrastructure.Persistence;
 using Income.Infrastructure.Seeding;
 using Income.Infrastructure.Tests.Fixtures;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Income.Infrastructure.Tests.SystemIntegration;
 
@@ -43,7 +45,7 @@ public class AnalyticsWithIncomeDataTests(PostgresFixture fixture) : IAsyncLifet
             if (_isSeeded) return;
 
             // Always seed our specific test data (using unique IDs to avoid conflicts)
-            var seeder = new SeedDataGenerator(_factory);
+            var seeder = new SeedDataGenerator(_factory, new EmptyConnectorRegistry(), NullLogger<SeedDataGenerator>.Instance);
             await seeder.SeedAsync(); // Will skip if our specific providers already exist
             _isSeeded = true;
         }
@@ -262,5 +264,18 @@ public class AnalyticsWithIncomeDataTests(PostgresFixture fixture) : IAsyncLifet
         // Cross-validate data consistency
         var totalFromDistribution = distribution.Value.TotalUsd;
         portfolio.Value.TotalIncomeUsd.ShouldBe(totalFromDistribution, 0.01m);
+    }
+
+    /// <summary>
+    /// Empty connector registry for testing - returns no connectors.
+    /// </summary>
+    private sealed class EmptyConnectorRegistry : IConnectorRegistry
+    {
+        public IReadOnlyList<IIncomeConnector> GetAll() => [];
+        public IReadOnlyList<ISyncableConnector> GetSyncable() => [];
+        public IReadOnlyList<IRecurringConnector> GetRecurring() => [];
+        public IIncomeConnector? GetById(string providerId) => null;
+        public ISyncableConnector? GetSyncableById(string providerId) => null;
+        public IRecurringConnector? GetRecurringById(string providerId) => null;
     }
 }

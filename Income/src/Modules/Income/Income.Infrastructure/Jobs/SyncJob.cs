@@ -1,5 +1,6 @@
 using Income.Application.Connectors;
 using Income.Application.Services;
+using Income.Application.Services.Notifications;
 using Income.Application.Services.Streams;
 using Income.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +61,7 @@ internal sealed class SyncJob : BackgroundService
         var registry = scope.ServiceProvider.GetRequiredService<IConnectorRegistry>();
         var credentialEncryptor = scope.ServiceProvider.GetRequiredService<ICredentialEncryptor>();
         var streamService = scope.ServiceProvider.GetRequiredService<IStreamService>();
+        var notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
 
         await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
 
@@ -116,6 +118,14 @@ internal sealed class SyncJob : BackgroundService
 
                     _activityLog.LogError(streamEntity.Id, streamEntity.Name, "Sync failed", errorMsg);
 
+                    // Create error notification
+                    await notificationService.CreateAsync(new CreateNotificationRequest(
+                        Type: NotificationTypes.SyncError,
+                        Title: $"Sync failed for {streamEntity.Name}",
+                        Message: errorMsg,
+                        StreamId: streamEntity.Id,
+                        StreamName: streamEntity.Name), ct);
+
                     // Mark as failed
                     streamEntity.SyncState = (int)Domain.StreamContext.ValueObjects.SyncState.Failed;
                     streamEntity.LastAttemptAt = DateTime.UtcNow;
@@ -155,11 +165,27 @@ internal sealed class SyncJob : BackgroundService
                     streamEntity.Name,
                     $"Sync completed. Recorded {result.Value.Count} snapshot(s). Next sync: {streamEntity.NextScheduledAt:HH:mm:ss}",
                     totalAmount);
+
+                // Create success notification
+                await notificationService.CreateAsync(new CreateNotificationRequest(
+                    Type: NotificationTypes.SyncSuccess,
+                    Title: $"Sync completed for {streamEntity.Name}",
+                    Message: $"Successfully synced {result.Value.Count} snapshot(s). Current balance: ${totalAmount:N2}",
+                    StreamId: streamEntity.Id,
+                    StreamName: streamEntity.Name), ct);
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
                 _logger.LogError(ex, "Error syncing stream {StreamId}", streamEntity.Id);
                 _activityLog.LogError(streamEntity.Id, streamEntity.Name, "Sync error", ex.Message);
+
+                // Create error notification
+                await notificationService.CreateAsync(new CreateNotificationRequest(
+                    Type: NotificationTypes.SyncError,
+                    Title: $"Sync error for {streamEntity.Name}",
+                    Message: ex.Message,
+                    StreamId: streamEntity.Id,
+                    StreamName: streamEntity.Name), ct);
 
                 streamEntity.SyncState = (int)Domain.StreamContext.ValueObjects.SyncState.Failed;
                 streamEntity.LastAttemptAt = DateTime.UtcNow;

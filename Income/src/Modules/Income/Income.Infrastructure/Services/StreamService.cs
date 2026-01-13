@@ -219,6 +219,30 @@ internal sealed class StreamService(
         return Result.Ok();
     }
 
+    public async Task<Result> ToggleStatusAsync(string streamId, CancellationToken ct = default)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
+
+        var entity = await dbContext.Streams
+            .FirstOrDefaultAsync(x => x.Id == streamId, ct);
+
+        if (entity is null)
+            return Result.Fail($"Stream with id '{streamId}' not found");
+
+        var stream = entity.ToDomain();
+
+        // Toggle: if disabled -> enable, otherwise -> disable
+        if (entity.SyncState == (int)Domain.StreamContext.ValueObjects.SyncState.Disabled)
+            stream.Enable();
+        else
+            stream.Disable();
+
+        entity.UpdateFrom(stream);
+        await dbContext.SaveChangesAsync(ct);
+
+        return Result.Ok();
+    }
+
     private static StreamListItem MapToListItem(Persistence.Entities.StreamEntity entity)
     {
         var lastSnapshot = entity.Snapshots
@@ -235,7 +259,8 @@ internal sealed class StreamService(
             FixedPeriod: entity.FixedPeriod,
             HasCredentials: !string.IsNullOrEmpty(entity.EncryptedCredentials),
             SnapshotCount: entity.Snapshots.Count,
-            LastSnapshot: lastSnapshot is not null ? MapSnapshotEntityToItem(lastSnapshot) : null);
+            LastSnapshot: lastSnapshot is not null ? MapSnapshotEntityToItem(lastSnapshot) : null,
+            SyncState: (StreamSyncState)entity.SyncState);
     }
 
     private static StreamDetail MapToDetail(Persistence.Entities.StreamEntity entity)
@@ -252,7 +277,8 @@ internal sealed class StreamService(
             Snapshots: entity.Snapshots
                 .OrderByDescending(s => s.Date)
                 .Select(MapSnapshotEntityToItem)
-                .ToList());
+                .ToList(),
+            SyncState: (StreamSyncState)entity.SyncState);
     }
 
     private static SnapshotItem MapSnapshotEntityToItem(Persistence.Entities.SnapshotEntity entity)

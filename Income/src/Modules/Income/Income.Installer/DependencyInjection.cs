@@ -1,5 +1,6 @@
 using Income.Application.Connectors;
 using Income.Application.Services;
+using Income.Application.Services.Notifications;
 using Income.Application.Services.Providers;
 using Income.Application.Services.Streams;
 using Income.Contracts.Queries;
@@ -40,6 +41,7 @@ public static class DependencyInjection
         // Application Services (for Blazor/Frontend consumption)
         services.AddScoped<IStreamService, StreamService>();
         services.AddScoped<IProviderService, ProviderService>();
+        services.AddScoped<INotificationService, NotificationService>();
 
         // Activity Log (Singleton for cross-scope access from background jobs)
         services.AddSingleton<IActivityLogService, ActivityLogService>();
@@ -63,7 +65,7 @@ public static class DependencyInjection
         using var scope = services.CreateScope();
         var factory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<IncomeDbContext>>();
         await using var context = await factory.CreateDbContextAsync(ct);
-        await context.Database.EnsureCreatedAsync(ct);
+        await context.Database.MigrateAsync(ct);
     }
 
     public static async Task SeedIncomeDatabaseAsync(this IServiceProvider services, CancellationToken ct = default)

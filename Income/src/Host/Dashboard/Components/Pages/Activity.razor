@@ -25,38 +25,48 @@
 </div>
 
 <MudPaper Class="pa-4 mb-4" Elevation="1">
-    <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center">
+    <MudStack Row="true" Spacing="4" AlignItems="AlignItems.Center" Wrap="Wrap.Wrap">
+        <MudSelect T="string" Value="_selectedStream" ValueChanged="OnStreamFilterChanged"
+                   Label="Filter by Stream" Variant="Variant.Outlined" Dense="true"
+                   Style="min-width: 200px;" Clearable="true">
+            <MudSelectItem Value="@((string?)null)">All Streams</MudSelectItem>
+            @foreach (var stream in _availableStreams)
+            {
+                <MudSelectItem Value="@stream">@stream</MudSelectItem>
+            }
+        </MudSelect>
+        <MudDivider Vertical="true" FlexItem="true" Class="mx-2" />
         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
             <MudIcon Icon="@Icons.Material.Filled.Circle" Size="Size.Small" Color="Color.Success" />
-            <MudText Typo="Typo.body2">@_entries.Count(e => e.Level == ActivityLevel.Success) Success</MudText>
+            <MudText Typo="Typo.body2">@FilteredEntries.Count(e => e.Level == ActivityLevel.Success) Success</MudText>
         </MudStack>
         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
             <MudIcon Icon="@Icons.Material.Filled.Circle" Size="Size.Small" Color="Color.Info" />
-            <MudText Typo="Typo.body2">@_entries.Count(e => e.Level == ActivityLevel.Info) Info</MudText>
+            <MudText Typo="Typo.body2">@FilteredEntries.Count(e => e.Level == ActivityLevel.Info) Info</MudText>
         </MudStack>
         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
             <MudIcon Icon="@Icons.Material.Filled.Circle" Size="Size.Small" Color="Color.Warning" />
-            <MudText Typo="Typo.body2">@_entries.Count(e => e.Level == ActivityLevel.Warning) Warning</MudText>
+            <MudText Typo="Typo.body2">@FilteredEntries.Count(e => e.Level == ActivityLevel.Warning) Warning</MudText>
         </MudStack>
         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
             <MudIcon Icon="@Icons.Material.Filled.Circle" Size="Size.Small" Color="Color.Error" />
-            <MudText Typo="Typo.body2">@_entries.Count(e => e.Level == ActivityLevel.Error) Error</MudText>
+            <MudText Typo="Typo.body2">@FilteredEntries.Count(e => e.Level == ActivityLevel.Error) Error</MudText>
         </MudStack>
         <MudSpacer />
         <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">
-            @_entries.Count entries
+            @FilteredEntries.Count() entries
         </MudChip>
         <MudSwitch @bind-Value="_autoRefresh" Label="Auto-refresh" Color="Color.Primary" />
     </MudStack>
 </MudPaper>
 
-@if (!_entries.Any())
+@if (!FilteredEntries.Any())
 {
     <MudPaper Class="pa-8 text-center" Elevation="2">
         <MudIcon Icon="@Icons.Material.Filled.History" Size="Size.Large" Color="Color.Secondary" />
-        <MudText Typo="Typo.h6" Class="mt-4">No Activity Yet</MudText>
+        <MudText Typo="Typo.h6" Class="mt-4">@(string.IsNullOrEmpty(_selectedStream) ? "No Activity Yet" : "No Activity for Selected Stream")</MudText>
         <MudText Color="Color.Secondary" Class="mb-4">
-            Activity will appear here as streams sync. The SyncJob runs every 5 minutes.
+            @(string.IsNullOrEmpty(_selectedStream) ? "Activity will appear here as streams sync. The SyncJob runs every 5 minutes." : "Try selecting a different stream or clear the filter.")
         </MudText>
     </MudPaper>
 }
@@ -64,7 +74,7 @@ else
 {
     <MudPaper Class="activity-log-container" Elevation="2">
         <MudList T="ActivityEntry" Dense="true">
-            @foreach (var entry in _entries)
+            @foreach (var entry in FilteredEntries)
             {
                 <MudListItem Class="@($"activity-entry {GetEntryClass(entry.Level)}")">
                     <div class="activity-entry-content">
@@ -164,11 +174,33 @@ else
     private List<ActivityEntry> _entries = [];
     private bool _autoRefresh = true;
     private CancellationTokenSource? _cts;
+    private string? _selectedStream;
+    private List<string> _availableStreams = [];
+
+    private IEnumerable<ActivityEntry> FilteredEntries => string.IsNullOrEmpty(_selectedStream)
+        ? _entries
+        : _entries.Where(e => e.StreamName == _selectedStream);
 
     protected override void OnInitialized()
     {
         LoadEntries();
+        UpdateAvailableStreams();
         ActivityLogService.OnNewEntry += OnNewEntry;
+    }
+
+    private void UpdateAvailableStreams()
+    {
+        _availableStreams = _entries
+            .Select(e => e.StreamName)
+            .Where(s => !string.IsNullOrEmpty(s))
+            .Distinct()
+            .OrderBy(s => s)
+            .ToList();
+    }
+
+    private void OnStreamFilterChanged(string? value)
+    {
+        _selectedStream = value;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -203,6 +235,7 @@ else
     private void LoadEntries()
     {
         _entries = ActivityLogService.GetEntries(100).ToList();
+        UpdateAvailableStreams();
     }
 
     private async void OnNewEntry(ActivityEntry entry)
@@ -212,6 +245,7 @@ else
         {
             _entries.RemoveAt(_entries.Count - 1);
         }
+        UpdateAvailableStreams();
         await InvokeAsync(StateHasChanged);
     }
 

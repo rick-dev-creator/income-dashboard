@@ -12,6 +12,7 @@ public interface IStreamService
     Task<Result> DeleteAsync(string streamId, CancellationToken ct = default);
     Task<Result<SnapshotItem>> RecordSnapshotAsync(RecordSnapshotRequest request, CancellationToken ct = default);
     Task<Result> UpdateCredentialsAsync(string streamId, string? credentials, CancellationToken ct = default);
+    Task<Result> ToggleStatusAsync(string streamId, CancellationToken ct = default);
 }
 
 // DTOs
@@ -25,7 +26,17 @@ public sealed record StreamListItem(
     string? FixedPeriod,
     bool HasCredentials,
     int SnapshotCount,
-    SnapshotItem? LastSnapshot);
+    SnapshotItem? LastSnapshot,
+    StreamSyncState SyncState);
+
+public enum StreamSyncState
+{
+    Active,
+    Syncing,
+    Failed,
+    Stale,
+    Disabled
+}
 
 public sealed record StreamDetail(
     string Id,
@@ -36,7 +47,8 @@ public sealed record StreamDetail(
     bool IsFixed,
     string? FixedPeriod,
     bool HasCredentials,
-    IReadOnlyList<SnapshotItem> Snapshots);
+    IReadOnlyList<SnapshotItem> Snapshots,
+    StreamSyncState SyncState);
 
 public sealed record SnapshotItem(
     string Id,
