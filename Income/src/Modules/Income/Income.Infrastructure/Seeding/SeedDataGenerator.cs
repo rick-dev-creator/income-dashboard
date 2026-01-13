@@ -100,6 +100,31 @@ internal sealed class SeedDataGenerator(
     {
         var streams = new List<StreamEntity>();
         var now = DateTime.UtcNow;
+        var today = DateOnly.FromDateTime(now);
+
+        // Test stream - Daily recurring $50 USD (for testing)
+        var testStream = new StreamEntity
+        {
+            Id = "stream-test-daily",
+            ProviderId = provider.Id,
+            Name = "Daily Test Income",
+            Category = "Other",
+            OriginalCurrency = "USD",
+            IsFixed = true,
+            FixedPeriod = "Daily",
+            EncryptedCredentials = null,
+            SyncState = 0, // Active
+            LastSuccessAt = null,
+            LastAttemptAt = null,
+            LastError = null,
+            NextScheduledAt = null,
+            CreatedAt = now,
+            RecurringAmount = 50m,
+            RecurringFrequency = (int)RecurringFrequency.Daily,
+            RecurringStartDate = today,
+            Snapshots = []
+        };
+        streams.Add(testStream);
 
         // Salary stream - Monthly recurring $8,500 USD
         var salaryStream = new StreamEntity
@@ -119,7 +144,7 @@ internal sealed class SeedDataGenerator(
             NextScheduledAt = null,
             CreatedAt = now.AddMonths(-6),
             RecurringAmount = 8500m,
-            RecurringFrequency = 2, // Monthly
+            RecurringFrequency = (int)RecurringFrequency.Monthly,
             RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-6)).AddDays(14),
             Snapshots = GenerateMonthlySalarySnapshots(8500m, 6, 0.05m)
         };
@@ -143,7 +168,7 @@ internal sealed class SeedDataGenerator(
             NextScheduledAt = null,
             CreatedAt = now.AddMonths(-4),
             RecurringAmount = 3500m,
-            RecurringFrequency = 2, // Monthly
+            RecurringFrequency = (int)RecurringFrequency.Monthly,
             RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-4)).AddDays(0),
             Snapshots = GenerateMonthlySalarySnapshots(3500m, 4, 0.08m)
         };
@@ -167,7 +192,7 @@ internal sealed class SeedDataGenerator(
             NextScheduledAt = null,
             CreatedAt = now.AddMonths(-5),
             RecurringAmount = 1200m,
-            RecurringFrequency = 2, // Monthly
+            RecurringFrequency = (int)RecurringFrequency.Monthly,
             RecurringStartDate = DateOnly.FromDateTime(now.AddMonths(-5)).AddDays(0),
             Snapshots = GenerateMonthlySalarySnapshots(1200m, 5, 0.0m)
         };
