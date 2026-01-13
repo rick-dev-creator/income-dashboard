@@ -198,7 +198,73 @@ internal sealed class SeedDataGenerator(
         };
         streams.Add(rentStream);
 
+        // Variable income - Freelance gigs (variable, not fixed)
+        var gigsStream = new StreamEntity
+        {
+            Id = "stream-freelance-gigs",
+            ProviderId = provider.Id,
+            Name = "Freelance Gigs",
+            Category = "Business",
+            OriginalCurrency = "USD",
+            IsFixed = false,
+            FixedPeriod = null,
+            EncryptedCredentials = null,
+            SyncState = 0,
+            LastSuccessAt = now,
+            LastAttemptAt = now,
+            LastError = null,
+            NextScheduledAt = null,
+            CreatedAt = now.AddMonths(-6),
+            RecurringAmount = null,
+            RecurringFrequency = null,
+            RecurringStartDate = null,
+            Snapshots = GenerateVariableIncomeSnapshots(2000m, 6, 0.40m)
+        };
+        streams.Add(gigsStream);
+
         return streams;
+    }
+
+    private static List<SnapshotEntity> GenerateVariableIncomeSnapshots(decimal avgAmount, int months, decimal volatility)
+    {
+        var snapshots = new List<SnapshotEntity>();
+        var now = DateTime.UtcNow;
+        var random = new Random(123);
+
+        for (var i = months; i >= 0; i--)
+        {
+            var monthDate = DateOnly.FromDateTime(now.AddMonths(-i));
+
+            // Generate 1-4 payments per month with high variability
+            var paymentsThisMonth = random.Next(1, 5);
+            for (var p = 0; p < paymentsThisMonth; p++)
+            {
+                var day = random.Next(1, 28);
+                var payDate = new DateOnly(monthDate.Year, monthDate.Month, day);
+
+                if (payDate <= DateOnly.FromDateTime(now))
+                {
+                    // High variability: +/- volatility percent
+                    var variation = 1 + (decimal)((random.NextDouble() * 2 - 1) * (double)volatility);
+                    var amount = Math.Round(avgAmount / paymentsThisMonth * variation, 2);
+                    amount = Math.Max(100m, amount); // Minimum $100 per gig
+
+                    snapshots.Add(new SnapshotEntity
+                    {
+                        Id = $"snapshot-gig-{payDate:yyyyMMdd}-{Guid.NewGuid().ToString()[..8]}",
+                        Date = payDate,
+                        OriginalAmount = amount,
+                        OriginalCurrency = "USD",
+                        UsdAmount = amount,
+                        ExchangeRate = 1m,
+                        RateSource = "Fixed",
+                        SnapshotAt = DateTime.SpecifyKind(payDate.ToDateTime(TimeOnly.FromDateTime(now)), DateTimeKind.Utc)
+                    });
+                }
+            }
+        }
+
+        return snapshots;
     }
 
     private static List<SnapshotEntity> GenerateMonthlySalarySnapshots(decimal baseAmount, int months, decimal annualRaisePercent = 0.03m)
