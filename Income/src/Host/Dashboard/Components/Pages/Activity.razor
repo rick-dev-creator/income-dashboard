@@ -163,25 +163,41 @@ else
 @code {
     private List<ActivityEntry> _entries = [];
     private bool _autoRefresh = true;
-    private System.Threading.Timer? _refreshTimer;
+    private CancellationTokenSource? _cts;
 
     protected override void OnInitialized()
     {
         LoadEntries();
         ActivityLogService.OnNewEntry += OnNewEntry;
+    }
 
-        // Auto-refresh timer
-        _refreshTimer = new System.Threading.Timer(async _ =>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
         {
-            if (_autoRefresh)
+            _cts = new CancellationTokenSource();
+            _ = StartAutoRefreshAsync(_cts.Token);
+        }
+    }
+
+    private async Task StartAutoRefreshAsync(CancellationToken ct)
+    {
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(3));
+        try
+        {
+            while (await timer.WaitForNextTickAsync(ct))
             {
-                await InvokeAsync(() =>
+                if (_autoRefresh)
                 {
                     LoadEntries();
-                    StateHasChanged();
-                });
+                    await InvokeAsync(StateHasChanged);
+                }
             }
-        }, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected when disposed
+        }
     }
 
     private void LoadEntries()
@@ -189,17 +205,14 @@ else
         _entries = ActivityLogService.GetEntries(100).ToList();
     }
 
-    private void OnNewEntry(ActivityEntry entry)
+    private async void OnNewEntry(ActivityEntry entry)
     {
-        InvokeAsync(() =>
+        _entries.Insert(0, entry);
+        if (_entries.Count > 100)
         {
-            _entries.Insert(0, entry);
-            if (_entries.Count > 100)
-            {
-                _entries.RemoveAt(_entries.Count - 1);
-            }
-            StateHasChanged();
-        });
+            _entries.RemoveAt(_entries.Count - 1);
+        }
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task CopyLogsToClipboard()
@@ -247,6 +260,7 @@ else
     public void Dispose()
     {
         ActivityLogService.OnNewEntry -= OnNewEntry;
-        _refreshTimer?.Dispose();
+        _cts?.Cancel();
+        _cts?.Dispose();
     }
 }
