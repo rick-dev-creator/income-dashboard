@@ -1,0 +1,532 @@
+@page "/risk-analysis"
+@inject IGetMonteCarloHandler MonteCarloHandler
+@rendermode InteractiveServer
+
+<PageTitle>Risk Analysis - FlowMetrics</PageTitle>
+
+<div class="page-header">
+    <h1 class="page-title">Risk Analysis</h1>
+    <p class="page-subtitle">Monte Carlo simulation for income probability distributions</p>
+</div>
+
+<!-- Configuration Panel -->
+<MudPaper Class="pa-4 mb-4" Elevation="2">
+    <MudGrid>
+        <MudItem xs="12" sm="4">
+            <MudNumericField T="int" @bind-Value="_simulations"
+                             Label="Simulations" Variant="Variant.Outlined"
+                             Min="1000" Max="50000" Step="1000"
+                             Adornment="Adornment.Start"
+                             AdornmentIcon="@Icons.Material.Filled.Casino" />
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudNumericField T="int" @bind-Value="_monthsAhead"
+                             Label="Months Ahead" Variant="Variant.Outlined"
+                             Min="1" Max="24" Step="1"
+                             Adornment="Adornment.Start"
+                             AdornmentIcon="@Icons.Material.Filled.CalendarMonth" />
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudNumericField T="decimal" @bind-Value="_goalAmount"
+                             Label="Goal Amount" Variant="Variant.Outlined"
+                             Min="0" Step="1000"
+                             Adornment="Adornment.Start"
+                             AdornmentIcon="@Icons.Material.Filled.Flag" />
+        </MudItem>
+    </MudGrid>
+    <MudStack Row="true" Justify="Justify.FlexEnd" Class="mt-4">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.PlayArrow"
+                   OnClick="RunSimulationAsync" Disabled="_isLoading">
+            @if (_isLoading)
+            {
+                <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                <span>Running...</span>
+            }
+            else
+            {
+                <span>Run Simulation</span>
+            }
+        </MudButton>
+    </MudStack>
+</MudPaper>
+
+@if (_isLoading)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="mb-4" />
+}
+else if (_result is null)
+{
+    <MudPaper Class="pa-6" Elevation="2" Style="text-align: center;">
+        <MudIcon Icon="@Icons.Material.Filled.Analytics" Size="Size.Large" Color="Color.Secondary" Class="mb-3" />
+        <MudText Typo="Typo.h6" Color="Color.Secondary">No simulation data yet</MudText>
+        <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mt-2">
+            Configure the parameters above and click "Run Simulation" to analyze your income probability distribution.
+        </MudText>
+    </MudPaper>
+}
+else
+{
+    <!-- Goal Probability Card -->
+    @if (_goalAmount > 0)
+    {
+        <MudPaper Class="pa-4 pa-sm-6 mb-4" Elevation="3" Style="@GetGoalCardStyle()">
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudStack Spacing="2">
+                        <MudText Typo="Typo.overline" Style="color: rgba(255,255,255,0.7);">
+                            PROBABILITY OF REACHING @FormatCurrency(_goalAmount)
+                        </MudText>
+                        <MudText Typo="Typo.h2" Style="color: white; font-weight: 700;">
+                            @_result.GoalProbability.ToString("F1")%
+                        </MudText>
+                        <MudText Typo="Typo.body2" Style="color: rgba(255,255,255,0.8);">
+                            Based on @_result.SimulationCount.ToString("N0") simulations over @_result.MonthsAhead months
+                        </MudText>
+                    </MudStack>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudStack Row="true" Justify="Justify.SpaceAround" AlignItems="AlignItems.Center">
+                        <MudStack AlignItems="AlignItems.Center">
+                            <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.6);">Median (P50)</MudText>
+                            <MudText Typo="Typo.h5" Style="color: white;">@FormatCurrency(_result.Percentiles.P50)</MudText>
+                        </MudStack>
+                        <MudStack AlignItems="AlignItems.Center">
+                            <MudText Typo="Typo.caption" Style="color: rgba(255,255,255,0.6);">Likely Range</MudText>
+                            <MudText Typo="Typo.h6" Style="color: white;">
+                                @FormatCurrency(_result.Percentiles.P25) - @FormatCurrency(_result.Percentiles.P75)
+                            </MudText>
+                        </MudStack>
+                    </MudStack>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    }
+
+    <!-- Percentiles Overview -->
+    <MudGrid Class="mb-4">
+        <MudItem xs="12" md="8">
+            <MudPaper Class="pa-4" Elevation="2" Style="height: 100%;">
+                <MudText Typo="Typo.h6" Class="mb-3">Outcome Distribution</MudText>
+                @if (_distributionData.Count > 0)
+                {
+                    <ApexChart @key="@($"distribution_{IsDarkMode}")"
+                               TItem="DistributionPoint"
+                               Options="_distributionChartOptions"
+                               Height="300">
+                        <ApexPointSeries TItem="DistributionPoint"
+                                         Items="_distributionData"
+                                         Name="Probability"
+                                         SeriesType="SeriesType.Bar"
+                                         XValue="@(p => p.Label)"
+                                         YValue="@(p => p.Percentage)" />
+                    </ApexChart>
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" md="4">
+            <MudPaper Class="pa-4" Elevation="2" Style="height: 100%;">
+                <MudText Typo="Typo.h6" Class="mb-3">Percentiles</MudText>
+                <MudStack Spacing="2">
+                    <div class="percentile-row">
+                        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.ArrowDownward" Color="Color.Error" Size="Size.Small" />
+                                <MudText Typo="Typo.body2">Pessimistic (P10)</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h6" Color="Color.Error">@FormatCurrency(_result.Percentiles.P10)</MudText>
+                        </MudStack>
+                    </div>
+                    <div class="percentile-row">
+                        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.TrendingDown" Color="Color.Warning" Size="Size.Small" />
+                                <MudText Typo="Typo.body2">Conservative (P25)</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h6" Color="Color.Warning">@FormatCurrency(_result.Percentiles.P25)</MudText>
+                        </MudStack>
+                    </div>
+                    <MudDivider Class="my-2" />
+                    <div class="percentile-row highlight">
+                        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.Star" Color="Color.Primary" Size="Size.Small" />
+                                <MudText Typo="Typo.body2" Style="font-weight: 600;">Median (P50)</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h6" Color="Color.Primary" Style="font-weight: 700;">@FormatCurrency(_result.Percentiles.P50)</MudText>
+                        </MudStack>
+                    </div>
+                    <MudDivider Class="my-2" />
+                    <div class="percentile-row">
+                        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Color="Color.Info" Size="Size.Small" />
+                                <MudText Typo="Typo.body2">Optimistic (P75)</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h6" Color="Color.Info">@FormatCurrency(_result.Percentiles.P75)</MudText>
+                        </MudStack>
+                    </div>
+                    <div class="percentile-row">
+                        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudIcon Icon="@Icons.Material.Filled.ArrowUpward" Color="Color.Success" Size="Size.Small" />
+                                <MudText Typo="Typo.body2">Best Case (P90)</MudText>
+                            </MudStack>
+                            <MudText Typo="Typo.h6" Color="Color.Success">@FormatCurrency(_result.Percentiles.P90)</MudText>
+                        </MudStack>
+                    </div>
+                    <MudDivider Class="my-2" />
+                    <MudStack Row="true" Justify="Justify.SpaceBetween">
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">Mean</MudText>
+                        <MudText Typo="Typo.body2">@FormatCurrency(_result.Percentiles.Mean)</MudText>
+                    </MudStack>
+                    <MudStack Row="true" Justify="Justify.SpaceBetween">
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">Std Dev</MudText>
+                        <MudText Typo="Typo.body2">@FormatCurrency(_result.Percentiles.StdDev)</MudText>
+                    </MudStack>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+    <!-- Monthly Projections Fan Chart -->
+    <MudPaper Class="pa-4 mb-4" Elevation="2">
+        <MudText Typo="Typo.h6" Class="mb-4">Monthly Probability Ranges</MudText>
+        @if (_monthlyData.Count > 0)
+        {
+            <ApexChart @key="@($"monthly_{IsDarkMode}")"
+                       TItem="MonthlyRangePoint"
+                       Options="_monthlyChartOptions"
+                       Height="350">
+                <ApexPointSeries TItem="MonthlyRangePoint"
+                                 Items="_monthlyData"
+                                 Name="P90"
+                                 SeriesType="SeriesType.Area"
+                                 XValue="@(p => p.Month)"
+                                 YValue="@(p => p.P90)" />
+                <ApexPointSeries TItem="MonthlyRangePoint"
+                                 Items="_monthlyData"
+                                 Name="P75"
+                                 SeriesType="SeriesType.Area"
+                                 XValue="@(p => p.Month)"
+                                 YValue="@(p => p.P75)" />
+                <ApexPointSeries TItem="MonthlyRangePoint"
+                                 Items="_monthlyData"
+                                 Name="P50 (Median)"
+                                 SeriesType="SeriesType.Line"
+                                 XValue="@(p => p.Month)"
+                                 YValue="@(p => p.P50)" />
+                <ApexPointSeries TItem="MonthlyRangePoint"
+                                 Items="_monthlyData"
+                                 Name="P25"
+                                 SeriesType="SeriesType.Area"
+                                 XValue="@(p => p.Month)"
+                                 YValue="@(p => p.P25)" />
+                <ApexPointSeries TItem="MonthlyRangePoint"
+                                 Items="_monthlyData"
+                                 Name="P10"
+                                 SeriesType="SeriesType.Area"
+                                 XValue="@(p => p.Month)"
+                                 YValue="@(p => p.P10)" />
+            </ApexChart>
+        }
+    </MudPaper>
+
+    <!-- Simulation Inputs Summary -->
+    <MudPaper Class="pa-4" Elevation="2">
+        <MudText Typo="Typo.h6" Class="mb-3">Simulation Inputs</MudText>
+        <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mb-3">
+            These values were derived from your historical income data and used to run the Monte Carlo simulation.
+        </MudText>
+        <MudGrid>
+            <MudItem xs="6" sm="4" md="2">
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.Lock" Color="Color.Success" />
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Fixed Monthly</MudText>
+                    <MudText Typo="Typo.h6">@FormatCurrency(_result.Inputs.FixedMonthlyIncome)</MudText>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="6" sm="4" md="2">
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.ShowChart" Color="Color.Warning" />
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Variable Monthly</MudText>
+                    <MudText Typo="Typo.h6">@FormatCurrency(_result.Inputs.VariableMonthlyIncome)</MudText>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="6" sm="4" md="2">
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.SwapVert" Color="Color.Info" />
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Volatility</MudText>
+                    <MudText Typo="Typo.h6">@_result.Inputs.VariableVolatility.ToString("F1")%</MudText>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="6" sm="4" md="2">
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.TrendingUp" Color="Color.Primary" />
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Growth Rate</MudText>
+                    <MudText Typo="Typo.h6">@_result.Inputs.MonthlyGrowthRate.ToString("F2")%/mo</MudText>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="6" sm="4" md="2">
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.AccountBalanceWallet" Color="Color.Secondary" />
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Total Streams</MudText>
+                    <MudText Typo="Typo.h6">@_result.Inputs.StreamCount</MudText>
+                </MudStack>
+            </MudItem>
+            <MudItem xs="6" sm="4" md="2">
+                <MudStack AlignItems="AlignItems.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.PieChart" Color="Color.Tertiary" />
+                    <MudText Typo="Typo.caption" Color="Color.Secondary">Fixed / Variable</MudText>
+                    <MudText Typo="Typo.h6">@_result.Inputs.FixedStreamCount / @_result.Inputs.VariableStreamCount</MudText>
+                </MudStack>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <!-- What is Monte Carlo -->
+    <MudPaper Class="pa-4 mt-4" Elevation="1" Style="@($"background-color: {(IsDarkMode ? "rgba(30,41,59,0.5)" : "rgba(241,245,249,0.8)")}; border-radius: 12px;")">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Class="mb-3">
+            <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Info" />
+            <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">What is Monte Carlo Simulation?</MudText>
+        </MudStack>
+        <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-2">
+            Monte Carlo simulation is a mathematical technique that uses random sampling to model uncertainty and predict possible outcomes.
+            Instead of a single forecast, it runs thousands of simulations with random variations based on your historical income patterns.
+        </MudText>
+        <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-3">
+            <strong>How it helps you:</strong> Rather than asking "How much will I earn?", Monte Carlo answers "What's the probability of reaching my goal?"
+            by showing you the full range of possible outcomes and their likelihood.
+        </MudText>
+        <MudStack Row="true" Spacing="4" Class="flex-wrap">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                <MudIcon Icon="@Icons.Material.Filled.Casino" Size="Size.Small" Color="Color.Secondary" />
+                <MudText Typo="Typo.caption" Color="Color.Secondary">10,000 random scenarios</MudText>
+            </MudStack>
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                <MudIcon Icon="@Icons.Material.Filled.ShowChart" Size="Size.Small" Color="Color.Secondary" />
+                <MudText Typo="Typo.caption" Color="Color.Secondary">Based on your real data</MudText>
+            </MudStack>
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                <MudIcon Icon="@Icons.Material.Filled.Flag" Size="Size.Small" Color="Color.Secondary" />
+                <MudText Typo="Typo.caption" Color="Color.Secondary">Goal probability analysis</MudText>
+            </MudStack>
+        </MudStack>
+    </MudPaper>
+}
+
+<style>
+    .percentile-row {
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
+    }
+
+    .percentile-row:hover {
+        background-color: var(--mud-palette-action-default-hover);
+    }
+
+    .percentile-row.highlight {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+</style>
+
+@code {
+    [CascadingParameter(Name = "IsDarkMode")]
+    private bool IsDarkMode { get; set; } = true;
+
+    private bool _isLoading;
+    private MonteCarloResultDto? _result;
+
+    // Configuration
+    private int _simulations = 10000;
+    private int _monthsAhead = 6;
+    private decimal _goalAmount = 50000;
+
+    // Chart data
+    private List<DistributionPoint> _distributionData = [];
+    private List<MonthlyRangePoint> _monthlyData = [];
+
+    // Theme-aware colors
+    private string AxisLabelColor => IsDarkMode ? "#94a3b8" : "#64748b";
+    private string GridColor => IsDarkMode ? "#334155" : "#e2e8f0";
+    private Mode TooltipTheme => IsDarkMode ? Mode.Dark : Mode.Light;
+
+    // Chart data classes
+    public class DistributionPoint
+    {
+        public string Label { get; set; } = "";
+        public decimal Percentage { get; set; }
+    }
+
+    public class MonthlyRangePoint
+    {
+        public string Month { get; set; } = "";
+        public decimal P10 { get; set; }
+        public decimal P25 { get; set; }
+        public decimal P50 { get; set; }
+        public decimal P75 { get; set; }
+        public decimal P90 { get; set; }
+    }
+
+    // Chart options
+    private ApexChartOptions<DistributionPoint> _distributionChartOptions = null!;
+    private ApexChartOptions<MonthlyRangePoint> _monthlyChartOptions = null!;
+
+    private void BuildChartOptions()
+    {
+        _distributionChartOptions = new ApexChartOptions<DistributionPoint>
+        {
+            Chart = new Chart
+            {
+                Toolbar = new Toolbar { Show = false },
+                Background = "transparent",
+                Animations = new Animations { Enabled = true, Speed = 500 }
+            },
+            PlotOptions = new PlotOptions
+            {
+                Bar = new PlotOptionsBar
+                {
+                    Horizontal = false,
+                    ColumnWidth = "80%",
+                    BorderRadius = 4
+                }
+            },
+            Xaxis = new XAxis
+            {
+                Labels = new XAxisLabels
+                {
+                    Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } },
+                    Rotate = -45
+                }
+            },
+            Yaxis = [new YAxis
+            {
+                Labels = new YAxisLabels
+                {
+                    Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } },
+                    Formatter = "function(val) { return val.toFixed(1) + '%'; }"
+                }
+            }],
+            DataLabels = new DataLabels { Enabled = false },
+            Grid = new Grid { BorderColor = GridColor, StrokeDashArray = 4 },
+            Tooltip = new Tooltip
+            {
+                Theme = TooltipTheme,
+                Y = new TooltipY { Formatter = "function(val) { return val.toFixed(1) + '%'; }" }
+            },
+            Colors = IsDarkMode ? ["#818cf8"] : ["#6366f1"]
+        };
+
+        _monthlyChartOptions = new ApexChartOptions<MonthlyRangePoint>
+        {
+            Chart = new Chart
+            {
+                Toolbar = new Toolbar { Show = false },
+                Background = "transparent",
+                Animations = new Animations { Enabled = true, Speed = 500 }
+            },
+            Stroke = new Stroke
+            {
+                Curve = Curve.Smooth,
+                Width = new List<int> { 0, 0, 3, 0, 0 }
+            },
+            Fill = new Fill
+            {
+                Type = new List<FillType> { FillType.Solid, FillType.Solid, FillType.Solid, FillType.Solid, FillType.Solid },
+                Opacity = new List<double> { 0.15, 0.25, 1, 0.25, 0.15 }
+            },
+            Xaxis = new XAxis
+            {
+                Labels = new XAxisLabels { Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } } }
+            },
+            Yaxis = [new YAxis
+            {
+                Labels = new YAxisLabels
+                {
+                    Style = new AxisLabelStyle { Colors = new List<string> { AxisLabelColor } },
+                    Formatter = "function(val) { return '$' + val.toLocaleString(); }"
+                }
+            }],
+            DataLabels = new DataLabels { Enabled = false },
+            Legend = new Legend { Show = true, Position = LegendPosition.Top, Labels = new LegendLabels { Colors = new ApexCharts.Color(AxisLabelColor) } },
+            Grid = new Grid { BorderColor = GridColor, StrokeDashArray = 4 },
+            Tooltip = new Tooltip
+            {
+                Theme = TooltipTheme,
+                Y = new TooltipY { Formatter = "function(val) { return '$' + val.toLocaleString(); }" }
+            },
+            Colors = IsDarkMode
+                ? ["#4ade80", "#22d3ee", "#818cf8", "#22d3ee", "#4ade80"]
+                : ["#10b981", "#06b6d4", "#6366f1", "#06b6d4", "#10b981"]
+        };
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        BuildChartOptions();
+        await RunSimulationAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        BuildChartOptions();
+    }
+
+    private async Task RunSimulationAsync()
+    {
+        _isLoading = true;
+        StateHasChanged();
+
+        var query = new GetMonteCarloQuery(_simulations, _monthsAhead, _goalAmount);
+        var result = await MonteCarloHandler.HandleAsync(query);
+
+        if (result.IsSuccess)
+        {
+            _result = result.Value;
+            PrepareCharts();
+        }
+
+        _isLoading = false;
+        StateHasChanged();
+    }
+
+    private void PrepareCharts()
+    {
+        if (_result is null) return;
+
+        // Distribution histogram data
+        _distributionData = _result.Distribution
+            .Select(d => new DistributionPoint { Label = d.Label, Percentage = d.Percentage })
+            .ToList();
+
+        // Monthly projection ranges
+        _monthlyData = _result.MonthlyProjections
+            .Select(m => new MonthlyRangePoint
+            {
+                Month = m.Month.ToString("MMM yy"),
+                P10 = m.P10,
+                P25 = m.P25,
+                P50 = m.P50,
+                P75 = m.P75,
+                P90 = m.P90
+            })
+            .ToList();
+    }
+
+    private string GetGoalCardStyle()
+    {
+        var probability = _result?.GoalProbability ?? 0;
+        var gradient = probability switch
+        {
+            >= 70 => "linear-gradient(135deg, #047857 0%, #059669 100%)",  // Green
+            >= 40 => "linear-gradient(135deg, #b45309 0%, #d97706 100%)",  // Amber
+            _ => "linear-gradient(135deg, #b91c1c 0%, #dc2626 100%)"       // Red
+        };
+        return $"background: {gradient};";
+    }
+
+    private static string FormatCurrency(decimal amount) =>
+        amount.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+}
