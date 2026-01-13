@@ -53,9 +53,57 @@ internal static class BlofinAccountTypes
 {
     public const string Funding = "funding";
     public const string Futures = "futures";
-    public const string Spot = "spot";
     public const string CopyTrading = "copy_trading";
     public const string Earn = "earn";
 
-    public static readonly string[] All = [Funding, Futures, Spot, CopyTrading, Earn];
+    public static readonly string[] All = [Funding, Futures, CopyTrading, Earn];
+}
+
+/// <summary>
+/// Account balance response from /api/v1/account/balance endpoint.
+/// Contains total equity in USD equivalent across all currencies.
+/// </summary>
+internal sealed class BlofinAccountBalance
+{
+    [JsonPropertyName("totalEquity")]
+    public string TotalEquity { get; init; } = "0";
+
+    [JsonPropertyName("isolatedEquity")]
+    public string IsolatedEquity { get; init; } = "0";
+
+    [JsonPropertyName("details")]
+    public List<BlofinAccountBalanceDetail> Details { get; init; } = [];
+
+    public decimal TotalEquityAsDecimal =>
+        decimal.TryParse(TotalEquity, out var result) ? result : 0;
+}
+
+/// <summary>
+/// Per-currency balance detail from account balance endpoint.
+/// </summary>
+internal sealed class BlofinAccountBalanceDetail
+{
+    [JsonPropertyName("currency")]
+    public string Currency { get; init; } = string.Empty;
+
+    [JsonPropertyName("equity")]
+    public string Equity { get; init; } = "0";
+
+    [JsonPropertyName("equityUsd")]
+    public string EquityUsd { get; init; } = "0";
+
+    [JsonPropertyName("available")]
+    public string Available { get; init; } = "0";
+
+    [JsonPropertyName("availableEquity")]
+    public string AvailableEquity { get; init; } = "0";
+
+    [JsonPropertyName("frozen")]
+    public string Frozen { get; init; } = "0";
+
+    [JsonPropertyName("orderFrozen")]
+    public string OrderFrozen { get; init; } = "0";
+
+    public decimal EquityUsdAsDecimal =>
+        decimal.TryParse(EquityUsd, out var result) ? result : 0;
 }

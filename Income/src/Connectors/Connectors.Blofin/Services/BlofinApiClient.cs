@@ -18,21 +18,30 @@ internal sealed class BlofinApiClient(
     };
 
     /// <summary>
-    /// Validates credentials by fetching account balances.
+    /// Validates credentials by fetching account balance.
     /// </summary>
     public async Task<Result> ValidateCredentialsAsync(
         BlofinCredentials credentials,
         CancellationToken ct = default)
     {
-        // Try to fetch funding balance as a validation check
-        var result = await GetAccountBalancesAsync(
-            credentials,
-            BlofinAccountTypes.Funding,
-            ct);
+        // Try to fetch futures account balance as a validation check
+        var result = await GetFuturesAccountBalanceAsync(credentials, ct);
 
         return result.IsSuccess
             ? Result.Ok()
             : Result.Fail(result.Errors);
+    }
+
+    /// <summary>
+    /// Gets the futures account balance with total equity in USD.
+    /// This endpoint returns the total value of all assets converted to USD.
+    /// </summary>
+    public async Task<Result<BlofinAccountBalance>> GetFuturesAccountBalanceAsync(
+        BlofinCredentials credentials,
+        CancellationToken ct = default)
+    {
+        const string endpoint = "/api/v1/account/balance";
+        return await SendRequestAsync<BlofinAccountBalance>(credentials, endpoint, ct);
     }
 
     /// <summary>
@@ -48,82 +57,70 @@ internal sealed class BlofinApiClient(
     }
 
     /// <summary>
-    /// Gets total balance across all account types in USDT.
-    /// </summary>
-    public async Task<Result<decimal>> GetTotalBalanceUsdtAsync(
-        BlofinCredentials credentials,
-        CancellationToken ct = default)
-    {
-        var totalUsdt = 0m;
-
-        foreach (var accountType in BlofinAccountTypes.All)
-        {
-            var result = await GetAccountBalancesAsync(credentials, accountType, ct);
-
-            if (result.IsFailed)
-            {
-                logger.LogWarning(
-                    "Failed to get balances for {AccountType}: {Error}",
-                    accountType,
-                    string.Join(", ", result.Errors.Select(e => e.Message)));
-                continue; // Skip failed account types, don't fail entire operation
-            }
-
-            foreach (var balance in result.Value)
-            {
-                // Sum USDT balances directly
-                if (balance.Currency.Equals("USDT", StringComparison.OrdinalIgnoreCase))
-                {
-                    totalUsdt += balance.BalanceAsDecimal;
-                }
-                // For other currencies, we'd need conversion rates
-                // For now, we'll only track USDT to keep it simple
-            }
-
-            // Small delay between requests to respect rate limits
-            await Task.Delay(50, ct);
-        }
-
-        return Result.Ok(totalUsdt);
-    }
-
-    /// <summary>
-    /// Gets detailed balance breakdown across all accounts.
+    /// Gets total balance snapshot across futures and funding accounts.
+    /// Uses /api/v1/account/balance for futures (returns totalEquity in USD)
+    /// and /api/v1/asset/balances for funding account.
     /// </summary>
     public async Task<Result<BalanceSnapshot>> GetBalanceSnapshotAsync(
         BlofinCredentials credentials,
         CancellationToken ct = default)
     {
         var balancesByAccount = new Dictionary<string, decimal>();
-        var totalUsdt = 0m;
+        var totalUsd = 0m;
 
-        foreach (var accountType in BlofinAccountTypes.All)
+        // 1. Get futures account balance (this gives us totalEquity in USD for all currencies)
+        var futuresResult = await GetFuturesAccountBalanceAsync(credentials, ct);
+        if (futuresResult.IsSuccess)
         {
-            var result = await GetAccountBalancesAsync(credentials, accountType, ct);
+            var futuresEquity = futuresResult.Value.TotalEquityAsDecimal;
+            logger.LogInformation(
+                "Futures account balance - TotalEquity: {TotalEquity}, TotalEquityDecimal: {Decimal}, Details count: {Count}",
+                futuresResult.Value.TotalEquity,
+                futuresEquity,
+                futuresResult.Value.Details?.Count ?? 0);
 
-            if (result.IsFailed)
+            if (futuresEquity > 0)
             {
-                logger.LogWarning(
-                    "Failed to get balances for {AccountType}",
-                    accountType);
-                continue;
+                balancesByAccount[BlofinAccountTypes.Futures] = futuresEquity;
+                totalUsd += futuresEquity;
             }
+        }
+        else
+        {
+            logger.LogWarning(
+                "Failed to get futures balance: {Error}",
+                string.Join(", ", futuresResult.Errors.Select(e => e.Message)));
+        }
 
-            var accountUsdt = result.Value
+        // 2. Get funding account balance (USDT only for now, as this endpoint doesn't provide USD conversion)
+        await Task.Delay(50, ct); // Rate limit
+        var fundingResult = await GetAccountBalancesAsync(credentials, BlofinAccountTypes.Funding, ct);
+        if (fundingResult.IsSuccess)
+        {
+            var fundingUsdt = fundingResult.Value
                 .Where(b => b.Currency.Equals("USDT", StringComparison.OrdinalIgnoreCase))
                 .Sum(b => b.BalanceAsDecimal);
 
-            if (accountUsdt > 0)
+            if (fundingUsdt > 0)
             {
-                balancesByAccount[accountType] = accountUsdt;
-                totalUsdt += accountUsdt;
+                balancesByAccount[BlofinAccountTypes.Funding] = fundingUsdt;
+                totalUsd += fundingUsdt; // USDT ≈ USD
             }
-
-            await Task.Delay(50, ct);
+        }
+        else
+        {
+            logger.LogWarning(
+                "Failed to get funding balance: {Error}",
+                string.Join(", ", fundingResult.Errors.Select(e => e.Message)));
         }
 
+        logger.LogInformation(
+            "Balance snapshot complete - TotalUsd: {TotalUsd}, Accounts: {Accounts}",
+            totalUsd,
+            string.Join(", ", balancesByAccount.Select(kv => $"{kv.Key}={kv.Value}")));
+
         return Result.Ok(new BalanceSnapshot(
-            TotalUsdt: totalUsdt,
+            TotalUsd: totalUsd,
             BalancesByAccount: balancesByAccount,
             SnapshotTime: DateTime.UtcNow));
     }
@@ -162,9 +159,12 @@ internal sealed class BlofinApiClient(
                 return Result.Fail($"API request failed: {response.StatusCode}");
             }
 
+            logger.LogDebug("Blofin API response: {Content}", content);
+
             var apiResponse = JsonSerializer.Deserialize<BlofinApiResponse<T>>(content, JsonOptions);
             if (apiResponse is null)
             {
+                logger.LogWarning("Failed to deserialize Blofin API response: {Content}", content);
                 return Result.Fail("Failed to deserialize API response");
             }
 
@@ -176,6 +176,10 @@ internal sealed class BlofinApiClient(
                     apiResponse.Message);
                 return Result.Fail($"API error: {apiResponse.Message}");
             }
+
+            logger.LogDebug("Blofin API data type: {Type}, IsNull: {IsNull}",
+                typeof(T).Name,
+                apiResponse.Data is null);
 
             return Result.Ok(apiResponse.Data!);
         }
@@ -189,8 +193,9 @@ internal sealed class BlofinApiClient(
 
 /// <summary>
 /// Snapshot of account balances at a point in time.
+/// TotalUsd includes all currencies converted to USD equivalent.
 /// </summary>
 internal sealed record BalanceSnapshot(
-    decimal TotalUsdt,
+    decimal TotalUsd,
     Dictionary<string, decimal> BalancesByAccount,
     DateTime SnapshotTime);

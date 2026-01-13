@@ -8,7 +8,7 @@ namespace Connectors.Blofin;
 
 /// <summary>
 /// Blofin exchange connector for syncing wallet balance snapshots.
-/// Captures the current total USDT balance across all account types.
+/// Captures the current total balance in USD equivalent across all account types and currencies.
 /// </summary>
 internal sealed class BlofinConnector(BlofinApiClient apiClient) : ISyncableConnector
 {
@@ -22,7 +22,7 @@ internal sealed class BlofinConnector(BlofinApiClient apiClient) : ISyncableConn
 
     public ConnectorKind Kind => ConnectorKind.Syncable;
 
-    public string DefaultCurrency => "USDT";
+    public string DefaultCurrency => "USD";
 
     public string ConfigSchema => """
         {
@@ -54,7 +54,7 @@ internal sealed class BlofinConnector(BlofinApiClient apiClient) : ISyncableConn
         }
         """;
 
-    public TimeSpan SyncInterval => TimeSpan.FromHours(24); // Daily snapshots
+    public TimeSpan SyncInterval => TimeSpan.FromMinutes(5); // Testing interval
 
     public async Task<Result> ValidateCredentialsAsync(
         string decryptedCredentials,
@@ -100,16 +100,16 @@ internal sealed class BlofinConnector(BlofinApiClient apiClient) : ISyncableConn
 
         var snapshot = result.Value;
 
-        // Return a single snapshot for today with total USDT balance
+        // Return a single snapshot for today with total USD balance (all currencies converted)
         var snapshots = new List<SyncedSnapshotData>();
 
-        if (snapshot.TotalUsdt > 0)
+        if (snapshot.TotalUsd > 0)
         {
             snapshots.Add(new SyncedSnapshotData(
                 Date: today,
-                OriginalAmount: snapshot.TotalUsdt,
-                OriginalCurrency: "USDT",
-                UsdAmount: snapshot.TotalUsdt, // USDT ≈ USD
+                OriginalAmount: snapshot.TotalUsd,
+                OriginalCurrency: "USD",
+                UsdAmount: snapshot.TotalUsd,
                 ExchangeRate: 1.0m,
                 RateSource: "Blofin"));
         }

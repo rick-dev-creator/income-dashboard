@@ -41,6 +41,9 @@ public static class DependencyInjection
         services.AddScoped<IStreamService, StreamService>();
         services.AddScoped<IProviderService, ProviderService>();
 
+        // Activity Log (Singleton for cross-scope access from background jobs)
+        services.AddSingleton<IActivityLogService, ActivityLogService>();
+
         // Connector Registry (Strategy pattern for connector resolution)
         services.AddSingleton<IConnectorRegistry, ConnectorRegistry>();
 

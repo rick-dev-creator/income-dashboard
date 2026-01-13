@@ -3,6 +3,8 @@ namespace Income.Domain.StreamContext.ValueObjects;
 internal sealed record StreamCategory
 {
     public static readonly StreamCategory Trading = new("Trading");
+    public static readonly StreamCategory Investment = new("Investment");
+    public static readonly StreamCategory Staking = new("Staking");
     public static readonly StreamCategory Referral = new("Referral");
     public static readonly StreamCategory Subscription = new("Subscription");
     public static readonly StreamCategory Salary = new("Salary");
@@ -13,6 +15,8 @@ internal sealed record StreamCategory
     private static readonly Dictionary<string, StreamCategory> All = new(StringComparer.OrdinalIgnoreCase)
     {
         [Trading.Value] = Trading,
+        [Investment.Value] = Investment,
+        [Staking.Value] = Staking,
         [Referral.Value] = Referral,
         [Subscription.Value] = Subscription,
         [Salary.Value] = Salary,

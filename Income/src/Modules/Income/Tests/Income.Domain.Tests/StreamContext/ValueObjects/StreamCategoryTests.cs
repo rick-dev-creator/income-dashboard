@@ -43,11 +43,15 @@ public class StreamCategoryTests
         var categories = StreamCategory.GetAll().ToList();
 
         // Assert
-        categories.Count.ShouldBe(5);
+        categories.Count.ShouldBe(9);
         categories.ShouldContain(StreamCategory.Trading);
+        categories.ShouldContain(StreamCategory.Investment);
+        categories.ShouldContain(StreamCategory.Staking);
         categories.ShouldContain(StreamCategory.Referral);
         categories.ShouldContain(StreamCategory.Subscription);
         categories.ShouldContain(StreamCategory.Salary);
+        categories.ShouldContain(StreamCategory.Rental);
+        categories.ShouldContain(StreamCategory.Dividend);
         categories.ShouldContain(StreamCategory.Other);
     }
 }
