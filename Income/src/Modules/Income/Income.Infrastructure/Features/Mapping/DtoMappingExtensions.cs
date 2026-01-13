@@ -21,6 +21,7 @@ internal static class DtoMappingExtensions
             SyncStatus: stream.SyncStatus.ToDto(),
             CreatedAt: stream.CreatedAt,
             Snapshots: stream.Snapshots.Select(s => s.ToDto()).ToList(),
+            StreamType: (int)stream.StreamType,
             RecurringAmount: stream.RecurringAmount,
             RecurringFrequency: stream.RecurringFrequency,
             RecurringStartDate: stream.RecurringStartDate);

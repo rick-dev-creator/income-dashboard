@@ -8,6 +8,8 @@ internal record TestCreateStreamData(
     bool IsFixed,
     string? FixedPeriod,
     string? EncryptedCredentials = null,
+    StreamType StreamType = StreamType.Income,
+    StreamId? LinkedIncomeStreamId = null,
     decimal? RecurringAmount = null,
     int? RecurringFrequency = null,
     DateOnly? RecurringStartDate = null) : ICreateStreamData;

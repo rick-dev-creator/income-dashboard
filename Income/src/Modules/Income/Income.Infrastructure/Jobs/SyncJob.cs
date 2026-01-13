@@ -166,11 +166,16 @@ internal sealed class SyncJob : BackgroundService
                     $"Sync completed. Recorded {result.Value.Count} snapshot(s). Next sync: {streamEntity.NextScheduledAt:HH:mm:ss}",
                     totalAmount);
 
-                // Create success notification
+                // Create success notification (contextual based on stream type)
+                var isExpenseSync = streamEntity.StreamType == 1;
+                var syncMessage = isExpenseSync
+                    ? $"Successfully synced {result.Value.Count} snapshot(s). Current expense: ${totalAmount:N2}"
+                    : $"Successfully synced {result.Value.Count} snapshot(s). Current balance: ${totalAmount:N2}";
+
                 await notificationService.CreateAsync(new CreateNotificationRequest(
                     Type: NotificationTypes.SyncSuccess,
                     Title: $"Sync completed for {streamEntity.Name}",
-                    Message: $"Successfully synced {result.Value.Count} snapshot(s). Current balance: ${totalAmount:N2}",
+                    Message: syncMessage,
                     StreamId: streamEntity.Id,
                     StreamName: streamEntity.Name), ct);
             }

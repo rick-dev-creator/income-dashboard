@@ -70,6 +70,17 @@ internal sealed class StreamEntityConfiguration : IEntityTypeConfiguration<Strea
             .HasColumnName("created_at")
             .IsRequired();
 
+        // Stream type: 0 = Income, 1 = Outcome
+        builder.Property(x => x.StreamType)
+            .HasColumnName("stream_type")
+            .HasDefaultValue(0) // Default to Income for existing streams
+            .IsRequired();
+
+        // For Outcome streams: link to a specific Income stream
+        builder.Property(x => x.LinkedIncomeStreamId)
+            .HasColumnName("linked_income_stream_id")
+            .HasMaxLength(36);
+
         // Recurring stream columns
         builder.Property(x => x.RecurringAmount)
             .HasColumnName("recurring_amount")
@@ -91,5 +102,11 @@ internal sealed class StreamEntityConfiguration : IEntityTypeConfiguration<Strea
 
         builder.HasIndex(x => x.Category)
             .HasDatabaseName("ix_streams_category");
+
+        builder.HasIndex(x => x.StreamType)
+            .HasDatabaseName("ix_streams_stream_type");
+
+        builder.HasIndex(x => x.LinkedIncomeStreamId)
+            .HasDatabaseName("ix_streams_linked_income_stream_id");
     }
 }

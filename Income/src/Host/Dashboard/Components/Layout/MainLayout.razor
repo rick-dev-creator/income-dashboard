@@ -2,7 +2,9 @@
 @implements IDisposable
 @inject MudTheme Theme
 @inject Income.Application.Services.Notifications.INotificationService NotificationService
+@inject Dashboard.Services.AppState AppState
 @using Income.Application.Services.Notifications
+@using Dashboard.Services
 
 <MudThemeProvider Theme="Theme" @bind-IsDarkMode="_isDarkMode" />
 <MudPopoverProvider />
@@ -22,6 +24,52 @@
                 <MudIcon Icon="@Icons.Material.Rounded.ShowChart" Size="Size.Small" />
             </div>
             <MudText Typo="Typo.h6" Class="brand-text">FlowMetrics</MudText>
+        </div>
+
+        <!-- Mode Selector -->
+        <div class="mode-selector">
+            <MudMenu AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+                <ActivatorContent>
+                    <MudButton Variant="Variant.Text" EndIcon="@Icons.Material.Rounded.KeyboardArrowDown"
+                               Class="@($"mode-button {GetModeClass()}")">
+                        <div class="@($"mode-indicator {GetModeClass()}")"></div>
+                        @AppState.ModeDisplayName
+                    </MudButton>
+                </ActivatorContent>
+                <ChildContent>
+                    <MudMenuItem OnClick="@(() => SetMode(AppMode.Income))">
+                        <div class="mode-menu-item">
+                            <div class="mode-indicator income"></div>
+                            <span>Income</span>
+                            @if (AppState.CurrentMode == AppMode.Income)
+                            {
+                                <MudIcon Icon="@Icons.Material.Rounded.Check" Size="Size.Small" Color="Color.Primary" />
+                            }
+                        </div>
+                    </MudMenuItem>
+                    <MudMenuItem OnClick="@(() => SetMode(AppMode.Outcome))">
+                        <div class="mode-menu-item">
+                            <div class="mode-indicator outcome"></div>
+                            <span>Outcome</span>
+                            @if (AppState.CurrentMode == AppMode.Outcome)
+                            {
+                                <MudIcon Icon="@Icons.Material.Rounded.Check" Size="Size.Small" Color="Color.Primary" />
+                            }
+                        </div>
+                    </MudMenuItem>
+                    <MudDivider Class="my-2" />
+                    <MudMenuItem OnClick="@(() => SetMode(AppMode.Divergence))">
+                        <div class="mode-menu-item">
+                            <div class="mode-indicator divergence"></div>
+                            <span>Divergence</span>
+                            @if (AppState.CurrentMode == AppMode.Divergence)
+                            {
+                                <MudIcon Icon="@Icons.Material.Rounded.Check" Size="Size.Small" Color="Color.Primary" />
+                            }
+                        </div>
+                    </MudMenuItem>
+                </ChildContent>
+            </MudMenu>
         </div>
 
         <MudSpacer />
@@ -116,7 +164,7 @@
         </div>
     </MudDrawer>
 
-    <MudMainContent Class="main-content">
+    <MudMainContent Class="main-content" Style="@GetBackgroundStyle()">
         <div class="page-container">
             @Body
         </div>
@@ -306,6 +354,63 @@
             max-width: 100vw;
         }
     }
+
+    /* Mode Selector Styles */
+    .mode-selector {
+        margin-left: 16px;
+    }
+
+    .mode-button {
+        text-transform: none;
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: 8px;
+        transition: background 0.2s ease;
+    }
+
+    .mode-button:hover {
+        background: var(--mud-palette-action-default-hover);
+    }
+
+    .mode-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+
+    .mode-indicator.income {
+        background: #10b981;
+    }
+
+    .mode-indicator.outcome {
+        background: #ef4444;
+    }
+
+    .mode-indicator.divergence {
+        background: #8b5cf6;
+    }
+
+    .mode-menu-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 140px;
+    }
+
+    .mode-menu-item span {
+        flex: 1;
+    }
+
+    @@media (max-width: 600px) {
+        .mode-selector {
+            margin-left: 8px;
+        }
+
+        .mode-button span:not(.mode-indicator) {
+            display: none;
+        }
+    }
 </style>
 
 @code {
@@ -397,6 +502,38 @@
 
     private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
     private void ToggleDarkMode() => _isDarkMode = !_isDarkMode;
+
+    private void SetMode(AppMode mode)
+    {
+        AppState.CurrentMode = mode;
+        StateHasChanged();
+    }
+
+    private string GetModeClass() => AppState.CurrentMode switch
+    {
+        AppMode.Income => "income",
+        AppMode.Outcome => "outcome",
+        AppMode.Divergence => "divergence",
+        _ => "income"
+    };
+
+    private string GetBackgroundStyle()
+    {
+        var tint = AppState.CurrentMode switch
+        {
+            AppMode.Income => _isDarkMode
+                ? "linear-gradient(180deg, rgba(16,185,129,0.03) 0%, transparent 50%)"
+                : "linear-gradient(180deg, rgba(16,185,129,0.04) 0%, transparent 50%)",
+            AppMode.Outcome => _isDarkMode
+                ? "linear-gradient(180deg, rgba(239,68,68,0.03) 0%, transparent 50%)"
+                : "linear-gradient(180deg, rgba(239,68,68,0.04) 0%, transparent 50%)",
+            AppMode.Divergence => _isDarkMode
+                ? "linear-gradient(180deg, rgba(139,92,246,0.03) 0%, transparent 50%)"
+                : "linear-gradient(180deg, rgba(139,92,246,0.04) 0%, transparent 50%)",
+            _ => ""
+        };
+        return $"background: {tint};";
+    }
 
     public void Dispose()
     {

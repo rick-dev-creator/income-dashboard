@@ -1,24 +1,44 @@
 @page "/streams"
 @using Income.Application.Services.Streams
 @using Income.Application.Services.Providers
+@using Income.Application.Connectors
 @using Analytics.Application.Services
+@using Dashboard.Services
 @inject IStreamService StreamService
 @inject IProviderService ProviderService
 @inject IDashboardService DashboardService
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject AppState AppState
+@implements IDisposable
 @rendermode InteractiveServer
 
-<PageTitle>Income Streams - FlowMetrics</PageTitle>
+<PageTitle>@_language.StreamsTitle - FlowMetrics</PageTitle>
 
 <div class="page-header">
     <div>
-        <h1 class="page-title">Income Streams</h1>
-        <p class="page-subtitle">Manage and track your income sources</p>
+        <div class="page-header-row">
+            <h1 class="page-title">@_language.StreamsTitle</h1>
+            @if (AppState.CurrentMode == AppMode.Outcome)
+            {
+                <div class="mode-legend outcome">
+                    <MudIcon Icon="@Icons.Material.Rounded.RemoveCircleOutline" Size="Size.Small" />
+                    <span>Expenses (outflow)</span>
+                </div>
+            }
+            else if (AppState.CurrentMode == AppMode.Divergence)
+            {
+                <div class="mode-legend divergence">
+                    <MudIcon Icon="@Icons.Material.Rounded.SwapVert" Size="Size.Small" />
+                    <span>All streams</span>
+                </div>
+            }
+        </div>
+        <p class="page-subtitle">@_language.StreamsSubtitle</p>
     </div>
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="btn-modern"
+    <MudButton Variant="Variant.Filled" Color="@GetModeColor()" Class="btn-modern"
                StartIcon="@Icons.Material.Rounded.Add" OnClick="OpenCreateDialog">
-        Add Stream
+        @_language.AddButtonText
     </MudButton>
 </div>
 
@@ -32,14 +52,14 @@
 else if (_streams.Count == 0)
 {
     <div class="empty-state-card animate-scale-in">
-        <div class="empty-state-icon">
-            <MudIcon Icon="@Icons.Material.Rounded.AccountBalanceWallet" Size="Size.Large" />
+        <div class="empty-state-icon" style="@($"background: linear-gradient(135deg, {_language.AccentColor} 0%, {_language.AccentColor}cc 100%);")">
+            <MudIcon Icon="@(AppState.CurrentMode == AppMode.Outcome ? Icons.Material.Rounded.Receipt : Icons.Material.Rounded.AccountBalanceWallet)" Size="Size.Large" />
         </div>
-        <h2>No Income Streams Yet</h2>
-        <p>Start tracking your income by adding your first stream</p>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4 btn-modern"
+        <h2>No @_language.StreamsTitle Yet</h2>
+        <p>Start tracking by adding your first @(AppState.CurrentMode == AppMode.Outcome ? "expense" : "income source")</p>
+        <MudButton Variant="Variant.Filled" Color="@GetModeColor()" Class="mt-4 btn-modern"
                    StartIcon="@Icons.Material.Rounded.Add" OnClick="OpenCreateDialog">
-            Add Your First Stream
+            @_language.AddButtonText
         </MudButton>
     </div>
 }
@@ -125,7 +145,7 @@ else
                             Edit
                         </MudMenuItem>
                         <MudMenuItem Icon="@Icons.Material.Rounded.AddChart" OnClick="@(() => OpenSnapshotDialog(stream))" Disabled="@(stream.SyncState == StreamSyncState.Disabled)">
-                            Record Income
+                            Record @(AppState.CurrentMode == AppMode.Outcome ? "Expense" : "Income")
                         </MudMenuItem>
                         <MudMenuItem Icon="@(stream.SyncState == StreamSyncState.Disabled ? Icons.Material.Rounded.PlayArrow : Icons.Material.Rounded.Pause)"
                                      IconColor="@(stream.SyncState == StreamSyncState.Disabled ? Color.Success : Color.Warning)"
@@ -156,7 +176,7 @@ else
                     <div class="contribution-bar-container">
                         <div class="contribution-bar @GetCategoryClass(stream.Category)" style="width: @contribution.ToString("F0")%"></div>
                     </div>
-                    <span class="contribution-text">@contribution.ToString("F1")% of total income</span>
+                    <span class="contribution-text">@contribution.ToString("F1")% of @_language.TotalLabel.ToLower()</span>
                 </div>
 
                 <!-- Footer: Metadata -->
@@ -186,7 +206,7 @@ else
 
                 <button class="record-btn" @onclick="@(() => OpenSnapshotDialog(stream))">
                     <MudIcon Icon="@Icons.Material.Rounded.Add" Size="Size.Small" />
-                    <span>Record Income</span>
+                    <span>Record @(AppState.CurrentMode == AppMode.Outcome ? "Expense" : "Income")</span>
                 </button>
             </div>
         }
@@ -199,6 +219,41 @@ else
         justify-content: space-between;
         align-items: flex-start;
         margin-bottom: 32px;
+    }
+
+    .page-header-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .mode-legend {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .mode-legend.outcome {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .mode-legend.divergence {
+        background: rgba(139, 92, 246, 0.1);
+        color: #8b5cf6;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateX(-10px); }
+        to { opacity: 1; transform: translateX(0); }
     }
 
     .loading-container {
@@ -626,17 +681,32 @@ else
     private StreamHealthSummary? _streamHealth;
     private Dictionary<string, StreamHealthItem> _streamHealthMap = [];
     private decimal _totalMonthlyIncome;
+    private StreamLanguage _language = StreamLanguage.Income;
 
     protected override async Task OnInitializedAsync()
     {
+        _language = AppState.CurrentLanguage;
+        AppState.OnModeChanged += OnModeChanged;
         await LoadDataAsync();
+    }
+
+    private async void OnModeChanged()
+    {
+        _language = AppState.CurrentLanguage;
+        await LoadDataAsync();
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task LoadDataAsync()
     {
         _isLoading = true;
 
-        var streamsResult = await StreamService.GetAllAsync();
+        // Filter streams by current mode's stream type
+        var streamType = AppState.CurrentStreamType;
+        var streamsResult = streamType.HasValue
+            ? await StreamService.GetByTypeAsync(streamType.Value)
+            : await StreamService.GetAllAsync();
+
         var providersResult = await ProviderService.GetAllAsync();
         var healthResult = await DashboardService.GetStreamHealthAsync("MoM");
 
@@ -649,12 +719,23 @@ else
         if (healthResult.IsSuccess)
         {
             _streamHealth = healthResult.Value;
-            _streamHealthMap = _streamHealth.Streams.ToDictionary(s => s.StreamId, s => s);
-            _totalMonthlyIncome = _streamHealth.Streams.Sum(s => s.CurrentPeriodUsd);
+            // Filter health data by current streams
+            var streamIds = _streams.Select(s => s.Id).ToHashSet();
+            _streamHealthMap = _streamHealth.Streams
+                .Where(s => streamIds.Contains(s.StreamId))
+                .ToDictionary(s => s.StreamId, s => s);
+            _totalMonthlyIncome = _streamHealthMap.Values.Sum(s => s.CurrentPeriodUsd);
         }
 
         _isLoading = false;
     }
+
+    private Color GetModeColor() => AppState.CurrentMode switch
+    {
+        AppMode.Income => Color.Success,
+        AppMode.Outcome => Color.Error,
+        _ => Color.Primary
+    };
 
     private StreamHealthItem? GetStreamHealth(string streamId) =>
         _streamHealthMap.TryGetValue(streamId, out var health) ? health : null;
@@ -700,12 +781,27 @@ else
 
     private async Task OpenCreateDialog()
     {
+        // Filter providers by supported stream type for the current mode
+        var requiredType = AppState.CurrentMode == AppMode.Outcome
+            ? SupportedStreamTypes.Outcome
+            : SupportedStreamTypes.Income;
+
+        var filteredProviders = _providers.Values
+            .Where(p => p.SupportsStreamType(requiredType))
+            .ToList();
+
+        if (filteredProviders.Count == 0)
+        {
+            Snackbar.Add($"No providers available for {AppState.ModeDisplayName} streams.", Severity.Warning);
+            return;
+        }
+
         var parameters = new DialogParameters<StreamDialog>
         {
-            { x => x.Providers, _providers.Values.ToList() }
+            { x => x.Providers, filteredProviders }
         };
 
-        var dialog = await DialogService.ShowAsync<StreamDialog>("Create Stream", parameters,
+        var dialog = await DialogService.ShowAsync<StreamDialog>(_language.AddDialogTitle, parameters,
             new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true });
 
         var result = await dialog.Result;
@@ -815,5 +911,10 @@ else
         {
             Snackbar.Add($"Error: {toggleResult.Errors.FirstOrDefault()?.Message}", Severity.Error);
         }
+    }
+
+    public void Dispose()
+    {
+        AppState.OnModeChanged -= OnModeChanged;
     }
 }

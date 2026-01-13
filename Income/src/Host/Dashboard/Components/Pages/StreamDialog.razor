@@ -1,12 +1,14 @@
 @using Income.Application.Services.Streams
 @using Income.Application.Services.Providers
+@using Dashboard.Services
 @inject ISnackbar Snackbar
+@inject AppState AppState
 
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Stream" Class="mr-2" />
-            @(ExistingStream is null ? "Create Stream" : "Edit Stream")
+            <MudIcon Icon="@(AppState.CurrentMode == AppMode.Outcome ? Icons.Material.Filled.Receipt : Icons.Material.Filled.Stream)" Class="mr-2" />
+            @(ExistingStream is null ? _language.AddDialogTitle : "Edit Stream")
         </MudText>
     </TitleContent>
     <DialogContent>
@@ -26,13 +28,27 @@
 
                 <MudSelect T="string" Label="Category" @bind-Value="_category" Required="true"
                            RequiredError="Category is required" Variant="Variant.Outlined">
-                    <MudSelectItem Value="@("Salary")">Salary</MudSelectItem>
-                    <MudSelectItem Value="@("Rental")">Rental Income</MudSelectItem>
-                    <MudSelectItem Value="@("Trading")">Trading</MudSelectItem>
-                    <MudSelectItem Value="@("Subscription")">Subscription</MudSelectItem>
-                    <MudSelectItem Value="@("Dividend")">Dividend</MudSelectItem>
-                    <MudSelectItem Value="@("Referral")">Referral</MudSelectItem>
-                    <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                    @if (AppState.CurrentMode == AppMode.Outcome)
+                    {
+                        <MudSelectItem Value="@("Housing")">Housing</MudSelectItem>
+                        <MudSelectItem Value="@("Utilities")">Utilities</MudSelectItem>
+                        <MudSelectItem Value="@("Insurance")">Insurance</MudSelectItem>
+                        <MudSelectItem Value="@("Subscription")">Subscription</MudSelectItem>
+                        <MudSelectItem Value="@("Software")">Software/SaaS</MudSelectItem>
+                        <MudSelectItem Value="@("Services")">Services</MudSelectItem>
+                        <MudSelectItem Value="@("Trading")">Trading Fees</MudSelectItem>
+                        <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                    }
+                    else
+                    {
+                        <MudSelectItem Value="@("Salary")">Salary</MudSelectItem>
+                        <MudSelectItem Value="@("Rental")">Rental Income</MudSelectItem>
+                        <MudSelectItem Value="@("Trading")">Trading</MudSelectItem>
+                        <MudSelectItem Value="@("Subscription")">Subscription</MudSelectItem>
+                        <MudSelectItem Value="@("Dividend")">Dividend</MudSelectItem>
+                        <MudSelectItem Value="@("Referral")">Referral</MudSelectItem>
+                        <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                    }
                 </MudSelect>
 
                 <MudSelect T="string" Label="Currency" @bind-Value="_currency" Required="true"
@@ -46,12 +62,14 @@
 
                 @if (ExistingStream is null)
                 {
-                    <MudSwitch @bind-Value="_isFixed" Label="Fixed Income" Color="Color.Primary" />
+                    <MudSwitch @bind-Value="_isFixed"
+                               Label="@(AppState.CurrentMode == AppMode.Outcome ? "Fixed Expense" : "Fixed Income")"
+                               Color="@(AppState.CurrentMode == AppMode.Outcome ? Color.Error : Color.Primary)" />
 
                     @if (_isFixed)
                     {
                         <MudSelect T="string" Label="Period" @bind-Value="_fixedPeriod" Required="true"
-                                   RequiredError="Period is required for fixed income" Variant="Variant.Outlined">
+                                   RequiredError="Period is required" Variant="Variant.Outlined">
                             <MudSelectItem Value="@("Daily")">Daily</MudSelectItem>
                             <MudSelectItem Value="@("Weekly")">Weekly</MudSelectItem>
                             <MudSelectItem Value="@("Biweekly")">Biweekly</MudSelectItem>
@@ -64,7 +82,7 @@
                 else
                 {
                     <MudAlert Severity="Severity.Info" Dense="true">
-                        Income type (@(ExistingStream.IsFixed ? "Fixed" : "Variable")@(ExistingStream.FixedPeriod is not null ? $" - {ExistingStream.FixedPeriod}" : "")) cannot be changed after creation.
+                        Stream type (@(ExistingStream.IsFixed ? "Fixed" : "Variable")@(ExistingStream.FixedPeriod is not null ? $" - {ExistingStream.FixedPeriod}" : "")) cannot be changed after creation.
                     </MudAlert>
                 }
             </MudStack>
@@ -91,16 +109,20 @@
 
     private MudForm _form = null!;
     private bool _formValid;
+    private StreamLanguage _language = StreamLanguage.Income;
 
     private string _providerId = "";
     private string _name = "";
-    private string _category = "Salary";
+    private string _category = "";
     private string _currency = "USD";
     private bool _isFixed = true;
     private string _fixedPeriod = "Monthly";
 
     protected override void OnInitialized()
     {
+        _language = AppState.CurrentLanguage;
+        _category = AppState.CurrentMode == AppMode.Outcome ? "Housing" : "Salary";
+
         if (ExistingStream is not null)
         {
             _providerId = ExistingStream.ProviderId;
@@ -122,13 +144,15 @@
     {
         if (ExistingStream is null)
         {
+            var streamType = AppState.CurrentStreamType ?? StreamTypeDto.Income;
             var request = new CreateStreamRequest(
                 ProviderId: _providerId,
                 Name: _name,
                 Category: _category,
                 OriginalCurrency: _currency,
                 IsFixed: _isFixed,
-                FixedPeriod: _isFixed ? _fixedPeriod : null);
+                FixedPeriod: _isFixed ? _fixedPeriod : null,
+                StreamType: streamType);
             MudDialog.Close(DialogResult.Ok(request));
         }
         else

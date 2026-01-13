@@ -4,14 +4,14 @@ namespace Analytics.Application.Services;
 
 public interface IDashboardService
 {
-    Task<Result<DashboardSummary>> GetSummaryAsync(CancellationToken ct = default);
-    Task<Result<DashboardKpis>> GetKpisAsync(CancellationToken ct = default);
-    Task<Result<IncomeTimeSeries>> GetTimeSeriesAsync(DateOnly startDate, DateOnly endDate, string granularity, string? category = null, CancellationToken ct = default);
-    Task<Result<StackedTimeSeries>> GetStackedTimeSeriesAsync(string granularity = "Daily", int periodsBack = 180, CancellationToken ct = default);
-    Task<Result<IncomeDistribution>> GetDistributionAsync(string groupBy, DateOnly? startDate = null, DateOnly? endDate = null, CancellationToken ct = default);
-    Task<Result<IReadOnlyList<TopPerformerItem>>> GetTopPerformersAsync(int topN = 5, CancellationToken ct = default);
-    Task<Result<PeriodComparison>> GetPeriodComparisonAsync(string comparisonType, CancellationToken ct = default);
-    Task<Result<StreamHealthSummary>> GetStreamHealthAsync(string comparisonType = "MoM", CancellationToken ct = default);
+    Task<Result<DashboardSummary>> GetSummaryAsync(int? streamType = null, CancellationToken ct = default);
+    Task<Result<DashboardKpis>> GetKpisAsync(int? streamType = null, CancellationToken ct = default);
+    Task<Result<IncomeTimeSeries>> GetTimeSeriesAsync(DateOnly startDate, DateOnly endDate, string granularity, string? category = null, int? streamType = null, CancellationToken ct = default);
+    Task<Result<StackedTimeSeries>> GetStackedTimeSeriesAsync(string granularity = "Daily", int periodsBack = 180, int? streamType = null, CancellationToken ct = default);
+    Task<Result<IncomeDistribution>> GetDistributionAsync(string groupBy, DateOnly? startDate = null, DateOnly? endDate = null, int? streamType = null, CancellationToken ct = default);
+    Task<Result<IReadOnlyList<TopPerformerItem>>> GetTopPerformersAsync(int topN = 5, int? streamType = null, CancellationToken ct = default);
+    Task<Result<PeriodComparison>> GetPeriodComparisonAsync(string comparisonType, int? streamType = null, CancellationToken ct = default);
+    Task<Result<StreamHealthSummary>> GetStreamHealthAsync(string comparisonType = "MoM", int? streamType = null, CancellationToken ct = default);
 }
 
 public sealed record DashboardKpis(

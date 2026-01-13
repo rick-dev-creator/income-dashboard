@@ -4,7 +4,8 @@ using FluentResults;
 namespace Analytics.Contracts.Queries;
 
 public sealed record GetProjectionQuery(
-    int MonthsAhead = 12);
+    int MonthsAhead = 12,
+    int? StreamType = null);
 
 public interface IGetProjectionHandler
 {

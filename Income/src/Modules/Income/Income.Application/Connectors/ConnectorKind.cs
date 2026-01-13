@@ -22,3 +22,19 @@ public enum RecurringFrequency
     Quarterly,
     Yearly
 }
+
+/// <summary>
+/// Defines which stream types a provider/connector supports.
+/// </summary>
+[Flags]
+public enum SupportedStreamTypes
+{
+    /// <summary>Only supports income streams (money coming in)</summary>
+    Income = 1,
+
+    /// <summary>Only supports outcome streams (money going out)</summary>
+    Outcome = 2,
+
+    /// <summary>Supports both income and outcome streams</summary>
+    Both = Income | Outcome
+}

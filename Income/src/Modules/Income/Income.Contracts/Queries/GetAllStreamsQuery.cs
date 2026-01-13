@@ -3,7 +3,11 @@ using Income.Contracts.DTOs;
 
 namespace Income.Contracts.Queries;
 
-public sealed record GetAllStreamsQuery;
+/// <summary>
+/// Query to get all streams, optionally filtered by type.
+/// </summary>
+/// <param name="StreamType">Optional filter: 0=Income, 1=Outcome, null=All</param>
+public sealed record GetAllStreamsQuery(int? StreamType = null);
 
 public interface IGetAllStreamsHandler
 {

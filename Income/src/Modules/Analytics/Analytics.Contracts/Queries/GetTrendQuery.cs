@@ -7,7 +7,8 @@ public sealed record GetTrendQuery(
     string Period = "Monthly",
     int PeriodsBack = 6,
     string? StreamId = null,
-    string? Category = null);
+    string? Category = null,
+    int? StreamType = null);
 
 public interface IGetTrendHandler
 {

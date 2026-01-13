@@ -1,10 +1,19 @@
+@inject Dashboard.Services.AppState AppState
+@using Dashboard.Services
+
 <MudNavMenu Class="nav-menu">
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Rounded.SpaceDashboard" Class="nav-item">
         Dashboard
     </MudNavLink>
-    <MudNavLink Href="streams" Icon="@Icons.Material.Rounded.AccountBalanceWallet" Class="nav-item">
-        Streams
+    <MudNavLink Href="streams" Icon="@GetStreamsIcon()" Class="nav-item">
+        @GetStreamsLabel()
     </MudNavLink>
+    @if (AppState.CurrentMode == AppMode.Divergence)
+    {
+        <MudNavLink Href="divergence" Icon="@Icons.Material.Rounded.CompareArrows" Class="nav-item divergence-item">
+            Divergence
+        </MudNavLink>
+    }
     <MudNavLink Href="analytics" Icon="@Icons.Material.Rounded.Insights" Class="nav-item">
         Analytics
     </MudNavLink>
@@ -56,4 +65,29 @@
     :deep(.mud-nav-link-icon) {
         margin-right: 12px;
     }
+
+    .divergence-item {
+        background: rgba(139, 92, 246, 0.1) !important;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .divergence-item:hover {
+        background: rgba(139, 92, 246, 0.2) !important;
+    }
 </style>
+
+@code {
+    private string GetStreamsIcon() => AppState.CurrentMode switch
+    {
+        AppMode.Outcome => Icons.Material.Rounded.Receipt,
+        AppMode.Divergence => Icons.Material.Rounded.SwapHoriz,
+        _ => Icons.Material.Rounded.AccountBalanceWallet
+    };
+
+    private string GetStreamsLabel() => AppState.CurrentMode switch
+    {
+        AppMode.Outcome => "Expenses",
+        AppMode.Divergence => "All Streams",
+        _ => "Streams"
+    };
+}

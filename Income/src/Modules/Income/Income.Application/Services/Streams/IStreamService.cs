@@ -4,7 +4,8 @@ namespace Income.Application.Services.Streams;
 
 public interface IStreamService
 {
-    Task<Result<IReadOnlyList<StreamListItem>>> GetAllAsync(CancellationToken ct = default);
+    Task<Result<IReadOnlyList<StreamListItem>>> GetAllAsync(int? streamType = null, CancellationToken ct = default);
+    Task<Result<IReadOnlyList<StreamListItem>>> GetByTypeAsync(StreamTypeDto streamType, CancellationToken ct = default);
     Task<Result<StreamDetail>> GetByIdAsync(string streamId, CancellationToken ct = default);
     Task<Result<IReadOnlyList<StreamListItem>>> GetByProviderAsync(string providerId, CancellationToken ct = default);
     Task<Result<StreamDetail>> CreateAsync(CreateStreamRequest request, CancellationToken ct = default);
@@ -13,6 +14,7 @@ public interface IStreamService
     Task<Result<SnapshotItem>> RecordSnapshotAsync(RecordSnapshotRequest request, CancellationToken ct = default);
     Task<Result> UpdateCredentialsAsync(string streamId, string? credentials, CancellationToken ct = default);
     Task<Result> ToggleStatusAsync(string streamId, CancellationToken ct = default);
+    Task<Result> LinkToIncomeStreamAsync(string outcomeStreamId, string? incomeStreamId, CancellationToken ct = default);
 }
 
 // DTOs
@@ -27,7 +29,21 @@ public sealed record StreamListItem(
     bool HasCredentials,
     int SnapshotCount,
     SnapshotItem? LastSnapshot,
-    StreamSyncState SyncState);
+    StreamSyncState SyncState,
+    StreamTypeDto StreamType,
+    string? LinkedIncomeStreamId);
+
+/// <summary>
+/// Defines whether a stream represents money flowing in (Income) or out (Outcome).
+/// </summary>
+public enum StreamTypeDto
+{
+    /// <summary>Money flowing IN - earnings, revenue, gains</summary>
+    Income = 0,
+
+    /// <summary>Money flowing OUT - expenses, costs, burn rate</summary>
+    Outcome = 1
+}
 
 public enum StreamSyncState
 {
@@ -48,7 +64,10 @@ public sealed record StreamDetail(
     string? FixedPeriod,
     bool HasCredentials,
     IReadOnlyList<SnapshotItem> Snapshots,
-    StreamSyncState SyncState);
+    StreamSyncState SyncState,
+    StreamTypeDto StreamType,
+    string? LinkedIncomeStreamId,
+    string? LinkedIncomeStreamName);
 
 public sealed record SnapshotItem(
     string Id,
@@ -67,6 +86,8 @@ public sealed record CreateStreamRequest(
     bool IsFixed,
     string? FixedPeriod,
     string? Credentials = null,
+    StreamTypeDto StreamType = StreamTypeDto.Income,
+    string? LinkedIncomeStreamId = null,
     decimal? RecurringAmount = null,
     int? RecurringFrequency = null,
     DateOnly? RecurringStartDate = null);

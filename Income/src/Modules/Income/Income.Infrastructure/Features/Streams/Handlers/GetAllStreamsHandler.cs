@@ -14,11 +14,17 @@ internal sealed class GetAllStreamsHandler(IDbContextFactory<IncomeDbContext> db
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync(ct);
 
-        var entities = await dbContext.Streams
+        var dbQuery = dbContext.Streams
             .Include(x => x.Snapshots)
-            .AsNoTracking()
-            .ToListAsync(ct);
+            .AsNoTracking();
 
+        // Filter by StreamType if specified
+        if (query.StreamType.HasValue)
+        {
+            dbQuery = dbQuery.Where(x => x.StreamType == query.StreamType.Value);
+        }
+
+        var entities = await dbQuery.ToListAsync(ct);
         var dtos = entities.Select(e => e.ToDomain().ToDto()).ToList();
         return Result.Ok<IReadOnlyList<StreamDto>>(dtos);
     }

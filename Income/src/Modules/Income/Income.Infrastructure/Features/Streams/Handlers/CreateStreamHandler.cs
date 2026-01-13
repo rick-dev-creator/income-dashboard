@@ -66,6 +66,8 @@ internal sealed class CreateStreamHandler(
         bool IsFixed,
         string? FixedPeriod,
         string? EncryptedCredentials,
+        StreamType StreamType = StreamType.Income,
+        StreamId? LinkedIncomeStreamId = null,
         decimal? RecurringAmount = null,
         int? RecurringFrequency = null,
         DateOnly? RecurringStartDate = null) : ICreateStreamData;

@@ -30,4 +30,11 @@ public interface IIncomeConnector
     /// Default currency for this connector
     /// </summary>
     string DefaultCurrency { get; }
+
+    /// <summary>
+    /// Which stream types this connector supports (Income, Outcome, or Both).
+    /// Exchange connectors typically only support Income (wallet balances).
+    /// Manual/Recurring connectors typically support Both.
+    /// </summary>
+    SupportedStreamTypes SupportedStreamTypes { get; }
 }

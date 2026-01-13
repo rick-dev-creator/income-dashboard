@@ -1,14 +1,33 @@
 @page "/"
 @using Analytics.Application.Services
+@using Dashboard.Services
+@using Income.Application.Services.Streams
 @implements IDisposable
 @inject IDashboardService DashboardService
+@inject AppState AppState
 @rendermode InteractiveServer
 
-<PageTitle>FlowMetrics - Income Dashboard</PageTitle>
+<PageTitle>FlowMetrics - @_language.StreamsTitle</PageTitle>
 
 <div class="page-header">
-    <h1 class="page-title">Dashboard</h1>
-    <p class="page-subtitle">Your financial overview at a glance</p>
+    <div class="page-header-row">
+        <h1 class="page-title">Dashboard</h1>
+        @if (AppState.CurrentMode == AppMode.Outcome)
+        {
+            <div class="mode-legend outcome">
+                <MudIcon Icon="@Icons.Material.Rounded.RemoveCircleOutline" Size="Size.Small" />
+                <span>Showing expenses (outflow)</span>
+            </div>
+        }
+        else if (AppState.CurrentMode == AppMode.Divergence)
+        {
+            <div class="mode-legend divergence">
+                <MudIcon Icon="@Icons.Material.Rounded.SwapVert" Size="Size.Small" />
+                <span>Net flow (income - expenses)</span>
+            </div>
+        }
+    </div>
+    <p class="page-subtitle">Your @(AppState.CurrentMode == AppMode.Outcome ? "expenses" : AppState.CurrentMode == AppMode.Divergence ? "net flow" : "income") at a glance</p>
 </div>
 
 @if (_isLoading)
@@ -97,12 +116,12 @@ else
 
     <!-- CHARTS ROW -->
     <div class="charts-row mt-6">
-        <!-- INCOME OVER TIME -->
+        <!-- FLOW OVER TIME -->
         <div class="card-modern chart-main animate-slide-up" style="animation-delay: 0.1s;">
             <div class="section-header">
                 <div>
-                    <h2 class="section-title">Income Over Time</h2>
-                    <p class="page-subtitle" style="margin-top: 4px;">Track your earnings progression</p>
+                    <h2 class="section-title">@(AppState.CurrentMode == AppMode.Outcome ? "Expenses" : "Income") Over Time</h2>
+                    <p class="page-subtitle" style="margin-top: 4px;">Track your @(AppState.CurrentMode == AppMode.Outcome ? "spending" : "earnings") progression</p>
                 </div>
                 <MudToggleGroup T="string" Value="_selectedGranularity" ValueChanged="OnGranularityChanged" Color="Color.Primary" CheckMark="false" Class="toggle-rounded">
                     <MudToggleItem Value="@("Daily")">Daily</MudToggleItem>
@@ -141,10 +160,10 @@ else
                     <div class="empty-state-icon">
                         <MudIcon Icon="@Icons.Material.Rounded.BarChart" Size="Size.Large" Color="Color.Secondary" />
                     </div>
-                    <MudText Typo="Typo.h6">No income data yet</MudText>
-                    <MudText Typo="Typo.body2" Color="Color.Secondary">Add income streams and record snapshots to see your trends</MudText>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="mt-4" Href="/streams" StartIcon="@Icons.Material.Rounded.Add">
-                        Add Stream
+                    <MudText Typo="Typo.h6">No @(AppState.CurrentMode == AppMode.Outcome ? "expense" : "income") data yet</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">Add streams and record snapshots to see your trends</MudText>
+                    <MudButton Variant="Variant.Filled" Color="@GetModeColor()" Class="mt-4" Href="/streams" StartIcon="@Icons.Material.Rounded.Add">
+                        @_language.AddButtonText
                     </MudButton>
                 </div>
             }
@@ -196,7 +215,7 @@ else
         <div class="section-header">
             <div>
                 <h2 class="section-title">Stream Health</h2>
-                <p class="page-subtitle" style="margin-top: 4px;">Performance by income source</p>
+                <p class="page-subtitle" style="margin-top: 4px;">Performance by @(AppState.CurrentMode == AppMode.Outcome ? "expense" : "income") source</p>
             </div>
             <div class="health-badges">
                 <div class="health-badge health-badge-success">
@@ -256,13 +275,48 @@ else
                     <MudIcon Icon="@Icons.Material.Rounded.Assessment" Size="Size.Large" Color="Color.Secondary" />
                 </div>
                 <MudText Typo="Typo.h6">No streams to analyze</MudText>
-                <MudText Typo="Typo.body2" Color="Color.Secondary">Add your first income stream to track its performance</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary">Add your first @(AppState.CurrentMode == AppMode.Outcome ? "expense" : "income") stream to track its performance</MudText>
             </div>
         }
     </div>
 }
 
 <style>
+    .page-header-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .mode-legend {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .mode-legend.outcome {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .mode-legend.divergence {
+        background: rgba(139, 92, 246, 0.1);
+        color: #8b5cf6;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateX(-10px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
     .loading-container {
         display: flex;
         flex-direction: column;
@@ -715,6 +769,7 @@ else
     private string? _error;
     private string _selectedGranularity = "Monthly";
     private CancellationTokenSource? _cts;
+    private StreamLanguage _language = StreamLanguage.Income;
 
     private DashboardKpis? _kpis;
     private StackedTimeSeries? _stackedTimeSeries;
@@ -886,9 +941,25 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        _language = AppState.CurrentLanguage;
+        AppState.OnModeChanged += OnModeChanged;
         BuildChartOptions();
         await LoadDataAsync();
     }
+
+    private async void OnModeChanged()
+    {
+        _language = AppState.CurrentLanguage;
+        await LoadDataAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private Color GetModeColor() => AppState.CurrentMode switch
+    {
+        AppMode.Income => Color.Success,
+        AppMode.Outcome => Color.Error,
+        _ => Color.Primary
+    };
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -927,17 +998,25 @@ else
         {
             if (!silentRefresh) _isLoading = true;
 
-            var kpisResult = await DashboardService.GetKpisAsync();
+            // Convert StreamTypeDto to int? for filtering
+            var streamTypeFilter = AppState.CurrentStreamType switch
+            {
+                StreamTypeDto.Income => 0,
+                StreamTypeDto.Outcome => 1,
+                _ => (int?)null
+            };
+
+            var kpisResult = await DashboardService.GetKpisAsync(streamTypeFilter);
             if (kpisResult.IsSuccess) _kpis = kpisResult.Value;
 
-            var stackedResult = await DashboardService.GetStackedTimeSeriesAsync(_selectedGranularity, 180);
+            var stackedResult = await DashboardService.GetStackedTimeSeriesAsync(_selectedGranularity, 180, streamTypeFilter);
             if (stackedResult.IsSuccess)
             {
                 _stackedTimeSeries = stackedResult.Value;
                 PrepareCharts();
             }
 
-            var healthResult = await DashboardService.GetStreamHealthAsync("MoM");
+            var healthResult = await DashboardService.GetStreamHealthAsync("MoM", streamTypeFilter);
             if (healthResult.IsSuccess) _streamHealth = healthResult.Value;
         }
         catch (Exception ex)
@@ -958,7 +1037,14 @@ else
 
         try
         {
-            var stackedResult = await DashboardService.GetStackedTimeSeriesAsync(_selectedGranularity, 180);
+            var streamTypeFilter = AppState.CurrentStreamType switch
+            {
+                StreamTypeDto.Income => 0,
+                StreamTypeDto.Outcome => 1,
+                _ => (int?)null
+            };
+
+            var stackedResult = await DashboardService.GetStackedTimeSeriesAsync(_selectedGranularity, 180, streamTypeFilter);
             if (stackedResult.IsSuccess)
             {
                 _stackedTimeSeries = stackedResult.Value;
@@ -1079,6 +1165,7 @@ else
 
     public void Dispose()
     {
+        AppState.OnModeChanged -= OnModeChanged;
         _cts?.Cancel();
         _cts?.Dispose();
     }

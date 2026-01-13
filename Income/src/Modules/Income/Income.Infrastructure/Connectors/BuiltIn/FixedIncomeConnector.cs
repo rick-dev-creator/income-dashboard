@@ -14,6 +14,12 @@ internal sealed class FixedIncomeConnector : IRecurringConnector
     public ConnectorKind Kind => ConnectorKind.Recurring;
     public string DefaultCurrency => "USD";
 
+    /// <summary>
+    /// Recurring/Manual connectors support both Income and Outcome streams.
+    /// Can be used for salary, rent (income) or subscriptions, utilities (outcome).
+    /// </summary>
+    public SupportedStreamTypes SupportedStreamTypes => SupportedStreamTypes.Both;
+
     public DateOnly CalculateNextPaymentDate(
         DateOnly startDate,
         RecurringFrequency frequency,

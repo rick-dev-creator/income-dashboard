@@ -12,7 +12,7 @@ internal sealed class GetPortfolioSummaryHandler(
 {
     public async Task<Result<PortfolioSummaryDto>> HandleAsync(GetPortfolioSummaryQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<PortfolioSummaryDto>();
 

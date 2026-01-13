@@ -23,6 +23,8 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
         string? encryptedCredentials,
         SyncStatus syncStatus,
         DateTime createdAt,
+        StreamType streamType,
+        StreamId? linkedIncomeStreamId = null,
         decimal? recurringAmount = null,
         int? recurringFrequency = null,
         DateOnly? recurringStartDate = null)
@@ -37,6 +39,8 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
         EncryptedCredentials = encryptedCredentials;
         SyncStatus = syncStatus;
         CreatedAt = createdAt;
+        StreamType = streamType;
+        LinkedIncomeStreamId = linkedIncomeStreamId;
         RecurringAmount = recurringAmount;
         RecurringFrequency = recurringFrequency;
         RecurringStartDate = recurringStartDate;
@@ -62,6 +66,12 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
     public DateTime CreatedAt { get; private init; }
     public IReadOnlyList<DailySnapshot> Snapshots => _snapshots.AsReadOnly();
 
+    // Stream type: Income (money in) or Outcome (money out)
+    public StreamType StreamType { get; private init; }
+
+    // For Outcome streams: optionally link to a specific Income stream
+    public StreamId? LinkedIncomeStreamId { get; private set; }
+
     // Recurring stream properties (for schedule-based income)
     public decimal? RecurringAmount { get; private set; }
     public int? RecurringFrequency { get; private set; }
@@ -71,6 +81,21 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
     /// Whether this stream is a recurring (schedule-based) stream vs a syncable (API-based) stream.
     /// </summary>
     public bool IsRecurring => RecurringAmount.HasValue && RecurringFrequency.HasValue && RecurringStartDate.HasValue;
+
+    /// <summary>
+    /// Whether this is an Income stream (money flowing in).
+    /// </summary>
+    public bool IsIncome => StreamType == StreamType.Income;
+
+    /// <summary>
+    /// Whether this is an Outcome stream (money flowing out).
+    /// </summary>
+    public bool IsOutcome => StreamType == StreamType.Outcome;
+
+    /// <summary>
+    /// The flow direction multiplier: +1 for income, -1 for outcome.
+    /// </summary>
+    public int FlowDirectionMultiplier => FlowDirection.FromStreamType(StreamType);
 
     internal static Result<IncomeStream> Create(ICreateStreamData data)
     {
@@ -88,6 +113,10 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
         if (data.IsFixed && string.IsNullOrWhiteSpace(data.FixedPeriod))
             errors.Add(new Error("Fixed period is required for fixed income streams"));
 
+        // Validate linked income stream only for outcomes
+        if (data.StreamType == StreamType.Income && data.LinkedIncomeStreamId is not null)
+            errors.Add(new Error("Income streams cannot be linked to other streams"));
+
         if (errors.Count > 0)
             return Result.Fail<IncomeStream>(errors);
 
@@ -102,6 +131,8 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
             encryptedCredentials: data.EncryptedCredentials,
             syncStatus: SyncStatus.Initial(),
             createdAt: DateTime.UtcNow,
+            streamType: data.StreamType,
+            linkedIncomeStreamId: data.LinkedIncomeStreamId,
             recurringAmount: data.RecurringAmount,
             recurringFrequency: data.RecurringFrequency,
             recurringStartDate: data.RecurringStartDate);
@@ -128,6 +159,8 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
             encryptedCredentials: data.EncryptedCredentials,
             syncStatus: data.SyncStatus,
             createdAt: data.CreatedAt,
+            streamType: data.StreamType,
+            linkedIncomeStreamId: data.LinkedIncomeStreamId,
             recurringAmount: data.RecurringAmount,
             recurringFrequency: data.RecurringFrequency,
             recurringStartDate: data.RecurringStartDate);
@@ -224,7 +257,33 @@ internal sealed class IncomeStream : AggregateRoot<StreamId>
         RecurringStartDate = null;
     }
 
+    /// <summary>
+    /// Links this outcome stream to a specific income stream.
+    /// Only valid for Outcome streams.
+    /// </summary>
+    internal Result LinkToIncomeStream(StreamId? incomeStreamId)
+    {
+        if (StreamType != StreamType.Outcome)
+            return Result.Fail("Only outcome streams can be linked to income streams");
+
+        LinkedIncomeStreamId = incomeStreamId;
+        return Result.Ok();
+    }
+
+    /// <summary>
+    /// Removes the link to any income stream, making this outcome draw from the global pool.
+    /// </summary>
+    internal void UnlinkFromIncomeStream()
+    {
+        LinkedIncomeStreamId = null;
+    }
+
     public bool HasCredentials => !string.IsNullOrEmpty(EncryptedCredentials);
+
+    /// <summary>
+    /// Whether this outcome stream is linked to a specific income stream.
+    /// </summary>
+    public bool IsLinkedToIncomeStream => IsOutcome && LinkedIncomeStreamId is not null;
 
     public DailySnapshot? GetSnapshotByDate(DateOnly date) =>
         _snapshots.FirstOrDefault(s => s.Date == date);

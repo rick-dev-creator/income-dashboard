@@ -12,6 +12,7 @@ public sealed record StreamDto(
     SyncStatusDto SyncStatus,
     DateTime CreatedAt,
     IReadOnlyList<SnapshotDto> Snapshots,
+    int StreamType = 0, // 0=Income, 1=Outcome
     decimal? RecurringAmount = null,
     int? RecurringFrequency = null,
     DateOnly? RecurringStartDate = null);

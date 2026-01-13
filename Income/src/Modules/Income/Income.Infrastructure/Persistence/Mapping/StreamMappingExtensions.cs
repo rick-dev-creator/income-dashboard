@@ -31,6 +31,8 @@ internal static class StreamMappingExtensions
             LastError = domain.SyncStatus.LastError,
             NextScheduledAt = domain.SyncStatus.NextScheduledAt,
             CreatedAt = domain.CreatedAt,
+            StreamType = (int)domain.StreamType,
+            LinkedIncomeStreamId = domain.LinkedIncomeStreamId?.Value,
             RecurringAmount = domain.RecurringAmount,
             RecurringFrequency = domain.RecurringFrequency,
             RecurringStartDate = domain.RecurringStartDate,
@@ -48,6 +50,7 @@ internal static class StreamMappingExtensions
         entity.LastAttemptAt = domain.SyncStatus.LastAttemptAt;
         entity.LastError = domain.SyncStatus.LastError;
         entity.NextScheduledAt = domain.SyncStatus.NextScheduledAt;
+        entity.LinkedIncomeStreamId = domain.LinkedIncomeStreamId?.Value;
         entity.RecurringAmount = domain.RecurringAmount;
         entity.RecurringFrequency = domain.RecurringFrequency;
         entity.RecurringStartDate = domain.RecurringStartDate;
