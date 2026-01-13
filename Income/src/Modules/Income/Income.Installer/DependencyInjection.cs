@@ -53,6 +53,7 @@ public static class DependencyInjection
         // Background Jobs
         services.AddHostedService<SyncJob>();
         services.AddHostedService<RecurringJob>();
+        services.AddHostedService<TestDataGeneratorJob>(); // TEST ONLY - remove in production
 
         return services;
     }
