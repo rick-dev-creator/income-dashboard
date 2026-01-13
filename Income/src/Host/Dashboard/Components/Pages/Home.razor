@@ -1,5 +1,6 @@
 @page "/"
 @using Analytics.Application.Services
+@implements IDisposable
 @inject IDashboardService DashboardService
 @rendermode InteractiveServer
 
@@ -713,6 +714,7 @@ else
     private bool _isLoadingChart = false;
     private string? _error;
     private string _selectedGranularity = "Monthly";
+    private CancellationTokenSource? _cts;
 
     private DashboardKpis? _kpis;
     private StackedTimeSeries? _stackedTimeSeries;
@@ -888,16 +890,42 @@ else
         await LoadDataAsync();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _cts = new CancellationTokenSource();
+            _ = StartAutoRefreshAsync(_cts.Token);
+        }
+    }
+
+    private async Task StartAutoRefreshAsync(CancellationToken ct)
+    {
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(10));
+        try
+        {
+            while (await timer.WaitForNextTickAsync(ct))
+            {
+                await LoadDataAsync(silentRefresh: true);
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected when disposed
+        }
+    }
+
     protected override void OnParametersSet()
     {
         BuildChartOptions();
     }
 
-    private async Task LoadDataAsync()
+    private async Task LoadDataAsync(bool silentRefresh = false)
     {
         try
         {
-            _isLoading = true;
+            if (!silentRefresh) _isLoading = true;
 
             var kpisResult = await DashboardService.GetKpisAsync();
             if (kpisResult.IsSuccess) _kpis = kpisResult.Value;
@@ -914,7 +942,7 @@ else
         }
         catch (Exception ex)
         {
-            _error = $"Error loading dashboard: {ex.Message}";
+            if (!silentRefresh) _error = $"Error loading dashboard: {ex.Message}";
         }
         finally
         {
@@ -1048,4 +1076,10 @@ else
         "Downward" => "change-down",
         _ => "change-flat"
     };
+
+    public void Dispose()
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+    }
 }
