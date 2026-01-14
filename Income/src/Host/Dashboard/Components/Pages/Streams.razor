@@ -781,42 +781,14 @@ else
 
     private async Task OpenCreateDialog()
     {
-        // Filter providers by supported stream type for the current mode
-        var requiredType = AppState.CurrentMode == AppMode.Outcome
-            ? SupportedStreamTypes.Outcome
-            : SupportedStreamTypes.Income;
-
-        var filteredProviders = _providers.Values
-            .Where(p => p.SupportsStreamType(requiredType))
-            .ToList();
-
-        if (filteredProviders.Count == 0)
-        {
-            Snackbar.Add($"No providers available for {AppState.ModeDisplayName} streams.", Severity.Warning);
-            return;
-        }
-
-        var parameters = new DialogParameters<StreamDialog>
-        {
-            { x => x.Providers, filteredProviders }
-        };
-
-        var dialog = await DialogService.ShowAsync<StreamDialog>(_language.AddDialogTitle, parameters,
+        var dialog = await DialogService.ShowAsync<AddIncomeSourceDialog>(
+            _language.AddDialogTitle,
             new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true });
 
         var result = await dialog.Result;
-        if (result is { Canceled: false, Data: CreateStreamRequest request })
+        if (result is { Canceled: false })
         {
-            var createResult = await StreamService.CreateAsync(request);
-            if (createResult.IsSuccess)
-            {
-                Snackbar.Add("Stream created successfully!", Severity.Success);
-                await LoadDataAsync();
-            }
-            else
-            {
-                Snackbar.Add($"Error: {createResult.Errors.FirstOrDefault()?.Message}", Severity.Error);
-            }
+            await LoadDataAsync();
         }
     }
 

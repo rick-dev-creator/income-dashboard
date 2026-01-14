@@ -1,9 +1,11 @@
 @using Income.Application.Connectors
 @using Income.Application.Services.Streams
+@using Dashboard.Services
 @using System.Text.Json
 @inject IConnectorRegistry ConnectorRegistry
 @inject IStreamService StreamService
 @inject ISnackbar Snackbar
+@inject AppState AppState
 
 <MudDialog>
     <TitleContent>
@@ -15,39 +17,42 @@
     <DialogContent>
         @if (_step == Step.SelectType)
         {
-            <MudText Class="mb-4">What type of income do you want to track?</MudText>
+            <MudText Class="mb-4">What type of @(_isOutcomeMode ? "expense" : "income") do you want to track?</MudText>
             <MudStack Spacing="3">
                 <MudCard Class="cursor-pointer hover-card" @onclick="SelectRecurring" Elevation="2">
                     <MudCardContent>
                         <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
-                            <MudAvatar Color="Color.Success" Size="Size.Large">
+                            <MudAvatar Color="@(_isOutcomeMode ? Color.Error : Color.Success)" Size="Size.Large">
                                 <MudIcon Icon="@Icons.Material.Filled.EventRepeat" />
                             </MudAvatar>
                             <div>
-                                <MudText Typo="Typo.h6">Recurring Income</MudText>
+                                <MudText Typo="Typo.h6">Recurring @(_isOutcomeMode ? "Expense" : "Income")</MudText>
                                 <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                    Salary, rent, subscriptions - fixed amounts on a schedule
+                                    @(_isOutcomeMode ? "Rent, utilities, subscriptions - fixed amounts on a schedule" : "Salary, rent, subscriptions - fixed amounts on a schedule")
                                 </MudText>
                             </div>
                         </MudStack>
                     </MudCardContent>
                 </MudCard>
 
-                <MudCard Class="cursor-pointer hover-card" @onclick="SelectApiIntegration" Elevation="2">
-                    <MudCardContent>
-                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
-                            <MudAvatar Color="Color.Info" Size="Size.Large">
-                                <MudIcon Icon="@Icons.Material.Filled.Sync" />
-                            </MudAvatar>
-                            <div>
-                                <MudText Typo="Typo.h6">API Integration</MudText>
-                                <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                    Exchanges, platforms - sync automatically via API
-                                </MudText>
-                            </div>
-                        </MudStack>
-                    </MudCardContent>
-                </MudCard>
+                @if (!_isOutcomeMode)
+                {
+                    <MudCard Class="cursor-pointer hover-card" @onclick="SelectApiIntegration" Elevation="2">
+                        <MudCardContent>
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                                <MudAvatar Color="Color.Info" Size="Size.Large">
+                                    <MudIcon Icon="@Icons.Material.Filled.Sync" />
+                                </MudAvatar>
+                                <div>
+                                    <MudText Typo="Typo.h6">API Integration</MudText>
+                                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                        Exchanges, platforms - sync automatically via API
+                                    </MudText>
+                                </div>
+                            </MudStack>
+                        </MudCardContent>
+                    </MudCard>
+                }
             </MudStack>
         }
         else if (_step == Step.SelectConnector)
@@ -139,17 +144,30 @@
         {
             <MudForm @ref="_form" @bind-IsValid="_formValid">
                 <MudStack Spacing="3">
-                    <MudTextField @bind-Value="_name" Label="Income Name" Required="true"
+                    <MudTextField @bind-Value="_name" Label="@(_isOutcomeMode ? "Expense Name" : "Income Name")" Required="true"
                                   RequiredError="Name is required" Variant="Variant.Outlined"
-                                  Placeholder="e.g., Monthly Salary, Apartment Rent" />
+                                  Placeholder="@(_isOutcomeMode ? "e.g., Monthly Rent, Netflix" : "e.g., Monthly Salary, Apartment Rent")" />
 
                     <MudSelect T="string" Label="Category" @bind-Value="_category" Required="true"
                                RequiredError="Category is required" Variant="Variant.Outlined">
-                        <MudSelectItem Value="@("Salary")">Salary</MudSelectItem>
-                        <MudSelectItem Value="@("Rental")">Rental Income</MudSelectItem>
-                        <MudSelectItem Value="@("Dividend")">Dividend</MudSelectItem>
-                        <MudSelectItem Value="@("Subscription")">Subscription</MudSelectItem>
-                        <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                        @if (_isOutcomeMode)
+                        {
+                            <MudSelectItem Value="@("Housing")">Housing</MudSelectItem>
+                            <MudSelectItem Value="@("Utilities")">Utilities</MudSelectItem>
+                            <MudSelectItem Value="@("Insurance")">Insurance</MudSelectItem>
+                            <MudSelectItem Value="@("Subscription")">Subscription</MudSelectItem>
+                            <MudSelectItem Value="@("Software")">Software/SaaS</MudSelectItem>
+                            <MudSelectItem Value="@("Services")">Services</MudSelectItem>
+                            <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                        }
+                        else
+                        {
+                            <MudSelectItem Value="@("Salary")">Salary</MudSelectItem>
+                            <MudSelectItem Value="@("Rental")">Rental Income</MudSelectItem>
+                            <MudSelectItem Value="@("Dividend")">Dividend</MudSelectItem>
+                            <MudSelectItem Value="@("Subscription")">Subscription</MudSelectItem>
+                            <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                        }
                     </MudSelect>
 
                     <MudNumericField T="decimal" @bind-Value="_amount" Label="Amount" Required="true"
@@ -175,7 +193,7 @@
                         <MudSelectItem Value="5">Yearly</MudSelectItem>
                     </MudSelect>
 
-                    <MudDatePicker @bind-Date="_startDate" Label="First Payment Date" Required="true"
+                    <MudDatePicker @bind-Date="_startDate" Label="@(_isOutcomeMode ? "First Payment Date" : "First Payment Date")" Required="true"
                                    RequiredError="Start date is required" Variant="Variant.Outlined"
                                    Placeholder="When did/will payments start?" />
 
@@ -253,6 +271,7 @@
     private bool _isValidating;
     private bool _credentialsValidated;
     private string? _validationError;
+    private bool _isOutcomeMode;
 
     // Available syncable connectors
     private IReadOnlyList<ISyncableConnector> _syncableConnectors = [];
@@ -279,16 +298,18 @@
 
     protected override void OnInitialized()
     {
+        _isOutcomeMode = AppState.CurrentMode == AppMode.Outcome;
+        _category = _isOutcomeMode ? "Housing" : "Salary";
         _syncableConnectors = ConnectorRegistry.GetSyncable();
     }
 
     private string GetDialogTitle() => _step switch
     {
-        Step.SelectType => "Add Income Source",
+        Step.SelectType => _isOutcomeMode ? "Add Expense" : "Add Income Source",
         Step.SelectConnector => "Select Integration",
         Step.ConfigureConnector => $"Configure {_selectedConnector?.DisplayName ?? "Integration"}",
-        Step.ConfigureRecurring => "Configure Recurring Income",
-        _ => "Add Income Source"
+        Step.ConfigureRecurring => _isOutcomeMode ? "Configure Recurring Expense" : "Configure Recurring Income",
+        _ => _isOutcomeMode ? "Add Expense" : "Add Income Source"
     };
 
     private void Cancel() => MudDialog.Cancel();
@@ -307,7 +328,7 @@
 
     private void SelectRecurring()
     {
-        _category = "Salary";
+        _category = _isOutcomeMode ? "Housing" : "Salary";
         _step = Step.ConfigureRecurring;
     }
 
@@ -439,6 +460,7 @@
 
         try
         {
+            var streamType = _isOutcomeMode ? StreamTypeDto.Outcome : StreamTypeDto.Income;
             var request = new CreateStreamRequest(
                 ProviderId: BuiltInProviders.RecurringIncome,
                 Name: _name,
@@ -447,6 +469,7 @@
                 IsFixed: true,
                 FixedPeriod: GetFrequencyLabel(_frequency),
                 Credentials: null,
+                StreamType: streamType,
                 RecurringAmount: _amount,
                 RecurringFrequency: _frequency,
                 RecurringStartDate: DateOnly.FromDateTime(_startDate.Value));
@@ -455,7 +478,8 @@
 
             if (result.IsSuccess)
             {
-                Snackbar.Add($"Income stream '{_name}' created successfully!", Severity.Success);
+                var typeLabel = _isOutcomeMode ? "Expense" : "Income";
+                Snackbar.Add($"{typeLabel} stream '{_name}' created successfully!", Severity.Success);
                 MudDialog.Close(DialogResult.Ok(true));
             }
             else

@@ -233,6 +233,128 @@ Income/src/
 
 ---
 
+## Phase 3 Vision: Life Economics
+
+### The Stoic Perspective
+
+> *"It is not that we have a short time to live, but that we waste a lot of it."*
+> — Seneca, On the Shortness of Life
+
+The Stoics understood a fundamental truth: **time is our only non-renewable resource**. Money can be earned, lost, and earned again. Time, once spent, is gone forever.
+
+Traditional finance apps measure everything in currency. But currency is just an abstraction - a medium of exchange. The real question isn't "How much does this cost?" but rather:
+
+> **"How many hours of my life am I trading for this?"**
+
+### The Time Cost of Living
+
+When you work, you're not just earning money - you're **converting hours of your finite life into currency**. Every expense then becomes a withdrawal from your life's limited time bank.
+
+```
+Your Hourly Life Rate = Income / Hours Worked
+Time Cost of Expense = Expense Amount / Hourly Life Rate
+
+Example:
+- Monthly Income: $4,000
+- Hours Worked: 160 hrs/month
+- Your Hour of Life = $25
+
+Therefore:
+- Netflix ($15/mo) = 0.6 hours of your life
+- Car Payment ($450/mo) = 18 hours of your life
+- Rent ($1,500/mo) = 60 hours of your life
+```
+
+This reframes every financial decision: **Is this purchase worth X hours of my life?**
+
+### The Three Questions of Life Economics
+
+| Question | Metric | Insight |
+|----------|--------|---------|
+| **What does my life cost?** | Hours to Maintain Lifestyle | Total hours/month needed to sustain current expenses |
+| **How free am I?** | Freedom Ratio | % of work hours that remain after covering expenses |
+| **When will I be free?** | Time to Financial Freedom | When passive income covers lifestyle cost |
+
+### Visualizing Your Life Budget
+
+```
+YOUR MONTHLY LIFE BUDGET (160 hours worked)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[██████████████████████████████████████████░░░░░░░░░░░░░░░░░░░░░░]
+              LIFE COST (128 hrs)              FREEDOM (32 hrs)
+                    80%                             20%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Where your 128 hours go:
+┌─────────────────────────────────────────────────────────────────┐
+│ 🏠 Housing           60 hrs  ████████████████████████           │
+│ 🚗 Transportation    18 hrs  ███████                            │
+│ 🍔 Food              16 hrs  ██████                             │
+│ 📱 Subscriptions      8 hrs  ███                                │
+│ ⚡ Utilities          6 hrs  ██                                 │
+│ 🎮 Entertainment      4 hrs  █                                  │
+│ 📦 Other             16 hrs  ██████                             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### The Path to Financial Freedom
+
+Financial Freedom isn't about being rich - it's about **reclaiming your time**. You achieve it when:
+
+```
+Passive Income ≥ Lifestyle Cost (in hours)
+```
+
+FlowMetrics already tracks:
+- **Income Streams** (including passive: dividends, rental, referrals)
+- **Outcome Streams** (your lifestyle cost)
+- **Projections** (where you're headed)
+
+Adding Life Economics means tracking your **journey to time sovereignty**:
+
+```
+FINANCIAL FREEDOM PROGRESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 28% FREE
+
+Passive Income:    $1,120/mo  →  covers 28% of lifestyle
+Active Income:     $2,880/mo  →  requires 115 hrs of work
+Lifestyle Cost:    $4,000/mo  →  128 hrs of life
+
+🎯 Target: 100% passive coverage
+📅 Projected: 6.2 years at current trajectory
+⚡ Accelerate: Each $100/mo passive = 4 fewer work hours
+```
+
+### Life Economics Features (Planned)
+
+| Feature | Description |
+|---------|-------------|
+| **Hourly Life Rate** | Your time-to-money conversion rate |
+| **Time Cost per Outcome** | Each expense shown in hours of life |
+| **Lifestyle Hours** | Total hours needed to maintain current life |
+| **Freedom Ratio** | Percentage of time truly yours |
+| **Passive Coverage** | % of lifestyle covered by passive income |
+| **Time to Freedom** | Projected date of financial independence |
+| **Life Budget View** | Visual breakdown of where your hours go |
+
+### The Deeper Insight
+
+This isn't just a feature - it's a **philosophical reframe**. When you see that a subscription costs "2 hours of life" instead of "$50", you start asking better questions:
+
+- *Do I value this more than 2 hours of my existence?*
+- *Could those 2 hours buy me something more meaningful?*
+- *How many hours am I unconsciously trading away?*
+
+The Stoics practiced *memento mori* - remembering that death is certain and time is limited. FlowMetrics brings this ancient wisdom into modern personal finance:
+
+> **Every expense is a choice about how to spend your finite time on Earth.**
+
+---
+
 ## Roadmap
 
 ### Phase 1: Foundation ✓
@@ -271,17 +393,29 @@ Income/src/
 - [ ] Net flow dashboard
 - [ ] Burn rate analytics
 
-### Phase 5: Advanced Analytics
+### Phase 5: Life Economics
+- [ ] User settings (hours worked per month)
+- [ ] Hourly Life Rate calculation
+- [ ] Time Cost per Outcome stream
+- [ ] Lifestyle Hours (total hours to maintain life)
+- [ ] Freedom Ratio metric
+- [ ] Active vs Passive income classification
+- [ ] Passive Coverage percentage
+- [ ] Time to Financial Freedom projection
+- [ ] Life Budget visualization
+- [ ] FIRE (Financial Independence) calculator
+
+### Phase 6: Advanced Analytics
 - [ ] Net flow projections (income - outcomes)
 - [ ] Sustainability scoring
 - [ ] What-If for outcomes
 - [ ] Combined stacked charts (income vs outcome)
 - [ ] Financial runway calculator
+- [ ] Monte Carlo simulation for FIRE timeline
 
-### Phase 6: Expansion
+### Phase 7: Expansion
 - [ ] Additional exchange connectors (Binance, Bybit, OKX)
 - [ ] Bank integrations (Plaid)
-- [ ] Monte Carlo simulation for probabilistic projections
 - [ ] Email/webhook notifications for anomalies
 - [ ] Mobile PWA support
 
