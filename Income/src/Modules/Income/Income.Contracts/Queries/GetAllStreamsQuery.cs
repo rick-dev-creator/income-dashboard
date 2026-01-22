@@ -4,10 +4,11 @@ using Income.Contracts.DTOs;
 namespace Income.Contracts.Queries;
 
 /// <summary>
-/// Query to get all streams, optionally filtered by type.
+/// Query to get all streams, optionally filtered by type and/or provider.
 /// </summary>
 /// <param name="StreamType">Optional filter: 0=Income, 1=Outcome, null=All</param>
-public sealed record GetAllStreamsQuery(int? StreamType = null);
+/// <param name="ProviderId">Optional filter by provider ID</param>
+public sealed record GetAllStreamsQuery(int? StreamType = null, string? ProviderId = null);
 
 public interface IGetAllStreamsHandler
 {

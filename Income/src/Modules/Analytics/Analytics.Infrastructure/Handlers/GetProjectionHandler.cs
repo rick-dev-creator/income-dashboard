@@ -11,7 +11,7 @@ internal sealed class GetProjectionHandler(
 {
     public async Task<Result<ProjectionDto>> HandleAsync(GetProjectionQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType, query.ProviderId), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<ProjectionDto>();
 
@@ -19,9 +19,9 @@ internal sealed class GetProjectionHandler(
         var now = DateTime.UtcNow;
         var currentMonth = new DateOnly(now.Year, now.Month, 1);
 
-        var fixedMonthly = CalculateFixedMonthlyIncome(streams);
-        var (variableMonthly, variableStdDev) = CalculateVariableMonthlyStats(streams);
-        var monthlyGrowthRate = CalculateMonthlyGrowthRate(streams);
+        var fixedMonthly = CalculateFixedMonthlyIncome(streams, query.StreamType);
+        var (variableMonthly, variableStdDev) = CalculateVariableMonthlyStats(streams, query.StreamType);
+        var monthlyGrowthRate = CalculateMonthlyGrowthRate(streams, query.StreamType);
 
         var projectedMonthly = fixedMonthly + variableMonthly;
         var projectedAnnual = projectedMonthly * 12;
@@ -64,7 +64,7 @@ internal sealed class GetProjectionHandler(
             MonthlyProjections: projections));
     }
 
-    private static decimal CalculateFixedMonthlyIncome(IReadOnlyList<StreamDto> streams)
+    private static decimal CalculateFixedMonthlyIncome(IReadOnlyList<StreamDto> streams, int? streamTypeFilter)
     {
         decimal total = 0;
         foreach (var stream in streams.Where(s => s.IsFixed))
@@ -83,22 +83,47 @@ internal sealed class GetProjectionHandler(
                 _ => 1m
             };
 
-            total += lastSnapshot.UsdAmount * multiplier;
+            var amount = lastSnapshot.UsdAmount * multiplier;
+
+            // In Net Flow mode (no filter), subtract outcome streams
+            if (!streamTypeFilter.HasValue && stream.StreamType == 1)
+                total -= amount;
+            else
+                total += amount;
         }
         return total;
     }
 
-    private static (decimal Average, decimal StdDev) CalculateVariableMonthlyStats(IReadOnlyList<StreamDto> streams)
+    private static (decimal Average, decimal StdDev) CalculateVariableMonthlyStats(IReadOnlyList<StreamDto> streams, int? streamTypeFilter)
     {
         var variableStreams = streams.Where(s => !s.IsFixed).ToList();
         if (variableStreams.Count == 0)
             return (0, 0);
 
-        var monthlyTotals = variableStreams
-            .SelectMany(s => s.Snapshots)
-            .GroupBy(s => new DateOnly(s.Date.Year, s.Date.Month, 1))
-            .Select(g => g.Sum(s => s.UsdAmount))
-            .ToList();
+        // In Net Flow mode, calculate monthly net (income - outcome)
+        List<decimal> monthlyTotals;
+        if (streamTypeFilter.HasValue)
+        {
+            monthlyTotals = variableStreams
+                .SelectMany(s => s.Snapshots)
+                .GroupBy(s => new DateOnly(s.Date.Year, s.Date.Month, 1))
+                .Select(g => g.Sum(s => s.UsdAmount))
+                .ToList();
+        }
+        else
+        {
+            // Net Flow mode: Income - Outcome per month
+            monthlyTotals = variableStreams
+                .SelectMany(s => s.Snapshots.Select(snap => new { s.StreamType, Snapshot = snap }))
+                .GroupBy(x => new DateOnly(x.Snapshot.Date.Year, x.Snapshot.Date.Month, 1))
+                .Select(g =>
+                {
+                    var income = g.Where(x => x.StreamType == 0).Sum(x => x.Snapshot.UsdAmount);
+                    var outcome = g.Where(x => x.StreamType == 1).Sum(x => x.Snapshot.UsdAmount);
+                    return income - outcome;
+                })
+                .ToList();
+        }
 
         if (monthlyTotals.Count == 0)
             return (0, 0);
@@ -133,29 +158,50 @@ internal sealed class GetProjectionHandler(
         return Math.Min(Math.Max(confidence, 0), 1);
     }
 
-    private static decimal CalculateMonthlyGrowthRate(IReadOnlyList<StreamDto> streams)
+    private static decimal CalculateMonthlyGrowthRate(IReadOnlyList<StreamDto> streams, int? streamTypeFilter)
     {
         // Get all snapshots grouped by month
-        var allSnapshots = streams
-            .SelectMany(s => s.Snapshots)
-            .GroupBy(s => new DateOnly(s.Date.Year, s.Date.Month, 1))
-            .OrderBy(g => g.Key)
-            .Select(g => new { Month = g.Key, Total = g.Sum(s => s.UsdAmount) })
-            .ToList();
+        List<(DateOnly Month, decimal Total)> monthlyTotals;
 
-        if (allSnapshots.Count < 2)
+        if (streamTypeFilter.HasValue)
+        {
+            monthlyTotals = streams
+                .SelectMany(s => s.Snapshots)
+                .GroupBy(s => new DateOnly(s.Date.Year, s.Date.Month, 1))
+                .OrderBy(g => g.Key)
+                .Select(g => (Month: g.Key, Total: g.Sum(s => s.UsdAmount)))
+                .ToList();
+        }
+        else
+        {
+            // Net Flow mode: calculate monthly net (Income - Outcome)
+            monthlyTotals = streams
+                .SelectMany(s => s.Snapshots.Select(snap => new { s.StreamType, Snapshot = snap }))
+                .GroupBy(x => new DateOnly(x.Snapshot.Date.Year, x.Snapshot.Date.Month, 1))
+                .OrderBy(g => g.Key)
+                .Select(g =>
+                {
+                    var income = g.Where(x => x.StreamType == 0).Sum(x => x.Snapshot.UsdAmount);
+                    var outcome = g.Where(x => x.StreamType == 1).Sum(x => x.Snapshot.UsdAmount);
+                    return (Month: g.Key, Total: income - outcome);
+                })
+                .ToList();
+        }
+
+        if (monthlyTotals.Count < 2)
             return 0.02m; // Default 2% monthly growth if insufficient data
 
         // Calculate month-over-month growth rates
         var growthRates = new List<decimal>();
-        for (var i = 1; i < allSnapshots.Count; i++)
+        for (var i = 1; i < monthlyTotals.Count; i++)
         {
-            var previous = allSnapshots[i - 1].Total;
-            var current = allSnapshots[i].Total;
+            var previous = monthlyTotals[i - 1].Total;
+            var current = monthlyTotals[i].Total;
 
-            if (previous > 0)
+            // For net flow, previous could be negative or zero
+            if (previous != 0)
             {
-                var rate = (current - previous) / previous;
+                var rate = (current - previous) / Math.Abs(previous);
                 // Cap extreme values to prevent unrealistic projections
                 rate = Math.Max(-0.5m, Math.Min(0.5m, rate));
                 growthRates.Add(rate);

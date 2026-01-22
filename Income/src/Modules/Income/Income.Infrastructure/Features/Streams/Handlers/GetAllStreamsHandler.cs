@@ -24,6 +24,12 @@ internal sealed class GetAllStreamsHandler(IDbContextFactory<IncomeDbContext> db
             dbQuery = dbQuery.Where(x => x.StreamType == query.StreamType.Value);
         }
 
+        // Filter by ProviderId if specified
+        if (!string.IsNullOrEmpty(query.ProviderId))
+        {
+            dbQuery = dbQuery.Where(x => x.ProviderId == query.ProviderId);
+        }
+
         var entities = await dbQuery.ToListAsync(ct);
         var dtos = entities.Select(e => e.ToDomain().ToDto()).ToList();
         return Result.Ok<IReadOnlyList<StreamDto>>(dtos);

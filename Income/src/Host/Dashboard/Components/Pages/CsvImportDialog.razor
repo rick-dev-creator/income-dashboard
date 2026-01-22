@@ -1,0 +1,762 @@
+@using Income.Application.Connectors
+@using Income.Application.Services.CsvImport
+@using Income.Application.Services.Streams
+@using Dashboard.Services
+@using System.Text.Json
+@inject IConnectorRegistry ConnectorRegistry
+@inject ICsvImportService CsvImportService
+@inject ISnackbar Snackbar
+@inject IJSRuntime JS
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Upload" Class="mr-2" />
+            @GetDialogTitle()
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        @* Step 1: Select Bank *@
+        @if (_step == Step.SelectBank)
+        {
+            <MudText Class="mb-4">Select your bank to import transactions:</MudText>
+            <MudStack Spacing="2">
+                @foreach (var connector in _csvImportConnectors)
+                {
+                    <MudCard Class="cursor-pointer hover-card" @onclick="() => SelectBank(connector)" Elevation="2">
+                        <MudCardContent>
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                                <MudAvatar Color="Color.Primary">
+                                    <MudIcon Icon="@Icons.Material.Filled.AccountBalance" />
+                                </MudAvatar>
+                                <div>
+                                    <MudText Typo="Typo.subtitle1">@connector.BankName</MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                        @connector.DefaultCurrency - @connector.ProviderType
+                                    </MudText>
+                                </div>
+                            </MudStack>
+                        </MudCardContent>
+                    </MudCard>
+                }
+            </MudStack>
+            @if (!_csvImportConnectors.Any())
+            {
+                <MudAlert Severity="Severity.Info">No bank connectors available yet.</MudAlert>
+            }
+        }
+
+        @* Step 2: Export Streams for Classification *@
+        else if (_step == Step.ExportStreams)
+        {
+            <MudStack Spacing="3">
+                <MudAlert Severity="Severity.Info" Dense="true">
+                    <MudText Typo="Typo.body2">
+                        <strong>Step 1:</strong> Download the classification package below and use Claude to classify your bank CSV.
+                    </MudText>
+                </MudAlert>
+
+                <MudCard>
+                    <MudCardContent>
+                        <MudText Typo="Typo.subtitle2" Class="mb-2">Classification Instructions</MudText>
+                        <MudTextField T="string" Value="@_exportPackage?.ClassificationInstructions" Lines="8"
+                                      ReadOnly="true" Variant="Variant.Outlined" Class="monospace-text" />
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Download"
+                                   OnClick="DownloadInstructions">
+                            Download Instructions
+                        </MudButton>
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary"
+                                   StartIcon="@Icons.Material.Filled.Download"
+                                   OnClick="DownloadStreamsJson">
+                            Download Streams JSON
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
+
+                @* Data Cleaning Prompt Section *@
+                <MudExpansionPanels>
+                    <MudExpansionPanel Text="Data Cleaning Prompt (Optional)" Icon="@Icons.Material.Filled.CleaningServices">
+                        <MudStack Spacing="2">
+                            <MudAlert Severity="Severity.Warning" Dense="true">
+                                <MudText Typo="Typo.body2">
+                                    Use this prompt to clean false income entries (ATM withdrawals, self-transfers) before importing.
+                                </MudText>
+                            </MudAlert>
+
+                            <MudTextField T="string" Value="@_cleaningPrompt" Lines="12"
+                                          ReadOnly="true" Variant="Variant.Outlined" Class="monospace-text" />
+
+                            <MudStack Row="true" Spacing="2">
+                                <MudButton Variant="Variant.Filled"
+                                           Color="@(_promptCopied ? Color.Success : Color.Warning)"
+                                           StartIcon="@(_promptCopied ? Icons.Material.Filled.Check : Icons.Material.Filled.ContentCopy)"
+                                           OnClick="CopyCleaningPrompt">
+                                    @(_promptCopied ? "Copied!" : "Copy Cleaning Prompt")
+                                </MudButton>
+                                <MudButton Variant="Variant.Outlined" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Download"
+                                           OnClick="DownloadCleaningPrompt">
+                                    Download Full Prompt
+                                </MudButton>
+                            </MudStack>
+
+                            <MudDivider Class="my-2" />
+
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                <strong>Patterns detected:</strong> ATM (Seven Bank, Yucho), Self-transfers, Wise/Savings
+                            </MudText>
+                        </MudStack>
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+
+                <MudCard>
+                    <MudCardContent>
+                        <MudText Typo="Typo.subtitle2" Class="mb-2">Expected Output Format</MudText>
+                        <MudText Typo="Typo.body2" Class="monospace-text">@_exportPackage?.ExpectedOutputFormat</MudText>
+                    </MudCardContent>
+                </MudCard>
+
+                <MudAlert Severity="Severity.Warning" Dense="true">
+                    <MudText Typo="Typo.body2">
+                        After Claude classifies your bank CSV, proceed to the next step to upload the classified file.
+                    </MudText>
+                </MudAlert>
+            </MudStack>
+        }
+
+        @* Step 3: Upload Classified CSV *@
+        else if (_step == Step.UploadClassified)
+        {
+            <MudStack Spacing="3">
+                <MudAlert Severity="Severity.Info" Dense="true">
+                    <MudText Typo="Typo.body2">
+                        <strong>Step 2:</strong> Upload the classified CSV file that Claude Code generated.
+                    </MudText>
+                </MudAlert>
+
+                <MudFileUpload T="IBrowserFile" FilesChanged="OnFileSelected" Accept=".csv"
+                               MaximumFileCount="1">
+                    <ActivatorContent>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.CloudUpload">
+                            Select Classified CSV
+                        </MudButton>
+                    </ActivatorContent>
+                </MudFileUpload>
+
+                @if (_selectedFile is not null)
+                {
+                    <MudAlert Severity="Severity.Success" Dense="true">
+                        <MudText Typo="Typo.body2">File selected: @_selectedFile.Name (@FormatFileSize(_selectedFile.Size))</MudText>
+                    </MudAlert>
+                }
+
+                @if (!string.IsNullOrEmpty(_parseError))
+                {
+                    <MudAlert Severity="Severity.Error" Dense="true">@_parseError</MudAlert>
+                }
+
+                @if (_classifiedTransactions?.Any() == true)
+                {
+                    <MudAlert Severity="Severity.Success" Dense="true">
+                        <MudText Typo="Typo.body2">
+                            Parsed @_classifiedTransactions.Count transactions
+                            (@_classifiedTransactions.Count(t => !t.RequiresNewStream) mapped,
+                            @_classifiedTransactions.Count(t => t.RequiresNewStream) new streams)
+                        </MudText>
+                    </MudAlert>
+                }
+            </MudStack>
+        }
+
+        @* Step 4: Review New Streams *@
+        else if (_step == Step.ReviewNewStreams)
+        {
+            <MudStack Spacing="3">
+                <MudAlert Severity="Severity.Info" Dense="true">
+                    <MudText Typo="Typo.body2">
+                        <strong>Step 3:</strong> Review the new streams that will be created from unclassified transactions.
+                    </MudText>
+                </MudAlert>
+
+                @if (_newStreamsToCreate.Any())
+                {
+                    <MudTable Items="@_newStreamsToCreate" Dense="true" Hover="true">
+                        <HeaderContent>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Category</MudTh>
+                            <MudTh>Type</MudTh>
+                            <MudTh>Transactions</MudTh>
+                            <MudTh>Create</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd>
+                                <MudTextField T="string" @bind-Value="context.Name" Variant="Variant.Text" Margin="Margin.Dense" />
+                            </MudTd>
+                            <MudTd>
+                                <MudSelect T="string" @bind-Value="context.Category" Variant="Variant.Text" Margin="Margin.Dense">
+                                    @* Income categories *@
+                                    <MudSelectItem Value="@("Salary")">Salary</MudSelectItem>
+                                    <MudSelectItem Value="@("Freelance")">Freelance</MudSelectItem>
+                                    <MudSelectItem Value="@("Business")">Business</MudSelectItem>
+                                    <MudSelectItem Value="@("Trading")">Trading</MudSelectItem>
+                                    <MudSelectItem Value="@("Investment")">Investment</MudSelectItem>
+                                    <MudSelectItem Value="@("Dividend")">Dividend</MudSelectItem>
+                                    <MudSelectItem Value="@("Rental")">Rental</MudSelectItem>
+                                    <MudSelectItem Value="@("Bonus")">Bonus</MudSelectItem>
+                                    <MudSelectItem Value="@("Gift")">Gift</MudSelectItem>
+                                    <MudSelectItem Value="@("Refund")">Refund</MudSelectItem>
+                                    @* Outcome categories *@
+                                    <MudSelectItem Value="@("Housing")">Housing</MudSelectItem>
+                                    <MudSelectItem Value="@("Utilities")">Utilities</MudSelectItem>
+                                    <MudSelectItem Value="@("Food")">Food</MudSelectItem>
+                                    <MudSelectItem Value="@("Dining")">Dining</MudSelectItem>
+                                    <MudSelectItem Value="@("Transport")">Transport</MudSelectItem>
+                                    <MudSelectItem Value="@("Travel")">Travel</MudSelectItem>
+                                    <MudSelectItem Value="@("Shopping")">Shopping</MudSelectItem>
+                                    <MudSelectItem Value="@("Entertainment")">Entertainment</MudSelectItem>
+                                    <MudSelectItem Value="@("Subscription")">Subscription</MudSelectItem>
+                                    <MudSelectItem Value="@("Software")">Software</MudSelectItem>
+                                    <MudSelectItem Value="@("Healthcare")">Healthcare</MudSelectItem>
+                                    <MudSelectItem Value="@("Education")">Education</MudSelectItem>
+                                    <MudSelectItem Value="@("Insurance")">Insurance</MudSelectItem>
+                                    <MudSelectItem Value="@("Services")">Services</MudSelectItem>
+                                    <MudSelectItem Value="@("Fees")">Fees</MudSelectItem>
+                                    <MudSelectItem Value="@("Taxes")">Taxes</MudSelectItem>
+                                    <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                                </MudSelect>
+                            </MudTd>
+                            <MudTd>
+                                <MudSelect T="StreamTypeDto" @bind-Value="context.StreamType" Variant="Variant.Text" Margin="Margin.Dense">
+                                    <MudSelectItem Value="StreamTypeDto.Income">Income</MudSelectItem>
+                                    <MudSelectItem Value="StreamTypeDto.Outcome">Outcome</MudSelectItem>
+                                </MudSelect>
+                            </MudTd>
+                            <MudTd>@context.TransactionCount</MudTd>
+                            <MudTd>
+                                <MudCheckBox T="bool" @bind-Value="context.ShouldCreate" Color="Color.Primary" />
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                }
+                else
+                {
+                    <MudAlert Severity="Severity.Success" Dense="true">
+                        All transactions were mapped to existing streams. No new streams needed.
+                    </MudAlert>
+                }
+            </MudStack>
+        }
+
+        @* Step 5: Select Aggregation Mode *@
+        else if (_step == Step.SelectAggregation)
+        {
+            <MudStack Spacing="3">
+                <MudAlert Severity="Severity.Info" Dense="true">
+                    <MudText Typo="Typo.body2">
+                        <strong>Step 4:</strong> Choose how to aggregate transactions into snapshots.
+                    </MudText>
+                </MudAlert>
+
+                <MudRadioGroup T="ImportAggregationMode" @bind-Value="_aggregationMode">
+                    <MudStack Spacing="2">
+                        <MudCard Class="pa-2">
+                            <MudRadio Value="ImportAggregationMode.Individual" Color="Color.Primary">
+                                <MudText Typo="Typo.subtitle1">Individual Transactions</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                    Each transaction becomes a separate snapshot. Best for detailed tracking.
+                                </MudText>
+                            </MudRadio>
+                        </MudCard>
+                        <MudCard Class="pa-2">
+                            <MudRadio Value="ImportAggregationMode.DailyPerStream" Color="Color.Primary">
+                                <MudText Typo="Typo.subtitle1">Daily Aggregation</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                    Group transactions by day per stream. Good balance of detail and clarity.
+                                </MudText>
+                            </MudRadio>
+                        </MudCard>
+                        <MudCard Class="pa-2">
+                            <MudRadio Value="ImportAggregationMode.MonthlyPerStream" Color="Color.Primary">
+                                <MudText Typo="Typo.subtitle1">Monthly Aggregation</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">
+                                    Group transactions by month per stream. Best for high-level overview.
+                                </MudText>
+                            </MudRadio>
+                        </MudCard>
+                    </MudStack>
+                </MudRadioGroup>
+
+                <MudAlert Severity="Severity.Info" Dense="true">
+                    <MudText Typo="Typo.body2">
+                        <strong>Summary:</strong> @_classifiedTransactions?.Count transactions will be imported
+                        into @GetUniqueStreamCount() streams.
+                    </MudText>
+                </MudAlert>
+            </MudStack>
+        }
+
+        @* Step 6: Processing *@
+        else if (_step == Step.Processing)
+        {
+            <MudStack Spacing="3" AlignItems="AlignItems.Center" Class="py-4">
+                <MudProgressCircular Indeterminate="true" Size="Size.Large" Color="Color.Primary" />
+                <MudText Typo="Typo.h6">Importing transactions...</MudText>
+                <MudText Typo="Typo.body2" Color="Color.Secondary">@_processingStatus</MudText>
+            </MudStack>
+        }
+
+        @* Step 7: Complete *@
+        else if (_step == Step.Complete)
+        {
+            <MudStack Spacing="3">
+                <MudAlert Severity="Severity.Success">
+                    <MudText Typo="Typo.h6">Import Complete!</MudText>
+                </MudAlert>
+
+                @if (_importResult is not null)
+                {
+                    <MudSimpleTable Dense="true">
+                        <tbody>
+                            <tr>
+                                <td><strong>Transactions Processed</strong></td>
+                                <td>@_importResult.TransactionsProcessed</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Snapshots Created</strong></td>
+                                <td>@_importResult.SnapshotsCreated</td>
+                            </tr>
+                            <tr>
+                                <td><strong>New Streams Created</strong></td>
+                                <td>@_importResult.NewStreamsCreated</td>
+                            </tr>
+                        </tbody>
+                    </MudSimpleTable>
+
+                    @if (_importResult.Warnings.Any())
+                    {
+                        <MudExpansionPanels>
+                            <MudExpansionPanel Text="@($"Warnings ({_importResult.Warnings.Count})")">
+                                <MudStack Spacing="2">
+                                    <MudButton Variant="Variant.Outlined" Size="Size.Small"
+                                               StartIcon="@Icons.Material.Filled.ContentCopy"
+                                               OnClick="CopyWarningsToClipboard">
+                                        Copy All Warnings
+                                    </MudButton>
+                                    <MudList T="string" Dense="true">
+                                        @foreach (var warning in _importResult.Warnings)
+                                        {
+                                            <MudListItem Icon="@Icons.Material.Filled.Warning" IconColor="Color.Warning">
+                                                @warning
+                                            </MudListItem>
+                                        }
+                                    </MudList>
+                                </MudStack>
+                            </MudExpansionPanel>
+                        </MudExpansionPanels>
+                    }
+                }
+            </MudStack>
+        }
+    </DialogContent>
+    <DialogActions>
+        @if (_step == Step.SelectBank)
+        {
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+        }
+        else if (_step == Step.ExportStreams)
+        {
+            <MudButton OnClick="GoBack">Back</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="GoToUpload">
+                Continue to Upload
+            </MudButton>
+        }
+        else if (_step == Step.UploadClassified)
+        {
+            <MudButton OnClick="GoBack">Back</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled"
+                       Disabled="@(_classifiedTransactions is null || !_classifiedTransactions.Any())"
+                       OnClick="GoToReviewNewStreams">
+                Continue
+            </MudButton>
+        }
+        else if (_step == Step.ReviewNewStreams)
+        {
+            <MudButton OnClick="GoBack">Back</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="GoToAggregation">
+                Continue
+            </MudButton>
+        }
+        else if (_step == Step.SelectAggregation)
+        {
+            <MudButton OnClick="GoBack">Back</MudButton>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="StartImport">
+                Import Transactions
+            </MudButton>
+        }
+        else if (_step == Step.Complete)
+        {
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Close">
+                Done
+            </MudButton>
+        }
+    </DialogActions>
+</MudDialog>
+
+<style>
+    .hover-card:hover {
+        background-color: var(--mud-palette-action-default-hover);
+    }
+    .cursor-pointer {
+        cursor: pointer;
+    }
+    .monospace-text {
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 0.85rem;
+    }
+</style>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    private enum Step { SelectBank, ExportStreams, UploadClassified, ReviewNewStreams, SelectAggregation, Processing, Complete }
+    private Step _step = Step.SelectBank;
+
+    private IReadOnlyList<ICsvImportConnector> _csvImportConnectors = [];
+    private ICsvImportConnector? _selectedConnector;
+    private StreamExportPackage? _exportPackage;
+
+    private IBrowserFile? _selectedFile;
+    private string? _parseError;
+    private IReadOnlyList<ClassifiedTransaction>? _classifiedTransactions;
+    private List<NewStreamEditModel> _newStreamsToCreate = [];
+    private ImportAggregationMode _aggregationMode = ImportAggregationMode.DailyPerStream;
+    private string _processingStatus = "";
+    private CsvImportResult? _importResult;
+    private bool _promptCopied = false;
+
+    private readonly string _cleaningPrompt = """
+        # CSV Data Cleaning Instructions
+
+        Clean the bank CSV by removing false income entries before classification.
+
+        ## Remove these transaction types:
+
+        ### 1. ATM Withdrawals (false income - it's your own money)
+        - Pattern: Description contains "カード セブン" (Seven Bank ATM)
+        - Pattern: Description contains "カード ゆうちょ" (Yucho Bank ATM)
+        - Pattern: Any "ATM" + IsDeposit = true
+
+        ### 2. Self-Transfers (movement between your own accounts)
+        - Pattern: Description contains your name in katakana
+        - Pattern: Description contains your name in full-width (ＡＢＣＤ)
+        - Pattern: "振込" (transfer) + your name
+
+        ### 3. Savings/Investment Transfers (not expenses)
+        - Pattern: "Wise" or "TransferWise"
+        - Pattern: Transfers to your other accounts
+        - Pattern: "積立" (scheduled savings)
+
+        ## Expected Result:
+        Keep only: Real income (給与, 賞与), Real expenses (purchases, bills)
+        Remove: ATM, self-transfers, savings movements
+
+        ## Output:
+        Create cleaned CSV with columns:
+        Date,Description,Amount,IsDeposit,StreamId,StreamName,Category,Classification
+        """;
+
+    private readonly string _fullCleaningPrompt = """
+        # CSV Import Wizard con Limpieza Automatica - Income Dashboard
+
+        ## Contexto del Proyecto
+
+        Aplicacion de dashboard financiero con modelo "Life Economics":
+        - **Income** (StreamType = 0): Salarios, ingresos por trabajo
+        - **Fixed** (StreamType = 1): Gastos fijos mensuales
+        - **Variable** (StreamType = 1): Gastos variables
+        - **Savings** (StreamType = 1): Transferencias a ahorros (EXCLUIR)
+
+        ## Tarea: Limpiar CSV de Transacciones Bancarias
+
+        ### Paso 1: Identificar Transacciones Falsas de Income
+
+        **Retiros de ATM** (dinero que ya era tuyo, no es ingreso):
+        - Patron: "カード セブン" (Seven Bank ATM)
+        - Patron: "カード ゆうちょ" (Yucho Bank ATM)
+        - Patron: "ATM" + IsDeposit = true
+
+        **Auto-transferencias** (movimiento entre tus propias cuentas):
+        - Patron: Nombre en katakana (ej: "マルテイネズポンズリカルド")
+        - Patron: Nombre en full-width (ej: "ＲＩＣＡＲＤＯ")
+        - Patron: "振込" (transferencia) + nombre propio
+
+        **Reembolsos/Devoluciones**:
+        - Patron: "返金" (reembolso)
+        - Patron: "取消" (cancelacion)
+
+        ### Paso 2: Clasificar Transacciones Validas
+
+        **Income** (depositos reales):
+        - "給与" (salario), "賞与" (bonus), "配当" (dividendos)
+
+        **Fixed** (gastos fijos):
+        - "家賃" (renta), "電気" (electricidad), "ガス", "水道", "保険"
+
+        **Variable** (gastos variables):
+        - "コンビニ", "スーパー", "Amazon", "楽天"
+
+        **Savings** (EXCLUIR del calculo):
+        - "Wise", "TransferWise", "積立"
+
+        ### Paso 3: Generar CSV Limpio
+
+        Formato de salida:
+        ```
+        Date,Description,Amount,IsDeposit,StreamId,StreamName,Category,Classification
+        ```
+
+        Donde Classification es: Income, Fixed, Variable (NO incluir Savings)
+
+        ### Notas Tecnicas
+
+        1. **Encoding**: Archivos japoneses usan Shift-JIS
+        2. **Full-width chars**: Normalizar ＡＢＣＤ a ABCD antes de comparar
+        3. **Net Flow**: Income - (Fixed + Variable). Savings NO se resta.
+
+        ### Resultado Esperado
+
+        Totales de ejemplo despues de limpieza:
+        - Income: $100,751
+        - Variable: $70,434
+        - Fixed: $2,298
+        - Net Flow: +$28,019
+        """;
+
+    protected override void OnInitialized()
+    {
+        _csvImportConnectors = ConnectorRegistry.GetCsvImport();
+    }
+
+    private string GetDialogTitle() => _step switch
+    {
+        Step.SelectBank => "Import Bank Transactions",
+        Step.ExportStreams => $"Export for Claude - {_selectedConnector?.BankName}",
+        Step.UploadClassified => "Upload Classified CSV",
+        Step.ReviewNewStreams => "Review New Streams",
+        Step.SelectAggregation => "Aggregation Options",
+        Step.Processing => "Importing...",
+        Step.Complete => "Import Complete",
+        _ => "Import Transactions"
+    };
+
+    private void Cancel() => MudDialog.Cancel();
+    private void Close() => MudDialog.Close(DialogResult.Ok(true));
+
+    private void GoBack()
+    {
+        _step = _step switch
+        {
+            Step.ExportStreams => Step.SelectBank,
+            Step.UploadClassified => Step.ExportStreams,
+            Step.ReviewNewStreams => Step.UploadClassified,
+            Step.SelectAggregation => Step.ReviewNewStreams,
+            _ => _step
+        };
+    }
+
+    private async Task SelectBank(ICsvImportConnector connector)
+    {
+        _selectedConnector = connector;
+        var result = await CsvImportService.ExportStreamsForClassificationAsync(connector.ProviderId);
+        if (result.IsSuccess)
+        {
+            _exportPackage = result.Value;
+            _step = Step.ExportStreams;
+        }
+        else
+        {
+            Snackbar.Add($"Error: {result.Errors.First().Message}", Severity.Error);
+        }
+    }
+
+    private void GoToUpload() => _step = Step.UploadClassified;
+
+    private async Task OnFileSelected(IBrowserFile file)
+    {
+        _selectedFile = file;
+        _parseError = null;
+        _classifiedTransactions = null;
+
+        try
+        {
+            using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024); // 10MB max
+            using var reader = new StreamReader(stream);
+            var content = await reader.ReadToEndAsync();
+
+            var result = CsvImportService.ValidateClassifiedCsv(_selectedConnector!.ProviderId, content);
+            if (result.IsSuccess)
+            {
+                _classifiedTransactions = result.Value;
+                Snackbar.Add($"Successfully parsed {_classifiedTransactions.Count} transactions", Severity.Success);
+            }
+            else
+            {
+                _parseError = result.Errors.First().Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            _parseError = $"Error reading file: {ex.Message}";
+        }
+    }
+
+    private void GoToReviewNewStreams()
+    {
+        // Build list of new streams from transactions that need them
+        _newStreamsToCreate = _classifiedTransactions!
+            .Where(t => t.RequiresNewStream && !string.IsNullOrEmpty(t.SuggestedNewStreamName))
+            .GroupBy(t => t.SuggestedNewStreamName)
+            .Select(g => new NewStreamEditModel
+            {
+                Name = g.Key!,
+                Category = g.First().SuggestedCategory ?? "Other",
+                StreamType = g.First().IsDeposit ? StreamTypeDto.Income : StreamTypeDto.Outcome,
+                TransactionCount = g.Count(),
+                ShouldCreate = true
+            })
+            .ToList();
+
+        _step = Step.ReviewNewStreams;
+    }
+
+    private void GoToAggregation() => _step = Step.SelectAggregation;
+
+    private int GetUniqueStreamCount()
+    {
+        if (_classifiedTransactions is null) return 0;
+
+        var existingStreamIds = _classifiedTransactions
+            .Where(t => !string.IsNullOrEmpty(t.StreamId))
+            .Select(t => t.StreamId!)
+            .Distinct()
+            .Count();
+
+        var newStreamCount = _newStreamsToCreate.Count(s => s.ShouldCreate);
+
+        return existingStreamIds + newStreamCount;
+    }
+
+    private async Task StartImport()
+    {
+        _step = Step.Processing;
+        _processingStatus = "Creating new streams...";
+        StateHasChanged();
+
+        try
+        {
+            var newStreams = _newStreamsToCreate
+                .Where(s => s.ShouldCreate)
+                .Select(s => new NewStreamRequest(s.Name, s.Category, s.StreamType))
+                .ToList();
+
+            _processingStatus = $"Importing {_classifiedTransactions!.Count} transactions...";
+            StateHasChanged();
+
+            var result = await CsvImportService.ImportClassifiedTransactionsAsync(
+                _selectedConnector!.ProviderId,
+                _classifiedTransactions,
+                newStreams,
+                _aggregationMode);
+
+            if (result.IsSuccess)
+            {
+                _importResult = result.Value;
+                _step = Step.Complete;
+            }
+            else
+            {
+                Snackbar.Add($"Import failed: {result.Errors.First().Message}", Severity.Error);
+                _step = Step.SelectAggregation;
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Import error: {ex.Message}", Severity.Error);
+            _step = Step.SelectAggregation;
+        }
+    }
+
+    private async Task DownloadInstructions()
+    {
+        if (_exportPackage is null) return;
+
+        var content = _exportPackage.ClassificationInstructions;
+        var fileName = $"classification-instructions-{_selectedConnector!.ProviderId}.md";
+        await DownloadTextFile(fileName, content);
+    }
+
+    private async Task DownloadStreamsJson()
+    {
+        if (_exportPackage is null) return;
+
+        var json = JsonSerializer.Serialize(_exportPackage.Streams, new JsonSerializerOptions { WriteIndented = true });
+        var fileName = $"streams-{DateTime.Now:yyyyMMdd}.json";
+        await DownloadTextFile(fileName, json);
+    }
+
+    private async Task DownloadTextFile(string fileName, string content)
+    {
+        var bytes = System.Text.Encoding.UTF8.GetBytes(content);
+        var base64 = Convert.ToBase64String(bytes);
+        await JS.InvokeVoidAsync("downloadFile", fileName, base64);
+    }
+
+    private static string FormatFileSize(long bytes)
+    {
+        if (bytes < 1024) return $"{bytes} B";
+        if (bytes < 1024 * 1024) return $"{bytes / 1024.0:F1} KB";
+        return $"{bytes / (1024.0 * 1024.0):F1} MB";
+    }
+
+    private async Task CopyWarningsToClipboard()
+    {
+        if (_importResult?.Warnings.Any() != true) return;
+
+        var text = string.Join(Environment.NewLine, _importResult.Warnings);
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
+        Snackbar.Add($"Copied {_importResult.Warnings.Count} warnings to clipboard", Severity.Info);
+    }
+
+    private async Task CopyCleaningPrompt()
+    {
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", _fullCleaningPrompt);
+        _promptCopied = true;
+        StateHasChanged();
+        Snackbar.Add("Cleaning prompt copied to clipboard", Severity.Success);
+
+        await Task.Delay(2000);
+        _promptCopied = false;
+        StateHasChanged();
+    }
+
+    private async Task DownloadCleaningPrompt()
+    {
+        var fileName = $"cleaning-prompt-{_selectedConnector?.BankName ?? "bank"}.md";
+        await DownloadTextFile(fileName, _fullCleaningPrompt);
+        Snackbar.Add("Cleaning prompt downloaded", Severity.Success);
+    }
+
+    private class NewStreamEditModel
+    {
+        public string Name { get; set; } = "";
+        public string Category { get; set; } = "Other";
+        public StreamTypeDto StreamType { get; set; } = StreamTypeDto.Outcome;
+        public int TransactionCount { get; set; }
+        public bool ShouldCreate { get; set; } = true;
+    }
+}

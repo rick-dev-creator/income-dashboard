@@ -12,7 +12,7 @@ internal sealed class GetDistributionHandler(
 {
     public async Task<Result<DistributionDto>> HandleAsync(GetDistributionQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType, query.ProviderId), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<DistributionDto>();
 
@@ -29,7 +29,20 @@ internal sealed class GetDistributionHandler(
                         (!query.EndDate.HasValue || x.Snapshot.Date <= query.EndDate.Value))
             .ToList();
 
-        var totalUsd = snapshotsWithStreams.Sum(x => x.Snapshot.UsdAmount);
+        // Calculate total based on mode:
+        // - If StreamType filter is applied: sum all amounts
+        // - If no filter (Net Flow mode): Income - Outcome
+        decimal totalUsd;
+        if (query.StreamType.HasValue)
+        {
+            totalUsd = snapshotsWithStreams.Sum(x => x.Snapshot.UsdAmount);
+        }
+        else
+        {
+            var incomeTotal = snapshotsWithStreams.Where(x => x.Stream.StreamType == 0).Sum(x => x.Snapshot.UsdAmount);
+            var outcomeTotal = snapshotsWithStreams.Where(x => x.Stream.StreamType == 1).Sum(x => x.Snapshot.UsdAmount);
+            totalUsd = incomeTotal - outcomeTotal;
+        }
 
         var grouped = query.GroupBy.ToLower() switch
         {

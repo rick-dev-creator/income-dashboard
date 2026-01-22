@@ -10,7 +10,7 @@ internal sealed class GetTrendHandler(
 {
     public async Task<Result<TrendDto>> HandleAsync(GetTrendQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType, query.ProviderId), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<TrendDto>();
 
@@ -22,9 +22,14 @@ internal sealed class GetTrendHandler(
             .SelectMany(s => s.Snapshots)
             .ToList();
 
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var periodStart = GetPeriodStart(query.Period, query.PeriodsBack);
 
-        var groupedByPeriod = GroupByPeriod(filteredSnapshots, query.Period)
+        // For fair comparison, filter snapshots to equivalent periods
+        // e.g., for monthly: only include days 1-22 of each month if today is the 22nd
+        var equivalentSnapshots = FilterToEquivalentPeriods(filteredSnapshots, query.Period, today);
+
+        var groupedByPeriod = GroupByPeriod(equivalentSnapshots, query.Period)
             .Where(g => g.Key >= periodStart)
             .OrderBy(g => g.Key)
             .ToList();
@@ -51,7 +56,7 @@ internal sealed class GetTrendHandler(
             previousAmount = amount;
         }
 
-        var overallGrowthRate = points.Count >= 2
+        var overallGrowthRate = points.Count >= 2 && points[0].AmountUsd != 0
             ? ((points[^1].AmountUsd - points[0].AmountUsd) / points[0].AmountUsd) * 100
             : 0;
 
@@ -72,6 +77,40 @@ internal sealed class GetTrendHandler(
             Direction: direction,
             AverageGrowthPerPeriodUsd: Math.Round((decimal)avgGrowth, 2),
             Points: points));
+    }
+
+    /// <summary>
+    /// Filters snapshots to equivalent periods for fair comparison.
+    /// For example, if today is Jan 22, only includes days 1-22 of each month.
+    /// </summary>
+    private static List<Income.Contracts.DTOs.SnapshotDto> FilterToEquivalentPeriods(
+        List<Income.Contracts.DTOs.SnapshotDto> snapshots,
+        string period,
+        DateOnly today)
+    {
+        return period.ToLower() switch
+        {
+            "monthly" => snapshots.Where(s => s.Date.Day <= today.Day).ToList(),
+            "weekly" => snapshots.Where(s => (int)s.Date.DayOfWeek <= (int)today.DayOfWeek).ToList(),
+            "quarterly" => FilterQuarterlyEquivalent(snapshots, today),
+            "yearly" => snapshots.Where(s => s.Date.DayOfYear <= today.DayOfYear).ToList(),
+            _ => snapshots // Daily doesn't need filtering
+        };
+    }
+
+    private static List<Income.Contracts.DTOs.SnapshotDto> FilterQuarterlyEquivalent(
+        List<Income.Contracts.DTOs.SnapshotDto> snapshots,
+        DateOnly today)
+    {
+        var currentQuarterStart = new DateOnly(today.Year, ((today.Month - 1) / 3) * 3 + 1, 1);
+        var dayIntoQuarter = today.DayNumber - currentQuarterStart.DayNumber;
+
+        return snapshots.Where(s =>
+        {
+            var snapshotQuarterStart = new DateOnly(s.Date.Year, ((s.Date.Month - 1) / 3) * 3 + 1, 1);
+            var snapshotDayIntoQuarter = s.Date.DayNumber - snapshotQuarterStart.DayNumber;
+            return snapshotDayIntoQuarter <= dayIntoQuarter;
+        }).ToList();
     }
 
     private static DateOnly GetPeriodStart(string period, int periodsBack)

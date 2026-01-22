@@ -10,7 +10,13 @@ public enum ConnectorKind
     /// <summary>
     /// Auto-generates snapshots based on recurring schedule (Salary, Rent, etc.)
     /// </summary>
-    Recurring
+    Recurring,
+
+    /// <summary>
+    /// Imports transactions from bank CSV files that have been pre-classified.
+    /// Uses Claude Code for transaction classification before import.
+    /// </summary>
+    CsvImport
 }
 
 public enum RecurringFrequency

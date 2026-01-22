@@ -22,6 +22,11 @@ public interface IConnectorRegistry
     IReadOnlyList<IRecurringConnector> GetRecurring();
 
     /// <summary>
+    /// Gets all CSV import connectors (bank imports).
+    /// </summary>
+    IReadOnlyList<ICsvImportConnector> GetCsvImport();
+
+    /// <summary>
     /// Gets a connector by its provider ID.
     /// </summary>
     IIncomeConnector? GetById(string providerId);
@@ -35,4 +40,9 @@ public interface IConnectorRegistry
     /// Gets a recurring connector by its provider ID.
     /// </summary>
     IRecurringConnector? GetRecurringById(string providerId);
+
+    /// <summary>
+    /// Gets a CSV import connector by its provider ID.
+    /// </summary>
+    ICsvImportConnector? GetCsvImportById(string providerId);
 }

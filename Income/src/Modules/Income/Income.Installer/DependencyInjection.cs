@@ -1,11 +1,14 @@
 using Income.Application.Connectors;
 using Income.Application.Services;
+using Income.Application.Services.CsvImport;
+using Income.Application.Services.DataManagement;
 using Income.Application.Services.Notifications;
 using Income.Application.Services.Providers;
 using Income.Application.Services.Streams;
 using Income.Contracts.Queries;
 using Income.Infrastructure.Connectors;
 using Income.Infrastructure.Connectors.BuiltIn;
+using Income.Infrastructure.Connectors.CsvImport;
 using Income.Infrastructure.Features.Providers.Handlers;
 using Income.Infrastructure.Features.Streams.Handlers;
 using Income.Infrastructure.Jobs;
@@ -42,6 +45,8 @@ public static class DependencyInjection
         services.AddScoped<IStreamService, StreamService>();
         services.AddScoped<IProviderService, ProviderService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<ICsvImportService, CsvImportService>();
+        services.AddScoped<IDataManagementService, DataManagementService>();
 
         // Activity Log (Singleton for cross-scope access from background jobs)
         services.AddSingleton<IActivityLogService, ActivityLogService>();
@@ -51,6 +56,9 @@ public static class DependencyInjection
 
         // Built-in Connectors
         services.AddSingleton<IRecurringConnector, FixedIncomeConnector>();
+
+        // CSV Import Connectors
+        services.AddSingleton<ICsvImportConnector, SonyBankConnector>();
 
         // Background Jobs
         services.AddHostedService<SyncJob>();

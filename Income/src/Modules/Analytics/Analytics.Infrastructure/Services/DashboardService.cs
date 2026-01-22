@@ -13,17 +13,16 @@ internal sealed class DashboardService(
     IGetDailyRateHandler dailyRateHandler,
     IGetStackedTimeSeriesHandler stackedTimeSeriesHandler,
     IGetStreamTrendsHandler streamTrendsHandler,
-    IGetProjectionHandler projectionHandler,
-    IGetTrendHandler trendHandler) : IDashboardService
+    IGetProjectionHandler projectionHandler) : IDashboardService
 {
-    public async Task<Result<DashboardSummary>> GetSummaryAsync(int? streamType = null, CancellationToken ct = default)
+    public async Task<Result<DashboardSummary>> GetSummaryAsync(int? streamType = null, string? providerId = null, CancellationToken ct = default)
     {
-        var summaryResult = await summaryHandler.HandleAsync(new GetPortfolioSummaryQuery(StreamType: streamType), ct);
+        var summaryResult = await summaryHandler.HandleAsync(new GetPortfolioSummaryQuery(StreamType: streamType, ProviderId: providerId), ct);
         if (summaryResult.IsFailed)
             return summaryResult.ToResult<DashboardSummary>();
 
         var momResult = await periodComparisonHandler.HandleAsync(
-            new GetPeriodComparisonQuery("MoM", null, StreamType: streamType), ct);
+            new GetPeriodComparisonQuery("MoM", null, StreamType: streamType, ProviderId: providerId), ct);
 
         var summary = summaryResult.Value;
         PeriodComparison? mom = null;
@@ -56,9 +55,10 @@ internal sealed class DashboardService(
         string granularity,
         string? category = null,
         int? streamType = null,
+        string? providerId = null,
         CancellationToken ct = default)
     {
-        var query = new GetIncomeTimeSeriesQuery(startDate, endDate, granularity, StreamType: streamType)
+        var query = new GetIncomeTimeSeriesQuery(startDate, endDate, granularity, StreamType: streamType, ProviderId: providerId)
         {
             Category = category
         };
@@ -82,9 +82,10 @@ internal sealed class DashboardService(
         DateOnly? startDate = null,
         DateOnly? endDate = null,
         int? streamType = null,
+        string? providerId = null,
         CancellationToken ct = default)
     {
-        var query = new GetDistributionQuery(groupBy, StreamType: streamType)
+        var query = new GetDistributionQuery(groupBy, StreamType: streamType, ProviderId: providerId)
         {
             StartDate = startDate,
             EndDate = endDate
@@ -104,9 +105,10 @@ internal sealed class DashboardService(
     public async Task<Result<IReadOnlyList<TopPerformerItem>>> GetTopPerformersAsync(
         int topN = 5,
         int? streamType = null,
+        string? providerId = null,
         CancellationToken ct = default)
     {
-        var query = new GetTopPerformersQuery(topN, StreamType: streamType);
+        var query = new GetTopPerformersQuery(topN, StreamType: streamType, ProviderId: providerId);
         var result = await topPerformersHandler.HandleAsync(query, ct);
         if (result.IsFailed)
             return result.ToResult<IReadOnlyList<TopPerformerItem>>();
@@ -126,9 +128,10 @@ internal sealed class DashboardService(
     public async Task<Result<PeriodComparison>> GetPeriodComparisonAsync(
         string comparisonType,
         int? streamType = null,
+        string? providerId = null,
         CancellationToken ct = default)
     {
-        var query = new GetPeriodComparisonQuery(comparisonType, null, StreamType: streamType);
+        var query = new GetPeriodComparisonQuery(comparisonType, null, StreamType: streamType, ProviderId: providerId);
         var result = await periodComparisonHandler.HandleAsync(query, ct);
         if (result.IsFailed)
             return result.ToResult<PeriodComparison>();
@@ -145,23 +148,44 @@ internal sealed class DashboardService(
             Trend: data.Trend));
     }
 
-    public async Task<Result<DashboardKpis>> GetKpisAsync(int? streamType = null, CancellationToken ct = default)
+    public async Task<Result<DashboardKpis>> GetKpisAsync(int? streamType = null, string? providerId = null, CancellationToken ct = default)
     {
-        var dailyRateResult = await dailyRateHandler.HandleAsync(new GetDailyRateQuery(30, StreamType: streamType), ct);
+        var dailyRateResult = await dailyRateHandler.HandleAsync(new GetDailyRateQuery(90, StreamType: streamType, ProviderId: providerId), ct);
         if (dailyRateResult.IsFailed)
             return dailyRateResult.ToResult<DashboardKpis>();
 
-        var trendResult = await trendHandler.HandleAsync(new GetTrendQuery("Monthly", 2, StreamType: streamType), ct);
-        if (trendResult.IsFailed)
-            return trendResult.ToResult<DashboardKpis>();
+        // For KPI trend, use period comparison of COMPLETE months (last month vs month before)
+        // This avoids confusing partial-month comparisons like "Jan 1-22 vs Dec 1-22"
+        var now = DateTime.UtcNow;
+        var lastMonthStart = new DateOnly(now.Year, now.Month, 1).AddMonths(-1);
+        var periodComparisonResult = await periodComparisonHandler.HandleAsync(
+            new GetPeriodComparisonQuery("MoM", lastMonthStart, StreamType: streamType, ProviderId: providerId), ct);
 
-        var projectionResult = await projectionHandler.HandleAsync(new GetProjectionQuery(6, StreamType: streamType), ct);
+        var projectionResult = await projectionHandler.HandleAsync(new GetProjectionQuery(6, StreamType: streamType, ProviderId: providerId), ct);
         if (projectionResult.IsFailed)
             return projectionResult.ToResult<DashboardKpis>();
 
         var dailyRate = dailyRateResult.Value;
-        var trend = trendResult.Value;
         var projection = projectionResult.Value;
+
+        // Default trend values
+        var changePercentage = 0m;
+        var direction = "Stable";
+        var comparisonPeriod = "vs previous month";
+
+        if (periodComparisonResult.IsSuccess)
+        {
+            var comparison = periodComparisonResult.Value;
+            changePercentage = comparison.ChangePercentage;
+            direction = comparison.ChangePercentage switch
+            {
+                > 5 => "Upward",
+                < -5 => "Downward",
+                _ => "Stable"
+            };
+            // Show which complete months are being compared
+            comparisonPeriod = $"{comparison.CurrentPeriod.StartDate:MMM} vs {comparison.PreviousPeriod.StartDate:MMM}";
+        }
 
         return Result.Ok(new DashboardKpis(
             DailyRate: new DailyRate(
@@ -171,9 +195,9 @@ internal sealed class DashboardService(
                 StandardDeviation: dailyRate.StandardDeviation,
                 CoefficientOfVariation: dailyRate.CoefficientOfVariation),
             Trend: new TrendIndicator(
-                ChangePercentage: trend.GrowthRatePercentage,
-                Direction: trend.Direction,
-                ComparisonPeriod: "vs last month"),
+                ChangePercentage: changePercentage,
+                Direction: direction,
+                ComparisonPeriod: comparisonPeriod),
             Projection: new ProjectionSummary(
                 Projected6MonthTotalUsd: projection.Projected6MonthTotalUsd,
                 ConfidenceScore: projection.ConfidenceScore)));
@@ -183,9 +207,10 @@ internal sealed class DashboardService(
         string granularity = "Daily",
         int periodsBack = 180,
         int? streamType = null,
+        string? providerId = null,
         CancellationToken ct = default)
     {
-        var query = new GetStackedTimeSeriesQuery(granularity, periodsBack, StreamType: streamType);
+        var query = new GetStackedTimeSeriesQuery(granularity, periodsBack, StreamType: streamType, ProviderId: providerId);
         var result = await stackedTimeSeriesHandler.HandleAsync(query, ct);
         if (result.IsFailed)
             return result.ToResult<StackedTimeSeries>();
@@ -209,9 +234,10 @@ internal sealed class DashboardService(
     public async Task<Result<StreamHealthSummary>> GetStreamHealthAsync(
         string comparisonType = "MoM",
         int? streamType = null,
+        string? providerId = null,
         CancellationToken ct = default)
     {
-        var query = new GetStreamTrendsQuery(comparisonType, StreamType: streamType);
+        var query = new GetStreamTrendsQuery(comparisonType, StreamType: streamType, ProviderId: providerId);
         var result = await streamTrendsHandler.HandleAsync(query, ct);
         if (result.IsFailed)
             return result.ToResult<StreamHealthSummary>();

@@ -8,7 +8,8 @@ public sealed record GetTrendQuery(
     int PeriodsBack = 6,
     string? StreamId = null,
     string? Category = null,
-    int? StreamType = null);
+    int? StreamType = null,
+    string? ProviderId = null);
 
 public interface IGetTrendHandler
 {

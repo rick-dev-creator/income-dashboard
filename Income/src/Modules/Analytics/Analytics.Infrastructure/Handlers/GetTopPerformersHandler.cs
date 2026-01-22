@@ -11,7 +11,7 @@ internal sealed class GetTopPerformersHandler(
 {
     public async Task<Result<TopPerformersDto>> HandleAsync(GetTopPerformersQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType, query.ProviderId), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<TopPerformersDto>();
 

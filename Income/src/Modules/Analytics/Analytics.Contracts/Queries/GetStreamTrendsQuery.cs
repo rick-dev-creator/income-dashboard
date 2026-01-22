@@ -8,7 +8,8 @@ namespace Analytics.Contracts.Queries;
 /// </summary>
 /// <param name="ComparisonType">Comparison type: MoM (month over month), etc.</param>
 /// <param name="StreamType">Filter by stream type: 0=Income, 1=Outcome, null=Both</param>
-public sealed record GetStreamTrendsQuery(string ComparisonType = "MoM", int? StreamType = null);
+/// <param name="ProviderId">Filter by provider ID</param>
+public sealed record GetStreamTrendsQuery(string ComparisonType = "MoM", int? StreamType = null, string? ProviderId = null);
 
 public interface IGetStreamTrendsHandler
 {

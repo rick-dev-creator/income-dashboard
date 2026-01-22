@@ -12,7 +12,7 @@ internal sealed class GetPortfolioSummaryHandler(
 {
     public async Task<Result<PortfolioSummaryDto>> HandleAsync(GetPortfolioSummaryQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType, query.ProviderId), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<PortfolioSummaryDto>();
 
@@ -24,9 +24,9 @@ internal sealed class GetPortfolioSummaryHandler(
         var providers = providersResult.Value;
 
         var allSnapshots = streams
-            .SelectMany(s => s.Snapshots)
-            .Where(snap => (!query.StartDate.HasValue || snap.Date >= query.StartDate.Value) &&
-                           (!query.EndDate.HasValue || snap.Date <= query.EndDate.Value))
+            .SelectMany(s => s.Snapshots.Select(snap => new { s.StreamType, Snapshot = snap }))
+            .Where(x => (!query.StartDate.HasValue || x.Snapshot.Date >= query.StartDate.Value) &&
+                        (!query.EndDate.HasValue || x.Snapshot.Date <= query.EndDate.Value))
             .ToList();
 
         if (allSnapshots.Count == 0)
@@ -43,7 +43,22 @@ internal sealed class GetPortfolioSummaryHandler(
                 LatestSnapshotDate: DateOnly.FromDateTime(DateTime.UtcNow)));
         }
 
-        var totalIncome = allSnapshots.Sum(s => s.UsdAmount);
+        // Calculate total based on mode:
+        // - If StreamType filter is applied: sum all amounts (already filtered to that type)
+        // - If no filter (Net Flow mode): Income - Outcome
+        decimal totalIncome;
+        if (query.StreamType.HasValue)
+        {
+            // Filtered to specific type, just sum
+            totalIncome = allSnapshots.Sum(s => s.Snapshot.UsdAmount);
+        }
+        else
+        {
+            // Net Flow mode: Income (type 0) - Outcome (type 1)
+            var incomeTotal = allSnapshots.Where(s => s.StreamType == 0).Sum(s => s.Snapshot.UsdAmount);
+            var outcomeTotal = allSnapshots.Where(s => s.StreamType == 1).Sum(s => s.Snapshot.UsdAmount);
+            totalIncome = incomeTotal - outcomeTotal;
+        }
         var activeStreams = streams.Where(s => s.SyncStatus.State == "Active").ToList();
         var fixedStreams = streams.Where(s => s.IsFixed).ToList();
         var variableStreams = streams.Where(s => !s.IsFixed).ToList();
@@ -59,8 +74,8 @@ internal sealed class GetPortfolioSummaryHandler(
             AverageIncomePerStreamUsd: streams.Count > 0 ? totalIncome / streams.Count : 0,
             FixedMonthlyIncomeUsd: fixedMonthlyIncome,
             VariableMonthlyIncomeUsd: variableMonthlyIncome,
-            EarliestSnapshotDate: allSnapshots.Min(s => s.Date),
-            LatestSnapshotDate: allSnapshots.Max(s => s.Date)));
+            EarliestSnapshotDate: allSnapshots.Min(s => s.Snapshot.Date),
+            LatestSnapshotDate: allSnapshots.Max(s => s.Snapshot.Date)));
     }
 
     private static decimal CalculateMonthlyFixedIncome(IReadOnlyList<StreamDto> fixedStreams)

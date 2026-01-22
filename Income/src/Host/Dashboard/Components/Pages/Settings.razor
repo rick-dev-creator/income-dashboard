@@ -1,0 +1,226 @@
+@page "/settings"
+@using Income.Application.Services.DataManagement
+@inject IDataManagementService DataManagementService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@rendermode InteractiveServer
+
+<PageTitle>Settings - FlowMetrics</PageTitle>
+
+<div class="page-header">
+    <h1 class="page-title">Settings</h1>
+    <p class="page-subtitle">Application configuration and data management</p>
+</div>
+
+<MudGrid>
+    <!-- Data Statistics Card -->
+    <MudItem xs="12" md="6">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
+                <MudIcon Icon="@Icons.Material.Filled.QueryStats" Color="Color.Primary" Size="Size.Large" />
+                <MudText Typo="Typo.h6">Data Statistics</MudText>
+            </MudStack>
+
+            @if (_isLoadingStats)
+            {
+                <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="mb-4" />
+            }
+            else if (_stats is not null)
+            {
+                <MudSimpleTable Dense="true" Hover="true" Striped="true">
+                    <tbody>
+                        <tr>
+                            <td><MudIcon Icon="@Icons.Material.Filled.Stream" Size="Size.Small" Class="mr-2" /> Streams</td>
+                            <td class="text-right"><strong>@_stats.TotalStreams</strong></td>
+                        </tr>
+                        <tr>
+                            <td><MudIcon Icon="@Icons.Material.Filled.CameraAlt" Size="Size.Small" Class="mr-2" /> Snapshots</td>
+                            <td class="text-right"><strong>@_stats.TotalSnapshots</strong></td>
+                        </tr>
+                        <tr>
+                            <td><MudIcon Icon="@Icons.Material.Filled.Extension" Size="Size.Small" Class="mr-2" /> Providers</td>
+                            <td class="text-right"><strong>@_stats.TotalProviders</strong></td>
+                        </tr>
+                    </tbody>
+                </MudSimpleTable>
+                <MudButton Variant="Variant.Text" Size="Size.Small" StartIcon="@Icons.Material.Filled.Refresh"
+                           OnClick="RefreshStats" Class="mt-3">
+                    Refresh
+                </MudButton>
+            }
+        </MudPaper>
+    </MudItem>
+
+    <!-- Demo Data Card -->
+    <MudItem xs="12" md="6">
+        <MudPaper Class="pa-4" Elevation="2">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
+                <MudIcon Icon="@Icons.Material.Filled.Science" Color="Color.Secondary" Size="Size.Large" />
+                <MudText Typo="Typo.h6">Demo Data</MudText>
+            </MudStack>
+
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-4">
+                Create sample income and expense streams for testing. This includes salary, freelance income, rent, subscriptions, and more.
+            </MudText>
+
+            <MudAlert Severity="Severity.Info" Dense="true" Class="mb-4">
+                Demo data will only be created if no streams with "stream-" prefix exist.
+            </MudAlert>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="CreateDemoData" Disabled="_isCreatingDemo">
+                @if (_isCreatingDemo)
+                {
+                    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                    <span>Creating...</span>
+                }
+                else
+                {
+                    <span>Create Demo Data</span>
+                }
+            </MudButton>
+        </MudPaper>
+    </MudItem>
+
+    <!-- Danger Zone -->
+    <MudItem xs="12">
+        <MudPaper Class="pa-4 danger-zone" Elevation="2">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-4">
+                <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Error" Size="Size.Large" />
+                <MudText Typo="Typo.h6" Color="Color.Error">Danger Zone</MudText>
+            </MudStack>
+
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-4">
+                These actions are destructive and cannot be undone. Please proceed with caution.
+            </MudText>
+
+            <MudDivider Class="my-4" />
+
+            <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                <div>
+                    <MudText Typo="Typo.subtitle1">Delete All Streams</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary">
+                        Permanently delete all streams and their snapshots. Providers/connectors will be preserved.
+                    </MudText>
+                </div>
+                <MudButton Variant="Variant.Outlined" Color="Color.Error"
+                           StartIcon="@Icons.Material.Filled.DeleteForever"
+                           OnClick="ConfirmDeleteAllStreams" Disabled="_isDeleting">
+                    @if (_isDeleting)
+                    {
+                        <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="mr-2" />
+                        <span>Deleting...</span>
+                    }
+                    else
+                    {
+                        <span>Delete All Streams</span>
+                    }
+                </MudButton>
+            </MudStack>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+<style>
+    .danger-zone {
+        border: 1px solid var(--mud-palette-error);
+        border-radius: 8px;
+    }
+</style>
+
+@code {
+    private DataStatistics? _stats;
+    private bool _isLoadingStats;
+    private bool _isCreatingDemo;
+    private bool _isDeleting;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshStats();
+    }
+
+    private async Task RefreshStats()
+    {
+        _isLoadingStats = true;
+        StateHasChanged();
+
+        var result = await DataManagementService.GetStatisticsAsync();
+        if (result.IsSuccess)
+        {
+            _stats = result.Value;
+        }
+        else
+        {
+            Snackbar.Add("Failed to load statistics", Severity.Error);
+        }
+
+        _isLoadingStats = false;
+    }
+
+    private async Task CreateDemoData()
+    {
+        _isCreatingDemo = true;
+        StateHasChanged();
+
+        var result = await DataManagementService.CreateDemoDataAsync();
+
+        if (result.IsSuccess)
+        {
+            Snackbar.Add($"Created {result.Value.StreamsCreated} streams with {result.Value.SnapshotsCreated} snapshots", Severity.Success);
+            await RefreshStats();
+        }
+        else
+        {
+            Snackbar.Add(result.Errors.FirstOrDefault()?.Message ?? "Failed to create demo data", Severity.Warning);
+        }
+
+        _isCreatingDemo = false;
+    }
+
+    private async Task ConfirmDeleteAllStreams()
+    {
+        var parameters = new DialogParameters<ConfirmDialog>
+        {
+            { x => x.ContentText, "Are you sure you want to delete ALL streams and their snapshots? This action cannot be undone. Providers will be preserved." },
+            { x => x.ButtonText, "Delete All" },
+            { x => x.Color, Color.Error }
+        };
+
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small };
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Confirm Delete", parameters, options);
+        var result = await dialog.Result;
+
+        if (result is not null && !result.Canceled)
+        {
+            await DeleteAllStreams();
+        }
+    }
+
+    private async Task DeleteAllStreams()
+    {
+        _isDeleting = true;
+        StateHasChanged();
+
+        var result = await DataManagementService.DeleteAllStreamsAsync();
+
+        if (result.IsSuccess)
+        {
+            if (result.Value.StreamsDeleted == 0)
+            {
+                Snackbar.Add("No streams to delete", Severity.Info);
+            }
+            else
+            {
+                Snackbar.Add($"Deleted {result.Value.StreamsDeleted} streams and {result.Value.SnapshotsDeleted} snapshots", Severity.Success);
+            }
+            await RefreshStats();
+        }
+        else
+        {
+            Snackbar.Add(result.Errors.FirstOrDefault()?.Message ?? "Failed to delete streams", Severity.Error);
+        }
+
+        _isDeleting = false;
+    }
+}

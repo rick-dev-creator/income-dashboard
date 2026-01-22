@@ -2,9 +2,14 @@
 @using Analytics.Application.Services
 @using Dashboard.Services
 @using Income.Application.Services.Streams
+@using Income.Contracts.Queries
+@using Income.Contracts.DTOs
 @implements IDisposable
 @inject IDashboardService DashboardService
+@inject IGetAllProvidersHandler ProvidersHandler
 @inject AppState AppState
+@inject IJSRuntime JS
+@inject ISnackbar Snackbar
 @rendermode InteractiveServer
 
 <PageTitle>FlowMetrics - @_language.StreamsTitle</PageTitle>
@@ -26,6 +31,25 @@
                 <span>Net flow (income - expenses)</span>
             </div>
         }
+        @if (_providers.Count > 0)
+        {
+            <MudSelect T="string" Value="_selectedProviderId" ValueChanged="OnProviderChangedAsync"
+                       Label="Provider" Variant="Variant.Outlined" Dense="true"
+                       Class="provider-filter" Style="min-width: 180px;">
+                <MudSelectItem T="string" Value="@((string?)null)">All Providers</MudSelectItem>
+                @foreach (var provider in _providers)
+                {
+                    <MudSelectItem T="string" Value="@provider.Id">@provider.Name</MudSelectItem>
+                }
+            </MudSelect>
+        }
+        <MudTooltip Text="Copy all metrics to clipboard">
+            <MudIconButton Icon="@Icons.Material.Filled.ContentCopy"
+                           Color="Color.Default"
+                           Variant="Variant.Outlined"
+                           OnClick="CopyMetricsToClipboard"
+                           Disabled="@(_isLoading || _kpis is null)" />
+        </MudTooltip>
     </div>
     <p class="page-subtitle">Your @(AppState.CurrentMode == AppMode.Outcome ? "expenses" : AppState.CurrentMode == AppMode.Divergence ? "net flow" : "income") at a glance</p>
 </div>
@@ -310,6 +334,10 @@ else
         background: rgba(139, 92, 246, 0.1);
         color: #8b5cf6;
         border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .provider-filter {
+        margin-left: auto;
     }
 
     @@keyframes fadeIn {
@@ -768,8 +796,10 @@ else
     private bool _isLoadingChart = false;
     private string? _error;
     private string _selectedGranularity = "Monthly";
+    private string? _selectedProviderId;
     private CancellationTokenSource? _cts;
     private StreamLanguage _language = StreamLanguage.Income;
+    private IReadOnlyList<ProviderDto> _providers = [];
 
     private DashboardKpis? _kpis;
     private StackedTimeSeries? _stackedTimeSeries;
@@ -944,6 +974,22 @@ else
         _language = AppState.CurrentLanguage;
         AppState.OnModeChanged += OnModeChanged;
         BuildChartOptions();
+        await LoadProvidersAsync();
+        await LoadDataAsync();
+    }
+
+    private async Task LoadProvidersAsync()
+    {
+        var result = await ProvidersHandler.HandleAsync(new GetAllProvidersQuery());
+        if (result.IsSuccess)
+        {
+            _providers = result.Value;
+        }
+    }
+
+    private async Task OnProviderChangedAsync(string? providerId)
+    {
+        _selectedProviderId = providerId;
         await LoadDataAsync();
     }
 
@@ -1006,17 +1052,17 @@ else
                 _ => (int?)null
             };
 
-            var kpisResult = await DashboardService.GetKpisAsync(streamTypeFilter);
+            var kpisResult = await DashboardService.GetKpisAsync(streamTypeFilter, _selectedProviderId);
             if (kpisResult.IsSuccess) _kpis = kpisResult.Value;
 
-            var stackedResult = await DashboardService.GetStackedTimeSeriesAsync(_selectedGranularity, 180, streamTypeFilter);
+            var stackedResult = await DashboardService.GetStackedTimeSeriesAsync(_selectedGranularity, 180, streamTypeFilter, _selectedProviderId);
             if (stackedResult.IsSuccess)
             {
                 _stackedTimeSeries = stackedResult.Value;
                 PrepareCharts();
             }
 
-            var healthResult = await DashboardService.GetStreamHealthAsync("MoM", streamTypeFilter);
+            var healthResult = await DashboardService.GetStreamHealthAsync("MoM", streamTypeFilter, _selectedProviderId);
             if (healthResult.IsSuccess) _streamHealth = healthResult.Value;
         }
         catch (Exception ex)
@@ -1044,7 +1090,7 @@ else
                 _ => (int?)null
             };
 
-            var stackedResult = await DashboardService.GetStackedTimeSeriesAsync(_selectedGranularity, 180, streamTypeFilter);
+            var stackedResult = await DashboardService.GetStackedTimeSeriesAsync(_selectedGranularity, 180, streamTypeFilter, _selectedProviderId);
             if (stackedResult.IsSuccess)
             {
                 _stackedTimeSeries = stackedResult.Value;
@@ -1168,5 +1214,66 @@ else
         AppState.OnModeChanged -= OnModeChanged;
         _cts?.Cancel();
         _cts?.Dispose();
+    }
+
+    private async Task CopyMetricsToClipboard()
+    {
+        if (_kpis is null) return;
+
+        var providerName = string.IsNullOrEmpty(_selectedProviderId)
+            ? "All Providers"
+            : _providers.FirstOrDefault(p => p.Id == _selectedProviderId)?.Name ?? _selectedProviderId;
+
+        var modeLabel = AppState.CurrentMode switch
+        {
+            AppMode.Income => "Income",
+            AppMode.Outcome => "Expenses",
+            AppMode.Divergence => "Net Flow",
+            _ => "Income"
+        };
+
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"=== FlowMetrics Dashboard Report ===");
+        sb.AppendLine($"Mode: {modeLabel}");
+        sb.AppendLine($"Provider: {providerName}");
+        sb.AppendLine($"Generated: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+        sb.AppendLine();
+
+        // KPIs
+        sb.AppendLine("--- KEY METRICS ---");
+        sb.AppendLine($"Daily Rate: {FormatCurrency(_kpis.DailyRate.AverageDailyUsd)}/day (avg last {_kpis.DailyRate.DaysAnalyzed} days)");
+        sb.AppendLine($"Trend: {FormatSignedPercentage(_kpis.Trend.ChangePercentage)} ({_kpis.Trend.Direction}) - {_kpis.Trend.ComparisonPeriod}");
+        sb.AppendLine($"6-Month Projection: {FormatCurrency(_kpis.Projection.Projected6MonthTotalUsd)} (Confidence: {(_kpis.Projection.ConfidenceScore * 100):F0}%)");
+        sb.AppendLine();
+
+        // Distribution
+        if (_donutData.Count > 0)
+        {
+            sb.AppendLine("--- DISTRIBUTION ---");
+            foreach (var item in _donutData.OrderByDescending(d => d.Value))
+            {
+                sb.AppendLine($"  {item.Label}: {FormatCurrency(item.Value)}");
+            }
+            sb.AppendLine($"  TOTAL: {FormatCurrency(_donutData.Sum(d => d.Value))}");
+            sb.AppendLine();
+        }
+
+        // Stream Health
+        if (_streamHealth?.Streams.Count > 0)
+        {
+            sb.AppendLine("--- STREAM HEALTH ---");
+            sb.AppendLine($"Growing: {_streamHealth.GrowingCount} | Stable: {_streamHealth.StableCount} | Declining: {_streamHealth.DecliningCount}");
+            sb.AppendLine();
+            foreach (var stream in _streamHealth.Streams)
+            {
+                sb.AppendLine($"  [{stream.Direction}] {stream.StreamName} ({stream.ProviderName})");
+                sb.AppendLine($"    Category: {stream.Category}");
+                sb.AppendLine($"    This Period: {FormatCurrency(stream.CurrentPeriodUsd)}");
+                sb.AppendLine($"    Change: {FormatSignedPercentage(stream.ChangePercentage)} ({FormatSignedCurrency(stream.ChangeUsd)})");
+            }
+        }
+
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", sb.ToString());
+        Snackbar.Add("Dashboard metrics copied to clipboard", Severity.Success);
     }
 }
