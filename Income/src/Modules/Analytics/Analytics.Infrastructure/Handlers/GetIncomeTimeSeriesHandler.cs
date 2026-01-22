@@ -11,7 +11,7 @@ internal sealed class GetIncomeTimeSeriesHandler(
 {
     public async Task<Result<TimeSeriesDto>> HandleAsync(GetIncomeTimeSeriesQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType, query.ProviderId), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<TimeSeriesDto>();
 
@@ -21,17 +21,13 @@ internal sealed class GetIncomeTimeSeriesHandler(
             .Where(s => query.StreamId is null || s.Id == query.StreamId)
             .Where(s => query.ProviderId is null || s.ProviderId == query.ProviderId)
             .Where(s => query.Category is null || s.Category == query.Category)
-            .SelectMany(s => s.Snapshots)
-            .Where(snap => snap.Date >= query.StartDate && snap.Date <= query.EndDate)
+            .SelectMany(s => s.Snapshots.Select(snap => (s.StreamType, Snapshot: snap)))
+            .Where(x => x.Snapshot.Date >= query.StartDate && x.Snapshot.Date <= query.EndDate)
             .ToList();
 
-        var groupedPoints = GroupByGranularity(filteredSnapshots, query.Granularity);
+        var groupedPoints = GroupByGranularity(filteredSnapshots, query.Granularity, query.StreamType);
 
         var points = groupedPoints
-            .Select(g => new TimeSeriesPointDto(
-                Date: g.Key,
-                AmountUsd: g.Sum(s => s.UsdAmount),
-                SnapshotCount: g.Count()))
             .OrderBy(p => p.Date)
             .ToList();
 
@@ -48,18 +44,41 @@ internal sealed class GetIncomeTimeSeriesHandler(
             MaxUsd: points.Count > 0 ? points.Max(p => p.AmountUsd) : 0));
     }
 
-    private static IEnumerable<IGrouping<DateOnly, SnapshotDto>> GroupByGranularity(
-        List<SnapshotDto> snapshots, string granularity)
+    private static List<TimeSeriesPointDto> GroupByGranularity(
+        List<(int StreamType, SnapshotDto Snapshot)> snapshots, string granularity, int? streamTypeFilter)
     {
-        return granularity.ToLower() switch
+        Func<SnapshotDto, DateOnly> getGroupKey = granularity.ToLower() switch
         {
-            "daily" => snapshots.GroupBy(s => s.Date),
-            "weekly" => snapshots.GroupBy(s => GetWeekStart(s.Date)),
-            "monthly" => snapshots.GroupBy(s => new DateOnly(s.Date.Year, s.Date.Month, 1)),
-            "quarterly" => snapshots.GroupBy(s => new DateOnly(s.Date.Year, GetQuarterStart(s.Date.Month), 1)),
-            "yearly" => snapshots.GroupBy(s => new DateOnly(s.Date.Year, 1, 1)),
-            _ => snapshots.GroupBy(s => s.Date)
+            "daily" => s => s.Date,
+            "weekly" => s => GetWeekStart(s.Date),
+            "monthly" => s => new DateOnly(s.Date.Year, s.Date.Month, 1),
+            "quarterly" => s => new DateOnly(s.Date.Year, GetQuarterStart(s.Date.Month), 1),
+            "yearly" => s => new DateOnly(s.Date.Year, 1, 1),
+            _ => s => s.Date
         };
+
+        var grouped = snapshots.GroupBy(x => getGroupKey(x.Snapshot));
+
+        return grouped.Select(g =>
+        {
+            decimal amount;
+            if (streamTypeFilter.HasValue)
+            {
+                // Filtered mode: just sum all
+                amount = g.Sum(x => x.Snapshot.UsdAmount);
+            }
+            else
+            {
+                // Net Flow mode: Income - Outcome
+                var income = g.Where(x => x.StreamType == 0).Sum(x => x.Snapshot.UsdAmount);
+                var outcome = g.Where(x => x.StreamType == 1).Sum(x => x.Snapshot.UsdAmount);
+                amount = income - outcome;
+            }
+            return new TimeSeriesPointDto(
+                Date: g.Key,
+                AmountUsd: amount,
+                SnapshotCount: g.Count());
+        }).ToList();
     }
 
     private static DateOnly GetWeekStart(DateOnly date)

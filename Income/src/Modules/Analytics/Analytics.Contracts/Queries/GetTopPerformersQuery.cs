@@ -7,7 +7,8 @@ public sealed record GetTopPerformersQuery(
     int TopN = 10,
     DateOnly? StartDate = null,
     DateOnly? EndDate = null,
-    int? StreamType = null);
+    int? StreamType = null,
+    string? ProviderId = null);
 
 public interface IGetTopPerformersHandler
 {

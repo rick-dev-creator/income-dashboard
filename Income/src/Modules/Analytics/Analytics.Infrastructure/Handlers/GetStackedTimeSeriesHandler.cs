@@ -11,7 +11,7 @@ internal sealed class GetStackedTimeSeriesHandler(
 {
     public async Task<Result<StackedTimeSeriesDto>> HandleAsync(GetStackedTimeSeriesQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType, query.ProviderId), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<StackedTimeSeriesDto>();
 
@@ -25,6 +25,7 @@ internal sealed class GetStackedTimeSeriesHandler(
                 StreamId = s.Id,
                 StreamName = s.Name,
                 Category = s.Category,
+                StreamType = s.StreamType,
                 Snapshot = snap
             }))
             .Where(x => x.Snapshot.Date >= startDate)
@@ -40,12 +41,20 @@ internal sealed class GetStackedTimeSeriesHandler(
         foreach (var periodGroup in groupedByPeriod)
         {
             var streamContributions = periodGroup
-                .GroupBy(x => new { x.StreamId, x.StreamName, x.Category })
-                .Select(g => new StreamContributionDto(
-                    StreamId: g.Key.StreamId,
-                    StreamName: g.Key.StreamName,
-                    Category: g.Key.Category,
-                    AmountUsd: Math.Round(g.Sum(x => x.Snapshot.UsdAmount), 2)))
+                .GroupBy(x => new { x.StreamId, x.StreamName, x.Category, x.StreamType })
+                .Select(g =>
+                {
+                    var rawAmount = g.Sum(x => x.Snapshot.UsdAmount);
+                    // In Net Flow mode (no filter), show outcome streams as negative
+                    var amount = query.StreamType.HasValue
+                        ? rawAmount
+                        : (g.Key.StreamType == 1 ? -rawAmount : rawAmount);
+                    return new StreamContributionDto(
+                        StreamId: g.Key.StreamId,
+                        StreamName: g.Key.StreamName,
+                        Category: g.Key.Category,
+                        AmountUsd: Math.Round(amount, 2));
+                })
                 .OrderByDescending(x => x.AmountUsd)
                 .ToList();
 

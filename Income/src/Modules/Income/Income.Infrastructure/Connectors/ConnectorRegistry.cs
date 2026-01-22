@@ -13,6 +13,7 @@ internal sealed class ConnectorRegistry : IConnectorRegistry
     private readonly IServiceProvider _serviceProvider;
     private IReadOnlyList<ISyncableConnector>? _syncableConnectors;
     private IReadOnlyList<IRecurringConnector>? _recurringConnectors;
+    private IReadOnlyList<ICsvImportConnector>? _csvImportConnectors;
 
     public ConnectorRegistry(IServiceProvider serviceProvider)
     {
@@ -25,12 +26,17 @@ internal sealed class ConnectorRegistry : IConnectorRegistry
     private IReadOnlyList<IRecurringConnector> RecurringConnectors =>
         _recurringConnectors ??= _serviceProvider.GetServices<IRecurringConnector>().ToList();
 
+    private IReadOnlyList<ICsvImportConnector> CsvImportConnectors =>
+        _csvImportConnectors ??= _serviceProvider.GetServices<ICsvImportConnector>().ToList();
+
     public IReadOnlyList<IIncomeConnector> GetAll() =>
-        [.. SyncableConnectors, .. RecurringConnectors];
+        [.. SyncableConnectors, .. RecurringConnectors, .. CsvImportConnectors];
 
     public IReadOnlyList<ISyncableConnector> GetSyncable() => SyncableConnectors;
 
     public IReadOnlyList<IRecurringConnector> GetRecurring() => RecurringConnectors;
+
+    public IReadOnlyList<ICsvImportConnector> GetCsvImport() => CsvImportConnectors;
 
     public IIncomeConnector? GetById(string providerId) =>
         GetAll().FirstOrDefault(c => c.ProviderId.Equals(providerId, StringComparison.OrdinalIgnoreCase));
@@ -40,4 +46,7 @@ internal sealed class ConnectorRegistry : IConnectorRegistry
 
     public IRecurringConnector? GetRecurringById(string providerId) =>
         RecurringConnectors.FirstOrDefault(c => c.ProviderId.Equals(providerId, StringComparison.OrdinalIgnoreCase));
+
+    public ICsvImportConnector? GetCsvImportById(string providerId) =>
+        CsvImportConnectors.FirstOrDefault(c => c.ProviderId.Equals(providerId, StringComparison.OrdinalIgnoreCase));
 }

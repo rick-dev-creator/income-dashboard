@@ -23,7 +23,8 @@ internal enum SyncFrequency
 internal enum ConnectorKind
 {
     Recurring,  // Auto-generates snapshots based on schedule (Salary, Rent)
-    Syncable    // Pulls data from external APIs (future: Binance, Patreon)
+    Syncable,   // Pulls data from external APIs (Binance, Patreon)
+    CsvImport   // Imports transactions from bank CSV files
 }
 
 internal sealed class Provider : AggregateRoot<ProviderId>

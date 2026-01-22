@@ -9,10 +9,12 @@ namespace Analytics.Contracts.Queries;
 /// <param name="Granularity">Aggregation granularity: Daily, Weekly, Monthly</param>
 /// <param name="PeriodsBack">Number of periods to look back</param>
 /// <param name="StreamType">Filter by stream type: 0=Income, 1=Outcome, null=Both</param>
+/// <param name="ProviderId">Filter by provider ID</param>
 public sealed record GetStackedTimeSeriesQuery(
     string Granularity = "Daily",
     int PeriodsBack = 180,
-    int? StreamType = null);
+    int? StreamType = null,
+    string? ProviderId = null);
 
 public interface IGetStackedTimeSeriesHandler
 {

@@ -1,0 +1,2008 @@
+﻿Date,Description,Amount,IsDeposit,StreamId,StreamName,SuggestedNewStreamName,SuggestedCategory,RequiresNewStream
+2023-07-06,カード セブン,31.65,false,,,Variable,Variable,true
+2023-07-06,Visaデビット　622364　ヨドバシカメラ　マルチメディアＡＫＩＢＡ,109.95,false,,,Variable,Variable,true
+2023-07-09,Visaデビット　978269　WH Smith Gatwick South,29.58,false,,,Variable,Variable,true
+2023-07-09,Visaデビット　990818　AIRPORT RETAIL ENTERPR,7.15,false,,,Variable,Variable,true
+2023-07-09,Visaデビット　011916　THE TERRACE GARDEN CAF,16.8,false,,,Variable,Variable,true
+2023-07-10,Visaデビット　019379　CASTLE CORNET,3.54,false,,,Variable,Variable,true
+2023-07-10,Visaデビット　020683　FISHY TALES,3.54,false,,,Variable,Variable,true
+2023-07-10,Visaデビット　022416　TRINITY PLAICE CONVENI,6.91,false,,,Variable,Variable,true
+2023-07-10,Visaデビット　118880　THE CORNERSTONE,22.78,false,,,Variable,Variable,true
+2023-07-11,Visaデビット　252833　SHIP & CROWN,21.83,false,,,Variable,Variable,true
+2023-07-12,Visaデビット　267556　SumUp  *barbarjay,6.96,false,,,Variable,Variable,true
+2023-07-12,Visaデビット　270620　TRINITY PLAICE CONVENI,6.13,false,,,Variable,Variable,true
+2023-07-13,Visaデビット　488469　SumUp  *Mocca,9.65,false,,,Variable,Variable,true
+2023-07-15,Visaデビット　633432　THE COCK AND BULL,9.93,false,,,Variable,Variable,true
+2023-07-15,Visaデビット　640298　PETIT BISTRO,34.26,false,,,Variable,Variable,true
+2023-07-15,Visaデビット　744203　GOOD REBEL,18.2,false,,,Variable,Variable,true
+2023-07-16,Visaデビット　766821　TRINITY PLAICE CONVENI,3.7,false,,,Variable,Variable,true
+2023-07-16,Visaデビット　855649　THE TERRACE GARDEN CAF,18.14,false,,,Variable,Variable,true
+2023-07-16,Visaデビット　860105　THE TERRACE GARDEN CAF,18.38,false,,,Variable,Variable,true
+2023-07-17,Visaデビット　889109　Neds Noodle Bar,20.02,false,,,Variable,Variable,true
+2023-07-17,Visaデビット　889715　PPOINT_*ELEGANCE FOOD EXP,65.76,false,,,Variable,Variable,true
+2023-07-17,Visaデビット　892969　NYX*PGGroup,2.58,false,,,Variable,Variable,true
+2023-07-17,Visaデビット　906140　TFL TRAVEL CH,17.5,false,,,Variable,Variable,true
+2023-07-17,Visaデビット　974473　BOOTS 1995,15.7,false,,,Variable,Variable,true
+2023-07-17,Visaデビット　975045　COSTA COFFEE 43010882,4.28,false,,,Variable,Variable,true
+2023-07-17,Visaデビット　994592　COSTA COFFEE 43011136,13.62,false,,,Variable,Variable,true
+2023-07-18,Visaデビット　000342　WH Smith Heathrow T2,35.47,false,,,Variable,Variable,true
+2023-07-18,Visaデビット　005527　ANA PAC USD,19.68,false,,,Variable,Variable,true
+2023-07-18,Visaデビット　070197　羽田空港旅客ターミナルビル,8.23,false,,,Variable,Variable,true
+2023-07-18,Visaデビット　071032　Ａｉｒ　ＢＩＣ　ＣＡＭＥＲＡ,11.27,false,,,Variable,Variable,true
+2023-07-21,Visaデビット　358008　ＧＯＯＧＬＥ　ＡＤＳ３０９５３２２４４８,12.66,false,,,Fixed,Fixed,true
+2023-07-25,Visaデビット　893021　ヒカリ薬局信濃町店,8.23,false,,,Variable,Variable,true
+2023-07-25,Visaデビット　894109　カフェ・シェーキーズ外苑信濃町,10.76,false,,,Variable,Variable,true
+2023-07-25,Visaデビット　921876　フアミリ−マ−トハムラエキヒガシグチ,0.73,false,,,Variable,Variable,true
+2023-07-26,Visaデビット　016809　ＦＩＴＮＥＸＵＳ　２４,24.69,false,,,Fixed,Fixed,true
+2023-07-26,Visaデビット　022840　ドミノ・ピザ羽村緑ヶ丘店／ＮＦＣ,19.69,false,,,Variable,Variable,true
+2023-07-27,Visaデビット　091632　エリオロカンダイタリア−ナ,11.39,false,,,Variable,Variable,true
+2023-07-29,Visaデビット　307880　UBER * PENDING,0.43,false,,,Variable,Variable,true
+2023-07-29,Visaデビット　307880　UBER * PENDING,0.43,true,,,Income,Income,true
+2023-07-30,Visaデビット　475621　カインズホーム,117.14,false,,,Variable,Variable,true
+2023-08-02,Visaデビット　788901　ＧＯＯＧＬＥ　ＡＤＳ３０９５３２２４４８,46.66,false,,,Fixed,Fixed,true
+2023-08-03,Visaデビット　947847　ＳＱ＊東京デリ,12.31,false,,,Variable,Variable,true
+2023-08-03,Visaデビット　952908　フアミリ−マ−トコウジマチサンチヨウメ,3.04,false,,,Variable,Variable,true
+2023-08-03,Visaデビット　960255　ＳＱ＊ＳＲ／エスアール,3.8,false,,,Variable,Variable,true
+2023-08-06,Visaデビット　359296　三井アウトレットパーク入間,7.98,false,,,Variable,Variable,true
+2023-08-10,Visaデビット　816050　ＥＶＥＮＴＲＥＧＩＳＴ,14.56,false,,,Variable,Variable,true
+2023-08-11,Visaデビット　939041　ロイヤルホスト東新宿駅前店,38.23,false,,,Variable,Variable,true
+2023-08-13,Visaデビット　252182　アクアシティお台場,40.8,false,,,Variable,Variable,true
+2023-08-13,Visaデビット　256318　セブンイレブン,8.86,false,,,Variable,Variable,true
+2023-08-14,Visaデビット　301036　ダイバーシティ東京プラザ,21.08,false,,,Variable,Variable,true
+2023-08-14,Visaデビット　314328　アクアシティお台場,7.85,false,,,Variable,Variable,true
+2023-08-15,Visaデビット　389610　ＦＩＴＮＥＸＵＳ　２４,3.48,false,,,Fixed,Fixed,true
+2023-08-23,振込 デビツトリヨウキヤツシユバツク,1.08,true,,,Income,Income,true
+2023-08-27,Visaデビット　843478　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2023-09-02,カード イーネット,126.6,false,,,Variable,Variable,true
+2023-09-02,Visaデビット　658722　ジェイクロフーズ・ＭＰ１０,7.94,false,,,Variable,Variable,true
+2023-09-03,Visaデビット　693117　GOOGLE JAPAN,17.14,false,,,Variable,Variable,true
+2023-09-03,Visaデビット　722832　ベツテイフタマタオンセン,108.43,false,,,Variable,Variable,true
+2023-09-06,Visaデビット　130959　シェイクシャック　東京国際フォーラム店,12.67,false,,,Variable,Variable,true
+2023-09-07,振込 ワイズペイメンツジヤパン（カ,2278.8,false,,,Savings,Savings,true
+2023-09-07,振込 ワイズペイメンツジヤパン（カ,2278.8,false,,,Savings,Savings,true
+2023-09-07,振込 ワイズペイメンツジヤパン（カ,2278.8,false,,,Savings,Savings,true
+2023-09-07,振込手数料(税込),0.7,false,,,Fixed,Fixed,true
+2023-09-07,振込 ワイズペイメンツジヤパン（カ,1076.1,false,,,Savings,Savings,true
+2023-09-07,振込手数料(税込),0.7,false,,,Fixed,Fixed,true
+2023-09-11,Visaデビット　784141　フアミリ−マ−トハムラエキヒガシグチ,2.07,false,,,Variable,Variable,true
+2023-09-12,Visaデビット　831649　フアミリ−マ−トコウジマチサンチヨウメ,5.75,false,,,Variable,Variable,true
+2023-09-14,Visaデビット　062609　キラリナ京王吉祥寺／ＮＦＣ,16.46,false,,,Variable,Variable,true
+2023-09-14,Visaデビット　129282　セイユウ,6.58,false,,,Variable,Variable,true
+2023-09-15,Visaデビット　159742　ＦＩＴＮＥＸＵＳ　２４,3.48,false,,,Fixed,Fixed,true
+2023-09-15,Visaデビット　258310　ミニストップ羽村市役所前店,6.47,false,,,Variable,Variable,true
+2023-09-17,Visaデビット　459652　ＳＱ＊ＥＬ　ＩＮＳＡＣＩＡＢＬＥ,7.6,false,,,Variable,Variable,true
+2023-09-17,Visaデビット　499406　ビックカメラ　立川店,53.87,false,,,Variable,Variable,true
+2023-09-19,Visaデビット　745214　ユ）ヴィ・プランニング,36.71,false,,,Variable,Variable,true
+2023-09-21,振込 デビツトリヨウキヤツシユバツク,1.66,true,,,Income,Income,true
+2023-09-21,Visaデビット　944965　ＳＱ＊ＣＨＯＰＰＥＤ　ＳＡＬＡＤ　ＤＡＹ,17.41,false,,,Variable,Variable,true
+2023-09-21,Visaデビット　000000　VISA DEBIT CAMPAIGN,6.33,true,,,Income,Income,true
+2023-09-22,Visaデビット　114076　京王自動車,18.99,false,,,Variable,Variable,true
+2023-09-22,Visaデビット　116859　拝島交通株式会社,18.36,false,,,Variable,Variable,true
+2023-09-23,Visaデビット　172465　ベツテイフタマタオンセン,138.63,false,,,Variable,Variable,true
+2023-09-23,Visaデビット　176359　京王自動車,25.95,false,,,Variable,Variable,true
+2023-09-23,Visaデビット　189351　コメダ珈琲店　昭島店,25.95,false,,,Variable,Variable,true
+2023-09-26,Visaデビット　565357　フアミリ−マ−トコウジマチサンチヨウメ,7.79,false,,,Variable,Variable,true
+2023-09-26,Visaデビット　598906　セブンイレブン,2.01,false,,,Variable,Variable,true
+2023-09-27,Visaデビット　662197　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2023-09-27,Visaデビット　747781　セイユウ,32.61,false,,,Variable,Variable,true
+2023-09-28,Visaデビット　801630　フアミリ−マ−トコウジマチサンチヨウメ,3.73,false,,,Variable,Variable,true
+2023-09-28,Visaデビット　861614　ＨＡＣＩＥＮＤＡ　ＤＥＬ　ＣＩＥＬＯ,65.59,false,,,Variable,Variable,true
+2023-09-29,カード セブン,94.95,false,,,Variable,Variable,true
+2023-09-30,カード セブン,506.4,false,,,Variable,Variable,true
+2023-10-01,Visaデビット　186953　ウミヨコ商店１／ＮＦＣ,27.47,false,,,Variable,Variable,true
+2023-10-01,Visaデビット　234173　トピコ,7.09,false,,,Variable,Variable,true
+2023-10-02,振込 ワイズペイメンツジヤパン（カ,18.99,false,,,Savings,Savings,true
+2023-10-04,振込 ワイズペイメンツジヤパン（カ,3165.0,false,,,Savings,Savings,true
+2023-10-04,振込 ワイズペイメンツジヤパン（カ,3165.0,false,,,Savings,Savings,true
+2023-10-04,振込手数料(税込),0.7,false,,,Fixed,Fixed,true
+2023-10-06,Visaデビット　770246　ＧＯＯＧＬＥ　ＡＤＳ１９２１５６３５３９,12.66,false,,,Fixed,Fixed,true
+2023-10-07,Visaデビット　949390　無印良品,24.09,false,,,Variable,Variable,true
+2023-10-07,振込 ワイズペイメンツジヤパン（カ,3165.0,false,,,Savings,Savings,true
+2023-10-07,振込手数料(税込),0.7,false,,,Fixed,Fixed,true
+2023-10-09,振込 ワイズペイメンツジヤパン（カ,3165.0,false,,,Savings,Savings,true
+2023-10-09,振込手数料(税込),0.7,false,,,Fixed,Fixed,true
+2023-10-10,Visaデビット　357250　セイユウ,16.38,false,,,Variable,Variable,true
+2023-10-12,Visaデビット　554130　ラクテンペイ　ステ−キハウス　テキサス　コウ,15.0,false,,,Variable,Variable,true
+2023-10-12,Visaデビット　587965　１８０８マツモトキヨシ新宿靖国通り店,11.55,false,,,Variable,Variable,true
+2023-10-12,Visaデビット　589289　ホテルセンス,44.31,false,,,Variable,Variable,true
+2023-10-15,Visaデビット　915442　ＦＩＴＮＥＸＵＳ　２４,3.48,false,,,Fixed,Fixed,true
+2023-10-16,Visaデビット　075691　DISPLATE COM,167.03,false,,,Variable,Variable,true
+2023-10-17,Visaデビット　182093　ベロ−チエ　シンジユクゴチヨウメテ,7.91,false,,,Variable,Variable,true
+2023-10-17,Visaデビット　187263　日興自動車交通,13.93,false,,,Variable,Variable,true
+2023-10-17,Visaデビット　204709　ラクテンペイ　ステ−キハウス　テキサス　コウ,6.96,false,,,Variable,Variable,true
+2023-10-17,Visaデビット　205693　フアミリ−マ−トコウジマチサンチヨウメ,3.23,false,,,Variable,Variable,true
+2023-10-18,Visaデビット　364958　京王自動車,14.56,false,,,Variable,Variable,true
+2023-10-18,Visaデビット　373158　牛浜ペットクリニック,40.39,false,,,Variable,Variable,true
+2023-10-18,Visaデビット　375979　京王自動車,17.72,false,,,Variable,Variable,true
+2023-10-18,Visaデビット　382796　デニーズ羽村店,21.59,false,,,Variable,Variable,true
+2023-10-18,Visaデビット　391930　ＧＯ（タクシーアプリ）＊アプリ配車,45.58,false,,,Variable,Variable,true
+2023-10-19,Visaデビット　442818　ＳＱ＊ＣＨＯＰＰＥＤ　ＳＡＬＡＤ　ＤＡＹ,13.86,false,,,Variable,Variable,true
+2023-10-19,Visaデビット　495618　セイユウ,46.74,false,,,Variable,Variable,true
+2023-10-20,振込 デビツトリヨウキヤツシユバツク,2.89,true,,,Income,Income,true
+2023-10-20,振込 デビツト１０００エンプレゼント,6.33,true,,,Income,Income,true
+2023-10-25,Visaデビット　144766　ＧＯ（タクシーアプリ）＊アプリ配車,5.06,false,,,Variable,Variable,true
+2023-10-25,Visaデビット　175107　フアミリ−マ−トコウジマチサンチヨウメ,4.22,false,,,Variable,Variable,true
+2023-10-26,振込 ワイズペイメンツジヤパン（カ,1772.4,false,,,Savings,Savings,true
+2023-10-26,振込手数料(税込),0.7,false,,,Fixed,Fixed,true
+2023-10-27,Visaデビット　399806　ＧＯ（タクシーアプリ）＊アプリ配車,5.06,false,,,Variable,Variable,true
+2023-10-29,Visaデビット　731547　Ｐａｉｒｓ　ペアーズ,83.56,false,,,Variable,Variable,true
+2023-10-31,Visaデビット　896806　ＧＯ（タクシーアプリ）＊アプリ配車,5.06,false,,,Variable,Variable,true
+2023-10-31,Visaデビット　905813　フアミリ−マ−トコウジマチサンチヨウメ,3.8,false,,,Variable,Variable,true
+2023-10-31,Visaデビット　949866　ＧＯ（タクシーアプリ）＊アプリ配車,15.19,false,,,Variable,Variable,true
+2023-10-31,Visaデビット　975378　ベロ−チエ　シンジユクゴチヨウメテ,10.76,false,,,Variable,Variable,true
+2023-11-01,Visaデビット　132213　ＧＯＯＧＬＥ　ＡＤＳ１９２１５６３５３９,36.72,false,,,Fixed,Fixed,true
+2023-11-02,Visaデビット　155876　ＧＯ（タクシーアプリ）＊アプリ配車,5.06,false,,,Variable,Variable,true
+2023-11-02,Visaデビット　174741　フレツシユネスバ−ガ,8.74,false,,,Variable,Variable,true
+2023-11-02,Visaデビット　211648　シェイクシャック　東京国際フォーラム店,18.03,false,,,Variable,Variable,true
+2023-11-04,Visaデビット　511280　AIRBNB * HMXNWDDASQ,279.02,false,,,Variable,Variable,true
+2023-11-05,Visaデビット　533109　UBER *ONE HELP.UBER.COM,3.15,false,,,Variable,Variable,true
+2023-11-07,Visaデビット　771241　ＧＯ（タクシーアプリ）＊アプリ配車,5.06,false,,,Variable,Variable,true
+2023-11-07,Visaデビット　796414　ラクテンペイ　アジヤンタ,12.72,false,,,Variable,Variable,true
+2023-11-07,Visaデビット　826068　ルミネエスト,208.89,false,,,Variable,Variable,true
+2023-11-07,Visaデビット　842940　伊勢丹　新宿本店,53.24,false,,,Variable,Variable,true
+2023-11-07,カード セブン,63.3,false,,,Variable,Variable,true
+2023-11-08,Visaデビット　896090　ジェイクロフーズ・ＭＰ１０,8.15,false,,,Variable,Variable,true
+2023-11-08,Visaデビット　967889　スターバックスコーヒージャパン,6.15,false,,,Variable,Variable,true
+2023-11-09,Visaデビット　000523　フアミリ−マ−トウエノコウエン,2.63,false,,,Variable,Variable,true
+2023-11-09,Visaデビット　006316　スターバックス　Ｔ１（ＡＮＡ／ＮＦＣ,8.84,false,,,Variable,Variable,true
+2023-11-09,Visaデビット　011154　京成スカイライナー,32.54,false,,,Variable,Variable,true
+2023-11-09,Visaデビット　032266　御徒町吉池本店ビル,24.79,false,,,Variable,Variable,true
+2023-11-09,Visaデビット　034904　ｂｉｇ‐ｂ　ｕｅｎｏ,76.59,false,,,Variable,Variable,true
+2023-11-09,Visaデビット　087665　ＮＥＴＦＬＩＸ．ＣＯＭ,9.43,false,,,Fixed,Fixed,true
+2023-11-10,Visaデビット　202906　ＧＯ（タクシーアプリ）＊アプリ配車,17.72,false,,,Variable,Variable,true
+2023-11-10,Visaデビット　207781　牛浜ペットクリニック,55.39,false,,,Variable,Variable,true
+2023-11-10,Visaデビット　210461　ＧＯ（タクシーアプリ）＊アプリ配車,15.19,false,,,Variable,Variable,true
+2023-11-11,Visaデビット　315639　渋谷　パルコ,54.56,false,,,Variable,Variable,true
+2023-11-12,Visaデビット　406460　セイユウ,21.4,false,,,Variable,Variable,true
+2023-11-12,"Visaデビット　479051　GITHUB, INC.",85.97,false,,,Fixed,Fixed,true
+2023-11-13,Visaデビット　544823　・「ホンマイクロソフト（カ,7.66,false,,,Variable,Variable,true
+2023-11-13,Visaデビット　572554　セイユウニ,79.49,false,,,Variable,Variable,true
+2023-11-14,Visaデビット　627929　フアミリ−マ−トコウジマチサンチヨウメ,4.48,false,,,Variable,Variable,true
+2023-11-14,Visaデビット　645534　Ｐａｉｒｓ　ペアーズ,6.27,false,,,Variable,Variable,true
+2023-11-15,Visaデビット　712269　ＦＩＴＮＥＸＵＳ　２４,13.93,false,,,Fixed,Fixed,true
+2023-11-15,Visaデビット　781968　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2023-11-15,Visaデビット　806985　ルミネタチカワ,31.46,false,,,Variable,Variable,true
+2023-11-16,Visaデビット　848935　ＧＯ（タクシーアプリ）＊アプリ配車,5.06,false,,,Variable,Variable,true
+2023-11-16,Visaデビット　859192　フアミリ−マ−トコウジマチサンチヨウメ,5.81,false,,,Variable,Variable,true
+2023-11-16,Visaデビット　925037　ＧＯ（タクシーアプリ）＊アプリ配車,7.6,false,,,Variable,Variable,true
+2023-11-17,Visaデビット　968264　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2023-11-17,Visaデビット　024926　カインズホーム,35.19,false,,,Variable,Variable,true
+2023-11-17,Visaデビット　031441　ファッションセンターしまむら,29.87,false,,,Variable,Variable,true
+2023-11-18,Visaデビット　086543　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2023-11-18,Visaデビット　090959　ＧＯ（タクシーアプリ）＊アプリ配車,15.19,false,,,Variable,Variable,true
+2023-11-18,Visaデビット　125398　アテイツクル−ムヤスクニガイエン／ＮＦ,44.37,false,,,Variable,Variable,true
+2023-11-18,Visaデビット　139189　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2023-11-18,Visaデビット　160367　牛浜ペットクリニック,103.37,false,,,Variable,Variable,true
+2023-11-18,Visaデビット　163466　ＧＯ（タクシーアプリ）＊アプリ配車,13.93,false,,,Variable,Variable,true
+2023-11-18,Visaデビット　172217　デニーズ羽村店,19.64,false,,,Variable,Variable,true
+2023-11-19,Visaデビット　225384　Ｐａｉｒｓ　ペアーズ,16.2,false,,,Variable,Variable,true
+2023-11-19,Visaデビット　226260　デニーズ羽村店,24.65,false,,,Variable,Variable,true
+2023-11-19,Visaデビット　228431　セイユウニ,29.95,false,,,Variable,Variable,true
+2023-11-19,Visaデビット　282288　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,9.49,false,,,Variable,Variable,true
+2023-11-19,Visaデビット　287672　ＧＯ（タクシーアプリ）＊アプリ配車,17.72,false,,,Variable,Variable,true
+2023-11-20,Visaデビット　309138　ＧＯ（タクシーアプリ）＊アプリ配車,20.26,false,,,Variable,Variable,true
+2023-11-20,Visaデビット　313232　ＧＯタクシー（プレミアム）,20.26,false,,,Variable,Variable,true
+2023-11-20,Visaデビット　365512　ＰＡＲＣＯ＿ｙａ,35.45,false,,,Variable,Variable,true
+2023-11-20,Visaデビット　368167　ユニクロ／ＮＦＣ,37.85,false,,,Variable,Variable,true
+2023-11-20,Visaデビット　371552　ユニクロ／ＮＦＣ,119.51,false,,,Variable,Variable,true
+2023-11-21,振込 デビツトリヨウキヤツシユバツク,2.78,true,,,Income,Income,true
+2023-11-21,Visaデビット　444168　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2023-11-21,Visaデビット　445896　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2023-11-21,Visaデビット　451916　スターバックスコーヒージャパン,3.73,false,,,Variable,Variable,true
+2023-11-21,Visaデビット　503171　ユ）ヴィ・プランニング,36.71,false,,,Variable,Variable,true
+2023-11-21,Visaデビット　524877　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2023-11-23,Visaデビット　750740　オフハウス羽村店,31.02,false,,,Variable,Variable,true
+2023-11-23,Visaデビット　753896　スターバックスコーヒージャパン,12.22,false,,,Variable,Variable,true
+2023-11-24,Visaデビット　823501　ミニストップ羽村市役所前店,8.46,false,,,Variable,Variable,true
+2023-11-24,Visaデビット　872294　Microsoft*Store,0.63,false,,,Variable,Variable,true
+2023-11-24,Visaデビット　872294　Microsoft*Store,0.63,true,,,Income,Income,true
+2023-11-24,Visaデビット　872341　マイクロソフト,37.32,false,,,Variable,Variable,true
+2023-11-24,Visaデビット　912128　ＭＥＧＡドン・キホーテ立川店,34.78,false,,,Variable,Variable,true
+2023-11-26,Visaデビット　114359　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2023-11-26,Visaデビット　137991　東京都美術館,27.85,false,,,Variable,Variable,true
+2023-11-26,Visaデビット　161861　ユニクロ／ＮＦＣ,50.58,false,,,Variable,Variable,true
+2023-11-26,Visaデビット　178190　美楽味,68.45,false,,,Variable,Variable,true
+2023-11-26,Visaデビット　180240　ＳＱ＊ＢＡＮＡＤＡ,11.21,false,,,Variable,Variable,true
+2023-11-27,Visaデビット　231626　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2023-11-27,Visaデビット　243106　デニーズ羽村店,21.17,false,,,Variable,Variable,true
+2023-11-27,Visaデビット　292407　セイユウニ,17.95,false,,,Variable,Variable,true
+2023-11-28,Visaデビット　345570　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2023-11-28,Visaデビット　429015　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2023-11-29,Visaデビット　499647　やっぱりステーキ広島本通店,15.82,false,,,Variable,Variable,true
+2023-11-29,Visaデビット　500789　広島パルコ,8.48,false,,,Variable,Variable,true
+2023-11-29,Visaデビット　529859　COCA-COLA VENDING,0.89,false,,,Variable,Variable,true
+2023-11-29,Visaデビット　529871　コカ・コ−ラジハンキ,0.89,false,,,Variable,Variable,true
+2023-11-29,Visaデビット　529906　コカ・コ−ラジハンキ,0.82,false,,,Variable,Variable,true
+2023-11-29,Visaデビット　539771　ＥｇｇｓｎＴｈｉｎｇｓ／ＮＦＣ,28.76,false,,,Variable,Variable,true
+2023-11-29,Visaデビット　542092　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2023-11-30,Visaデビット　595890　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2023-11-30,Visaデビット　599439　中国ＪＲバス広島駅営業所,18.36,false,,,Variable,Variable,true
+2023-11-30,Visaデビット　609913　ロイヤルホスト広島空港店,14.2,false,,,Variable,Variable,true
+2023-11-30,Visaデビット　630196　成田空港Ｔ３ＬＣＢ京成バスカウンター,16.46,false,,,Variable,Variable,true
+2023-11-30,Visaデビット　633768　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,31.65,false,,,Variable,Variable,true
+2023-11-30,Visaデビット　657561　グランデュオタチカワ,28.17,false,,,Variable,Variable,true
+2023-11-30,Visaデビット　661620　グランデュオタチカワ,18.48,false,,,Variable,Variable,true
+2023-12-01,Visaデビット　774096　東京ディズニーリゾート,59.31,false,,,Variable,Variable,true
+2023-12-03,Visaデビット　035652　ＯＰＥＮ　ＧＡＴＥ　ＢＡＫＥＲＹ,26.22,false,,,Variable,Variable,true
+2023-12-04,Visaデビット　177561　神原矯正歯科,174.07,false,,,Variable,Variable,true
+2023-12-04,Visaデビット　183829　ビックカメラ　立川店,28.61,false,,,Variable,Variable,true
+2023-12-04,Visaデビット　185042　ルミネタチカワ,7.98,false,,,Variable,Variable,true
+2023-12-05,Visaデビット　262431　UBER *ONE HELP.UBER.COM,3.15,false,,,Variable,Variable,true
+2023-12-05,Visaデビット　303392　ルミネタチカワ,88.3,false,,,Variable,Variable,true
+2023-12-05,Visaデビット　306694　ルミネタチカワ,25.18,false,,,Variable,Variable,true
+2023-12-05,Visaデビット　313727　ゴンチャ　グランデュオ立川店,11.65,false,,,Variable,Variable,true
+2023-12-07,Visaデビット　485525　Ｐａｉｒｓ　ペアーズ,6.27,false,,,Variable,Variable,true
+2023-12-07,Visaデビット　511151　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2023-12-09,Visaデビット　746575　ＮＥＴＦＬＩＸ．ＣＯＭ,9.43,false,,,Fixed,Fixed,true
+2023-12-09,Visaデビット　856002　マイクロソフト,7.66,false,,,Variable,Variable,true
+2023-12-10,Visaデビット　887724　マイクロソフト,249.22,false,,,Variable,Variable,true
+2023-12-13,"Visaデビット　267922　GITHUB, INC.",7.77,false,,,Fixed,Fixed,true
+2023-12-13,Visaデビット　318707　Ｐａｉｒｓ　ペアーズ,16.2,false,,,Variable,Variable,true
+2023-12-13,Visaデビット　365728　PREPLY INC.,9.7,false,,,Variable,Variable,true
+2023-12-14,Visaデビット　443269　デル・テクノロジーズ,36.21,false,,,Variable,Variable,true
+2023-12-14,Visaデビット　445619　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2023-12-14,Visaデビット　448541　セイユウニ,20.07,false,,,Variable,Variable,true
+2023-12-14,Visaデビット　479148　ミニストップ羽村市役所前店,1.96,false,,,Variable,Variable,true
+2023-12-15,Visaデビット　500282　ＦＩＴＮＥＸＵＳ　２４,38.61,false,,,Fixed,Fixed,true
+2023-12-15,Visaデビット　592121　ミニストップ羽村市役所前店,2.98,false,,,Variable,Variable,true
+2023-12-17,Visaデビット　870840　ミニストップ羽村市役所前店,2.73,false,,,Variable,Variable,true
+2023-12-18,Visaデビット　988763　セイユウニ,22.09,false,,,Variable,Variable,true
+2023-12-18,Visaデビット　989231　セイユウ,2.72,false,,,Variable,Variable,true
+2023-12-19,Visaデビット　113345　デル・テクノロジーズ,165.02,false,,,Variable,Variable,true
+2023-12-21,振込 デビツトリヨウキヤツシユバツク,9.53,true,,,Income,Income,true
+2023-12-22,Visaデビット　404603　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2023-12-22,Visaデビット　413819　PREPLY INC.,124.35,false,,,Variable,Variable,true
+2023-12-22,Visaデビット　423498　成田国際空港ターミナル／ＮＦＣ,9.24,false,,,Variable,Variable,true
+2023-12-22,Visaデビット　491905　0009UNITED NATION AVENUE,72.16,false,,,Variable,Variable,true
+2023-12-22,Visaデビット　493316　APC SMART KIOS A T3,33.33,false,,,Variable,Variable,true
+2023-12-22,Visaデビット　499726　DENNYS T3,29.07,false,,,Variable,Variable,true
+2023-12-23,Visaデビット　556580　TRIP.COM,240.08,false,,,Variable,Variable,true
+2023-12-23,Visaデビット　570789　KENNY ROGERS MAKATI AV,17.92,false,,,Variable,Variable,true
+2023-12-23,Visaデビット　622863　GRAB,0.83,false,,,Variable,Variable,true
+2023-12-23,Visaデビット　622863　GRAB,0.83,true,,,Income,Income,true
+2023-12-23,Visaデビット　624416　GRAB,9.49,false,,,Variable,Variable,true
+2023-12-23,Visaデビット　640389　TRIP.COM,53.06,false,,,Variable,Variable,true
+2023-12-23,Visaデビット　641292　DENNYS T2-PASAY,23.37,false,,,Variable,Variable,true
+2023-12-23,Visaデビット　650862　0008NAIAT2_IPD,71.86,false,,,Variable,Variable,true
+2023-12-24,Visaデビット　674243　TRIP.COM,366.05,false,,,Variable,Variable,true
+2023-12-24,Visaデビット　674302　Ｔｒｉｐ．ｃｏｍ,169.77,false,,,Variable,Variable,true
+2023-12-24,Visaデビット　725002　003500462002 PPrincesa Ai,71.86,false,,,Variable,Variable,true
+2023-12-24,Visaデビット　788428　FOUR POINTS BY SHERATO,153.31,false,,,Variable,Variable,true
+2023-12-26,Visaデビット　986129　GRAB,2.24,false,,,Variable,Variable,true
+2023-12-26,Visaデビット　988234　GRAB,2.3,false,,,Variable,Variable,true
+2023-12-26,Visaデビット　986129　GRAB,2.24,true,,,Income,Income,true
+2023-12-26,Visaデビット　999970　GRAB,6.04,false,,,Variable,Variable,true
+2023-12-26,Visaデビット　005667　GRAB,5.51,false,,,Variable,Variable,true
+2023-12-26,Visaデビット　047926　GRAB,1.56,false,,,Variable,Variable,true
+2023-12-26,Visaデビット　048212　GRAB,1.56,false,,,Variable,Variable,true
+2023-12-26,Visaデビット　048497　GRAB,1.56,false,,,Variable,Variable,true
+2023-12-26,Visaデビット　048905　GRAB,1.56,false,,,Variable,Variable,true
+2023-12-26,Visaデビット　049305　6776 AYALA AVENUE,55.26,false,,,Variable,Variable,true
+2023-12-26,Visaデビット　047926　GRAB,1.56,true,,,Income,Income,true
+2023-12-27,Visaデビット　048212　GRAB,1.56,true,,,Income,Income,true
+2023-12-27,Visaデビット　048497　GRAB,1.56,true,,,Income,Income,true
+2023-12-27,Visaデビット　048905　GRAB,1.56,true,,,Income,Income,true
+2023-12-27,Visaデビット　077614　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2023-12-27,Visaデビット　165747　PREPLY INC.,8.55,false,,,Variable,Variable,true
+2024-01-03,Visaデビット　022083　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-01-04,Visaデビット　072813　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-01-04,Visaデビット　073663　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-01-05,Visaデビット　196538　UBER *ONE HELP.UBER.COM,3.15,false,,,Variable,Variable,true
+2024-01-05,Visaデビット　214257　ＧＯ（タクシーアプリ）＊アプリ配車,17.72,false,,,Variable,Variable,true
+2024-01-05,Visaデビット　226752　ＧＯ（タクシーアプリ）＊アプリ配車,16.46,false,,,Variable,Variable,true
+2024-01-07,Visaデビット　528487　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2024-01-07,Visaデビット　536336　ケーシズキッチン,27.92,false,,,Variable,Variable,true
+2024-01-09,Visaデビット　683740　ＮＥＴＦＬＩＸ．ＣＯＭ,9.43,false,,,Fixed,Fixed,true
+2024-01-09,Visaデビット　745299　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-01-10,Visaデビット　799702　GOOGLE PLAY JAPAN,7.6,false,,,Variable,Variable,true
+2024-01-10,Visaデビット　799841　GOOGLE PLAY JAPAN,7.6,false,,,Variable,Variable,true
+2024-01-13,"Visaデビット　165526　GITHUB, INC.",18.22,false,,,Fixed,Fixed,true
+2024-01-14,Visaデビット　529859　COCA-COLA VENDING,0.89,true,,,Income,Income,true
+2024-01-14,Visaデビット　334013　ＣｈｉＭｃＫｉｎｇ,30.85,false,,,Variable,Variable,true
+2024-01-14,Visaデビット　335958　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-01-14,Visaデビット　337100　ＨＯＴＥＬ　Ｍｏｎｂｉｊｏｕ／ＮＦＣ,36.21,false,,,Variable,Variable,true
+2024-01-14,Visaデビット　376637　フアミリ−マ−トハムラエキヒガシグチ,0.68,false,,,Variable,Variable,true
+2024-01-15,Visaデビット　405467　ＦＩＴＮＥＸＵＳ　２４,38.61,false,,,Fixed,Fixed,true
+2024-01-16,Visaデビット　513669　GOOGLE PLAY JAPAN,15.19,false,,,Variable,Variable,true
+2024-01-16,Visaデビット　554762　GOOGLE*TEMPORARY HOLD,1.27,false,,,Variable,Variable,true
+2024-01-16,Visaデビット　554762　GOOGLE*TEMPORARY HOLD,1.27,true,,,Income,Income,true
+2024-01-16,Visaデビット　593472　デニーズ羽村店,11.7,false,,,Variable,Variable,true
+2024-01-16,Visaデビット　595038　ミニストップ羽村市役所前店,1.01,false,,,Variable,Variable,true
+2024-01-16,Visaデビット　617721　ミニストップ羽村市役所前店,1.54,false,,,Variable,Variable,true
+2024-01-17,Visaデビット　651831　セブンイレブン,1.63,false,,,Variable,Variable,true
+2024-01-17,Visaデビット　680702　デニーズ羽村店,20.47,false,,,Variable,Variable,true
+2024-01-18,Visaデビット　783103　ミニストップ羽村市役所前店,5.44,false,,,Variable,Variable,true
+2024-01-19,Visaデビット　875845　ミニストップ羽村市役所前店,3.61,false,,,Variable,Variable,true
+2024-01-19,Visaデビット　946469　セブンイレブン,2.96,false,,,Variable,Variable,true
+2024-01-19,Visaデビット　961819　ミニストップ羽村市役所前店,8.92,false,,,Variable,Variable,true
+2024-01-20,Visaデビット　037848　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-01-20,Visaデビット　038149　ミニストップ羽村市役所前店,2.68,false,,,Variable,Variable,true
+2024-01-20,Visaデビット　060115　PREPLY INC.,120.83,false,,,Variable,Variable,true
+2024-01-20,Visaデビット　062034　PREPLY INC.,161.11,false,,,Variable,Variable,true
+2024-01-21,Visaデビット　117817　PREPLY INC.,161.11,false,,,Variable,Variable,true
+2024-01-22,Visaデビット　218555　GOOGLE PLAY JAPAN,1.39,false,,,Variable,Variable,true
+2024-01-22,Visaデビット　250560　ミニストップ羽村市役所前店,3.81,false,,,Variable,Variable,true
+2024-01-22,Visaデビット　290017　ミニストップ羽村市役所前店,6.97,false,,,Variable,Variable,true
+2024-01-23,振込 デビツトリヨウキヤツシユバツク,7.13,true,,,Income,Income,true
+2024-01-23,Visaデビット　432951　ミニストップ羽村市役所前店,1.89,false,,,Variable,Variable,true
+2024-01-27,Visaデビット　821286　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2024-01-27,Visaデビット　842970　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-02-02,Visaデビット　549279　ＧＯＯＧＬＥ　ＡＤＳ１９２１５６３５３９,17.6,false,,,Fixed,Fixed,true
+2024-02-02,Visaデビット　597500　ＧＯ（タクシーアプリ）＊アプリ配車,14.56,false,,,Variable,Variable,true
+2024-02-02,Visaデビット　643853　マイクロソフト,15.0,false,,,Variable,Variable,true
+2024-02-04,Visaデビット　843091　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-02-05,Visaデビット　944679　UBER *ONE HELP.UBER.COM,3.15,false,,,Variable,Variable,true
+2024-02-05,Visaデビット　949500　Ｐａｉｒｓ　ペアーズ,6.27,false,,,Variable,Variable,true
+2024-02-09,Visaデビット　436702　ネットフリックス,9.43,false,,,Variable,Variable,true
+2024-02-09,Visaデビット　503217　PREPLY INC.,9.63,false,,,Variable,Variable,true
+2024-02-09,Visaデビット　504108　PREPLY INC.,5.06,false,,,Variable,Variable,true
+2024-02-10,Visaデビット　617368　ミニストップ羽村市役所前店,5.93,false,,,Variable,Variable,true
+2024-02-11,Visaデビット　773876　味の民芸　羽村店,28.67,false,,,Variable,Variable,true
+2024-02-12,Visaデビット　862058　セイユウ,40.31,false,,,Variable,Variable,true
+2024-02-12,Visaデビット　903793　ドミノ・ピザ羽村緑ヶ丘店／ＮＦＣ,11.05,false,,,Variable,Variable,true
+2024-02-13,"Visaデビット　926752　GITHUB, INC.",18.65,false,,,Fixed,Fixed,true
+2024-02-13,Visaデビット　994490　ＧＯ（タクシーアプリ）＊アプリ配車,29.12,false,,,Variable,Variable,true
+2024-02-13,Visaデビット　000880　モリタウン,20.25,false,,,Variable,Variable,true
+2024-02-13,Visaデビット　001633　モリタウン,6.75,false,,,Variable,Variable,true
+2024-02-13,Visaデビット　003214　モリタウン,1.04,false,,,Variable,Variable,true
+2024-02-13,Visaデビット　013092　フアミリ−マ−トハムラエキヒガシグチ,5.32,false,,,Variable,Variable,true
+2024-02-14,Visaデビット　075511　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-02-14,Visaデビット　089134　ＧＯ（タクシーアプリ）＊アプリ配車,19.62,false,,,Variable,Variable,true
+2024-02-15,Visaデビット　163930　ＦＩＴＮＥＸＵＳ　２４,38.61,false,,,Fixed,Fixed,true
+2024-02-15,Visaデビット　202945　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2024-02-16,Visaデビット　303557　PREPLY INC.,163.05,false,,,Variable,Variable,true
+2024-02-17,Visaデビット　494808　PREPLY INC.,122.31,false,,,Variable,Variable,true
+2024-02-17,Visaデビット　496823　PREPLY INC.,4.85,false,,,Variable,Variable,true
+2024-02-17,Visaデビット　513880　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,180.42,false,,,Variable,Variable,true
+2024-02-20,Visaデビット　496405　PREPLY INC.,115.83,true,,,Income,Income,true
+2024-02-20,Visaデビット　858740　マイクロソフト,0.63,false,,,Variable,Variable,true
+2024-02-21,振込 デビツトリヨウキヤツシユバツク,1.74,true,,,Income,Income,true
+2024-02-23,Visaデビット　245091　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,174.07,false,,,Variable,Variable,true
+2024-02-25,Visaデビット　482413　ＧＯ（タクシーアプリ）＊アプリ配車,6.96,false,,,Variable,Variable,true
+2024-02-27,Visaデビット　      　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,180.42,true,,,Income,Income,true
+2024-02-27,Visaデビット　697281　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2024-02-28,Visaデビット　798567　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,37.81,false,,,Variable,Variable,true
+2024-02-29,Visaデビット　009453　ＴＫ　パソコン本店,291.62,false,,,Variable,Variable,true
+2024-03-02,Visaデビット　265757　福島屋　本店,32.4,false,,,Variable,Variable,true
+2024-03-05,Visaデビット　621008　UBER *ONE HELP.UBER.COM,3.15,false,,,Variable,Variable,true
+2024-03-05,Visaデビット　633861　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-03-05,Visaデビット　657572　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-03-06,Visaデビット　734399　ネットフリックス,12.53,false,,,Variable,Variable,true
+2024-03-06,Visaデビット　819034　ミニストップ羽村市役所前店,1.72,false,,,Variable,Variable,true
+2024-03-07,Visaデビット　894805　ミニストップ羽村市役所前店,8.58,false,,,Variable,Variable,true
+2024-03-08,Visaデビット　024116　ミニストップ羽村市役所前店,6.0,false,,,Variable,Variable,true
+2024-03-09,Visaデビット　147977　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-03-09,Visaデビット　187161　ミニストップ羽村市役所前店,4.7,false,,,Variable,Variable,true
+2024-03-09,Visaデビット　225319　ミニストップ羽村市役所前店,1.53,false,,,Variable,Variable,true
+2024-03-10,Visaデビット　306402　味の民芸　羽村店,21.08,false,,,Variable,Variable,true
+2024-03-10,振込 ワイズペイメンツジヤパン（カ,3.17,false,,,Savings,Savings,true
+2024-03-10,振込 ワイズペイメンツジヤパン（カ,3165.0,false,,,Savings,Savings,true
+2024-03-10,Visaデビット　371083　ミスタ−ド−ナツ　ハムラテン／ＮＦＣ,3.89,false,,,Variable,Variable,true
+2024-03-11,Visaデビット　444014　ＯＰＥＮ　ＧＡＴＥ　ＢＡＫＥＲＹ,7.21,false,,,Variable,Variable,true
+2024-03-11,振込 ワイズペイメンツジヤパン（カ,3165.0,false,,,Savings,Savings,true
+2024-03-11,振込手数料(税込),0.7,false,,,Fixed,Fixed,true
+2024-03-11,Visaデビット　494836　ミニストップ羽村市役所前店,4.02,false,,,Variable,Variable,true
+2024-03-13,"Visaデビット　635080　GITHUB, INC.",18.03,false,,,Fixed,Fixed,true
+2024-03-13,Visaデビット　654394　ＧＯ（タクシーアプリ）＊アプリ配車,18.36,false,,,Variable,Variable,true
+2024-03-13,Visaデビット　666847　デニーズ羽村店,8.01,false,,,Variable,Variable,true
+2024-03-13,Visaデビット　728193　デニーズ羽村店,14.9,false,,,Variable,Variable,true
+2024-03-13,Visaデビット　737255　マイクロソフト,14.8,false,,,Variable,Variable,true
+2024-03-13,Visaデビット　737309　マイクロソフト,2.97,false,,,Variable,Variable,true
+2024-03-13,Visaデビット　739954　ミニストップ羽村市役所前店,1.34,false,,,Variable,Variable,true
+2024-03-14,Visaデビット　812983　デニーズ羽村店,14.97,false,,,Variable,Variable,true
+2024-03-14,Visaデビット　814997　セイユウニ,18.68,false,,,Variable,Variable,true
+2024-03-14,Visaデビット　841945　ミニストップ羽村市役所前店,8.27,false,,,Variable,Variable,true
+2024-03-15,Visaデビット　901090　PREPLY INC.,160.62,false,,,Variable,Variable,true
+2024-03-15,Visaデビット　903358　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-03-15,Visaデビット　903533　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-03-15,Visaデビット　924417　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2024-03-15,Visaデビット　932303　成田国際空港ターミナル／ＮＦＣ,15.89,false,,,Variable,Variable,true
+2024-03-15,Visaデビット　934953　成田国際空港ターミナル／ＮＦＣ,5.7,false,,,Variable,Variable,true
+2024-03-15,Visaデビット　997575　CSL MOBILE LTD      05350,10.75,false,,,Fixed,Fixed,true
+2024-03-15,"Visaデビット　007995　7-Eleven, HK (0036)",9.28,false,,,Variable,Variable,true
+2024-03-16,Visaデビット　073399　B P INTERNATIONAL37004,46.7,false,,,Variable,Variable,true
+2024-03-16,Visaデビット　093273　THE COMMERCIAL   52200,14.5,false,,,Variable,Variable,true
+2024-03-16,Visaデビット　103270　THE ALCHEMIST CAFE BISTRO,13.51,false,,,Variable,Variable,true
+2024-03-16,Visaデビット　133429　YUNG'S BISTRO    27800,78.87,false,,,Variable,Variable,true
+2024-03-16,Visaデビット　135506　STARBUCKS COFFEE (4499),13.76,false,,,Variable,Variable,true
+2024-03-17,Visaデビット　206600　PLATO CAFE BISTRO,42.39,false,,,Variable,Variable,true
+2024-03-17,Visaデビット　250458　UNCLE MIGUEL,64.61,false,,,Variable,Variable,true
+2024-03-18,Visaデビット　330378　CAFE DE CORAL 89500,8.36,false,,,Variable,Variable,true
+2024-03-18,Visaデビット　352233　FORTRESS 476 KLN,798.66,false,,,Variable,Variable,true
+2024-03-18,Visaデビット　355325　Mongkok,150.67,false,,,Variable,Variable,true
+2024-03-18,Visaデビット　382656　PLATO CAFE BISTRO,50.63,false,,,Variable,Variable,true
+2024-03-19,Visaデビット　133429　YUNG'S BISTRO    27800,1.82,true,,,Income,Income,true
+2024-03-19,Visaデビット　032103　RETAIL IN MOTION ASIA,15.97,false,,,Variable,Variable,true
+2024-03-19,Visaデビット　452413　PLATO CAFE BISTRO,46.51,false,,,Variable,Variable,true
+2024-03-19,"Visaデビット　505198　7-Eleven, HK (0036)",9.34,false,,,Variable,Variable,true
+2024-03-20,Visaデビット　520063　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,12.23,false,,,Variable,Variable,true
+2024-03-20,Visaデビット　543638　MTR-TSING YI  STA02900,12.43,false,,,Variable,Variable,true
+2024-03-20,Visaデビット　550182　TSUI WAH RESTAURANT,9.08,false,,,Fixed,Fixed,true
+2024-03-20,Visaデビット　559990　STARBUCKS COFFEE (0318),9.94,false,,,Variable,Variable,true
+2024-03-20,Visaデビット　608667　成田空港バスカウンター第２北　券売機,39.25,false,,,Variable,Variable,true
+2024-03-20,Visaデビット　614930　GOOGLE PLAY JAPAN,15.82,false,,,Variable,Variable,true
+2024-03-20,Visaデビット　621491　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-03-20,Visaデビット　629414　フアミリ−マ−トハムラエキヒガシグチ,5.7,false,,,Variable,Variable,true
+2024-03-21,振込 デビツトリヨウキヤツシユバツク,2.39,true,,,Income,Income,true
+2024-03-21,Visaデビット　683698　ミニストップ羽村市役所前店,5.52,false,,,Variable,Variable,true
+2024-03-21,Visaデビット　732085　GOOGLE PLAY JAPAN,23.01,false,,,Variable,Variable,true
+2024-03-22,Visaデビット　823877　ＧＯ（タクシーアプリ）＊アプリ配車,17.72,false,,,Variable,Variable,true
+2024-03-23,Visaデビット　978255　デニーズ羽村店,19.08,false,,,Variable,Variable,true
+2024-03-25,Visaデビット　150369　UBER * EATS PENDING,85.83,false,,,Variable,Variable,true
+2024-03-25,Visaデビット　158346　UBER *EATS HELP.UBER.COM,10.22,false,,,Variable,Variable,true
+2024-03-25,Visaデビット　161077　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-03-25,Visaデビット　165674　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-03-25,Visaデビット　165848　ＧＯタクシー（チップ）,1.27,false,,,Variable,Variable,true
+2024-03-25,Visaデビット　250976　デニーズ羽村店,12.25,false,,,Variable,Variable,true
+2024-03-25,Visaデビット　150369　UBER * EATS PENDING,85.83,true,,,Income,Income,true
+2024-03-26,Visaデビット　295432　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-03-26,Visaデビット　295551　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-03-26,Visaデビット　309337　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-03-26,Visaデビット　335161　ローソン,2.03,false,,,Variable,Variable,true
+2024-03-26,Visaデビット　342116　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-03-26,Visaデビット　360397　UBER   * EATS PENDING,62.98,false,,,Variable,Variable,true
+2024-03-27,Visaデビット　408496　UberJP_EATS,8.89,false,,,Variable,Variable,true
+2024-03-27,Visaデビット　412602　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-03-27,Visaデビット　412813　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-03-27,Visaデビット　416073　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2024-03-27,Visaデビット　430975　ビックカメラ　有楽町店,87.39,false,,,Variable,Variable,true
+2024-03-27,Visaデビット　451669　ローソン,2.91,false,,,Variable,Variable,true
+2024-03-27,Visaデビット　512620　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-03-28,Visaデビット　544768　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-03-28,Visaデビット　544906　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-03-28,Visaデビット　559875　スターバックスコーヒージャパン,7.62,false,,,Variable,Variable,true
+2024-03-28,Visaデビット　590036　Ｃａｆｅ’＆ＤｅｌｉＧＧＣｏ．城／ＮＦＣ,2.98,false,,,Variable,Variable,true
+2024-03-28,Visaデビット　360397　UBER   * EATS PENDING,62.98,true,,,Income,Income,true
+2024-03-29,給与振込 リンクス（カ,1483.17,true,,,Income,Income,true
+2024-03-29,Visaデビット　678486　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,15.82,false,,,Variable,Variable,true
+2024-03-29,Visaデビット　678597　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-03-29,Visaデビット　695417　ラクテンペイ　ウイズグリ−ンシロヤマトラ,9.46,false,,,Variable,Variable,true
+2024-03-29,Visaデビット　696367　Ｃａｆｅ’＆ＤｅｌｉＧＧＣｏ．城／ＮＦＣ,5.19,false,,,Variable,Variable,true
+2024-03-29,Visaデビット　719284　ローソン,4.3,false,,,Variable,Variable,true
+2024-03-29,Visaデビット　768092　GOOGLE PLAY JAPAN,4.43,false,,,Variable,Variable,true
+2024-03-29,Visaデビット　773322　ミニストップ羽村市役所前店,2.18,false,,,Variable,Variable,true
+2024-03-29,Visaデビット　783056　UberJP_EATS,8.48,false,,,Variable,Variable,true
+2024-03-30,Visaデビット　784953　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,332.32,false,,,Variable,Variable,true
+2024-03-30,Visaデビット　816491　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,17.15,false,,,Variable,Variable,true
+2024-03-30,Visaデビット　820053　UberJP_EATS,85.81,false,,,Variable,Variable,true
+2024-03-30,Visaデビット　873718　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,30.72,false,,,Variable,Variable,true
+2024-03-30,Visaデビット　900347　UberJP_EATS,11.14,false,,,Variable,Variable,true
+2024-03-31,Visaデビット　967397　UberJP_EATS,9.91,false,,,Variable,Variable,true
+2024-04-01,Visaデビット　820053　UberJP_EATS,2.39,true,,,Income,Income,true
+2024-04-01,Visaデビット　091950　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-04-01,Visaデビット　092490　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-04-01,Visaデビット　116055　森ビル関連施設,6.24,false,,,Variable,Variable,true
+2024-04-01,Visaデビット　117723　ローソン,3.13,false,,,Variable,Variable,true
+2024-04-01,Visaデビット　153528　ローソン,3.84,false,,,Variable,Variable,true
+2024-04-01,Visaデビット　193045　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-04-01,Visaデビット　198332　デニーズ羽村店,9.26,false,,,Variable,Variable,true
+2024-04-02,Visaデビット　233784　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-04-02,Visaデビット　257233　ローソン,6.8,false,,,Variable,Variable,true
+2024-04-02,Visaデビット　329535　ミニストップ羽村市役所前店,4.56,false,,,Variable,Variable,true
+2024-04-03,Visaデビット　356824　GOOGLE PLAY JAPAN,6.96,false,,,Variable,Variable,true
+2024-04-03,Visaデビット　360631　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-04-03,Visaデビット　377874　ローソン,6.96,false,,,Variable,Variable,true
+2024-04-04,Visaデビット　481988　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-04-04,Visaデビット　557993　森ビル関連施設,23.93,false,,,Variable,Variable,true
+2024-04-04,Visaデビット　573009　GOOGLE PLAY JAPAN,4.43,false,,,Variable,Variable,true
+2024-04-05,Visaデビット　604947　UberJP_EATS,3.15,false,,,Variable,Variable,true
+2024-04-05,Visaデビット　626380　UberJP_EATS,9.41,false,,,Variable,Variable,true
+2024-04-05,Visaデビット　627872　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-04-05,Visaデビット　677571　UberJP_EATS,10.67,false,,,Variable,Variable,true
+2024-04-06,Visaデビット　725142　ネットフリックス,12.53,false,,,Variable,Variable,true
+2024-04-07,Visaデビット　968468　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,31.65,false,,,Variable,Variable,true
+2024-04-08,Visaデビット　032622　セブンイレブン,1.01,false,,,Variable,Variable,true
+2024-04-08,Visaデビット　089077　デニーズ羽村店,14.83,false,,,Variable,Variable,true
+2024-04-09,Visaデビット　125892　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-04-09,Visaデビット　143032　ＡＯＩ　ＧＡＲＤＥＮ　ＦＯＯＤＨＡＬＬ,16.46,false,,,Variable,Variable,true
+2024-04-09,Visaデビット　192035　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-04-10,Visaデビット　252316　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-04-10,Visaデビット　252603　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-04-10,Visaデビット　275244　ラクテンペイ　ウイズグリ−ンシロヤマトラ,11.9,false,,,Variable,Variable,true
+2024-04-10,Visaデビット　280247　ローソン,3.27,false,,,Variable,Variable,true
+2024-04-10,Visaデビット　298947　ローソン,4.32,false,,,Variable,Variable,true
+2024-04-10,Visaデビット　349749　ＢＡＧＵＳ　銀座／ＮＦＣ,51.91,false,,,Variable,Variable,true
+2024-04-11,Visaデビット　356694　フアミリ−マ−トハムラエキヒガシグチ,1.89,false,,,Variable,Variable,true
+2024-04-11,Visaデビット　383498　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-04-11,Visaデビット　383696　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-04-11,Visaデビット　383892　フアミリ−マ−トジエイアールハムラエキ,1.96,false,,,Variable,Variable,true
+2024-04-11,Visaデビット　393339　セブンイレブン,2.5,false,,,Variable,Variable,true
+2024-04-11,Visaデビット　401649　シユマツツトウキヨウワ−ルドゲ−トテ,8.86,false,,,Variable,Variable,true
+2024-04-11,Visaデビット　404860　シユマツツトウキヨウワ−ルドゲ−トテ,6.96,false,,,Variable,Variable,true
+2024-04-11,Visaデビット　444476　ローソン,1.44,false,,,Variable,Variable,true
+2024-04-11,Visaデビット　461242　フアミリ−マ−トハムラエキヒガシグチ,1.67,false,,,Variable,Variable,true
+2024-04-11,Visaデビット　469527　GOOGLE PLAY JAPAN,4.43,false,,,Variable,Variable,true
+2024-04-11,Visaデビット　480126　UberJP_EATS,25.31,false,,,Variable,Variable,true
+2024-04-12,Visaデビット　504247　UberJP_EATS,9.3,false,,,Variable,Variable,true
+2024-04-12,Visaデビット　505464　PREPLY INC.,166.0,false,,,Variable,Variable,true
+2024-04-12,カード ゆうちょ,189.9,false,,,Variable,Variable,true
+2024-04-12,Visaデビット　570591　ドミノ・ピザ羽村緑ヶ丘店／ＮＦＣ,8.42,false,,,Variable,Variable,true
+2024-04-13,"Visaデビット　617778　GITHUB, INC.",18.77,false,,,Fixed,Fixed,true
+2024-04-13,Visaデビット　674745　ＧＯ（タクシーアプリ）＊アプリ配車,29.75,false,,,Variable,Variable,true
+2024-04-13,Visaデビット　683118　三井アウトレットパーク入間,9.31,false,,,Variable,Variable,true
+2024-04-13,Visaデビット　689458　三井アウトレットパーク入間,171.08,false,,,Variable,Variable,true
+2024-04-13,Visaデビット　693131　三井アウトレットパーク入間,150.4,false,,,Variable,Variable,true
+2024-04-13,Visaデビット　702782　東京インテリア家具　入間店,7.6,false,,,Variable,Variable,true
+2024-04-13,Visaデビット　713091　ＧＯ（タクシーアプリ）＊アプリ配車,31.02,false,,,Variable,Variable,true
+2024-04-15,Visaデビット　904785　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-04-15,Visaデビット　926281　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2024-04-15,Visaデビット　952646　UberJP_EATS,11.89,false,,,Variable,Variable,true
+2024-04-16,Visaデビット　040947　UberJP_EATS,13.88,false,,,Variable,Variable,true
+2024-04-16,Visaデビット　075661　ミニストップ羽村市役所前店,3.03,false,,,Variable,Variable,true
+2024-04-17,Visaデビット　241842　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,31.65,false,,,Variable,Variable,true
+2024-04-18,Visaデビット　336919　ヒカリ薬局信濃町店,10.13,false,,,Variable,Variable,true
+2024-04-18,Visaデビット　348001　フアミリ−マ−トハムラエキヒガシグチ,3.6,false,,,Variable,Variable,true
+2024-04-18,Visaデビット　352634　UberJP_EATS,7.26,false,,,Variable,Variable,true
+2024-04-18,Visaデビット　355158　GOOGLE PLAY JAPAN,4.43,false,,,Variable,Variable,true
+2024-04-19,Visaデビット　413631　ローソン,5.7,false,,,Variable,Variable,true
+2024-04-19,Visaデビット　438845　スターバックスコーヒージャパン,5.87,false,,,Variable,Variable,true
+2024-04-20,Visaデビット　558064　UberJP_EATS,13.88,false,,,Variable,Variable,true
+2024-04-20,Visaデビット　597586　カインズホーム,62.03,false,,,Variable,Variable,true
+2024-04-20,Visaデビット　631370　UberJP_EATS,10.11,false,,,Variable,Variable,true
+2024-04-21,Visaデビット　664603　UberJP_EATS,9.51,false,,,Variable,Variable,true
+2024-04-21,Visaデビット　699484　UberJP_EATS,10.67,false,,,Variable,Variable,true
+2024-04-21,Visaデビット　738824　UBER   *EATS,14.49,false,,,Variable,Variable,true
+2024-04-23,振込 デビツトリヨウキヤツシユバツク,4.73,true,,,Income,Income,true
+2024-04-25,Visaデビット　145765　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-04-25,Visaデビット　171703　ＴＯＲＩ．ＧＯ,6.96,false,,,Variable,Variable,true
+2024-04-25,Visaデビット　241793　テンチョ,45.12,false,,,Variable,Variable,true
+2024-04-26,Visaデビット　259673　Ｐａｉｒｓ　ペアーズ,83.56,false,,,Variable,Variable,true
+2024-04-26,Visaデビット　306201　UBER   *EATS,12.17,false,,,Variable,Variable,true
+2024-04-26,Visaデビット　346805　ＧＯ（タクシーアプリ）＊アプリ配車,13.29,false,,,Variable,Variable,true
+2024-04-26,Visaデビット　363746　グランデュオタチカワ,189.49,false,,,Variable,Variable,true
+2024-04-26,Visaデビット　369869　グランデュオタチカワ,23.66,false,,,Variable,Variable,true
+2024-04-27,Visaデビット　423196　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2024-04-27,Visaデビット　428786　UberJP_EATS,8.68,false,,,Variable,Variable,true
+2024-04-28,Visaデビット　569179　UberJP_EATS,8.68,false,,,Variable,Variable,true
+2024-04-30,給与振込 リンクス（カ,4815.34,true,,,Income,Income,true
+2024-04-30,Visaデビット　923884　マイクロソフト,23.85,false,,,Variable,Variable,true
+2024-05-01,Visaデビット　990531　GOOGLE PLAY JAPAN,91.15,false,,,Variable,Variable,true
+2024-05-01,Visaデビット　047833　UberJP_EATS,8.55,false,,,Variable,Variable,true
+2024-05-01,Visaデビット　099542　UberJP_EATS,11.12,false,,,Variable,Variable,true
+2024-05-02,Visaデビット　150725　UberJP_EATS,12.17,false,,,Variable,Variable,true
+2024-05-02,Visaデビット　212869　UberJP_EATS,9.48,false,,,Variable,Variable,true
+2024-05-02,Visaデビット　229231　NEXTUI INC.,252.73,false,,,Variable,Variable,true
+2024-05-03,Visaデビット　279380　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-05-03,Visaデビット　279602　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-05-03,Visaデビット　290946　丸の内ビルディング,6.36,false,,,Variable,Variable,true
+2024-05-03,カード セブン,379.8,false,,,Variable,Variable,true
+2024-05-03,Visaデビット　336942　ココロナガオカ,24.44,false,,,Variable,Variable,true
+2024-05-04,Visaデビット　407574　ココロナガオカ,6.9,false,,,Variable,Variable,true
+2024-05-05,Visaデビット　618339　・「ホンマイクロソフト（カ,7.66,false,,,Variable,Variable,true
+2024-05-05,Visaデビット　635535　セイユウ,28.96,false,,,Variable,Variable,true
+2024-05-06,Visaデビット　657266　ネットフリックス,12.53,false,,,Variable,Variable,true
+2024-05-06,Visaデビット　709655　UberJP_EATS,13.88,false,,,Variable,Variable,true
+2024-05-06,Visaデビット　758267　UberJP_EATS,7.26,false,,,Variable,Variable,true
+2024-05-08,Visaデビット　941532　UberJP_EATS,8.75,false,,,Variable,Variable,true
+2024-05-08,Visaデビット　983366　UberJP_EATS,8.48,false,,,Variable,Variable,true
+2024-05-08,振込 ワイズペイメンツジヤパン（カ,1772.4,false,,,Savings,Savings,true
+2024-05-09,振込 リンクス（カ,92.57,true,,,Income,Income,true
+2024-05-09,Visaデビット　060317　UberJP_EATS,10.93,false,,,Variable,Variable,true
+2024-05-09,Visaデビット　076912　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-05-10,Visaデビット　163672　UberJP_EATS,8.55,false,,,Variable,Variable,true
+2024-05-10,Visaデビット　167078　Preply Inc.,168.85,false,,,Variable,Variable,true
+2024-05-11,Visaデビット　367521　UberJP_EATS,9.48,false,,,Variable,Variable,true
+2024-05-12,Visaデビット　477637　ＧＯ（タクシーアプリ）＊アプリ配車,24.05,false,,,Variable,Variable,true
+2024-05-12,Visaデビット　509836　イオンスタイル日の出,19.05,false,,,Variable,Variable,true
+2024-05-12,Visaデビット　514322　横川観光株式会社,20.89,false,,,Variable,Variable,true
+2024-05-13,"Visaデビット　559545　GITHUB, INC.",19.09,false,,,Fixed,Fixed,true
+2024-05-13,Visaデビット　577199　GOOGLE PLAY JAPAN,16.46,false,,,Variable,Variable,true
+2024-05-13,Visaデビット　618241　ミニストップ羽村市役所前店,2.03,false,,,Variable,Variable,true
+2024-05-14,Visaデビット　684925　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-05-14,Visaデビット　710493　ＧＯ（タクシーアプリ）＊アプリ配車,6.96,false,,,Variable,Variable,true
+2024-05-14,Visaデビット　754234　UberJP_EATS,12.99,false,,,Variable,Variable,true
+2024-05-15,Visaデビット　788047　GOOGLE PLAY JAPAN,5.44,false,,,Variable,Variable,true
+2024-05-15,Visaデビット　828559　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2024-05-15,Visaデビット　828684　UberJP_EATS,12.17,false,,,Variable,Variable,true
+2024-05-15,Visaデビット　868019　UBER   *EATS,9.57,false,,,Variable,Variable,true
+2024-05-16,Visaデビット　941443　UberJP_EATS,10.48,false,,,Variable,Variable,true
+2024-05-16,Visaデビット　983991　UberJP_EATS,10.18,false,,,Variable,Variable,true
+2024-05-17,Visaデビット　075389　UberJP_EATS,15.59,false,,,Variable,Variable,true
+2024-05-18,Visaデビット　220768　ミニストップ羽村市役所前店,3.4,false,,,Variable,Variable,true
+2024-05-18,Visaデビット　246557　福島屋　本店,35.92,false,,,Variable,Variable,true
+2024-05-19,Visaデビット　345752　ミニストップ羽村市役所前店,2.39,false,,,Variable,Variable,true
+2024-05-19,Visaデビット　388684　ミニストップ羽村市役所前店,1.82,false,,,Variable,Variable,true
+2024-05-20,Visaデビット　513513　ミニストップ羽村市役所前店,8.06,false,,,Variable,Variable,true
+2024-05-21,振込 デビツトリヨウキヤツシユバツク,8.65,true,,,Income,Income,true
+2024-05-22,Visaデビット　695339　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-05-25,Visaデビット　078802　マイクロソフト,8.87,false,,,Variable,Variable,true
+2024-05-27,Visaデビット　324503　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2024-05-28,Visaデビット　150609　Preply Inc.,161.66,true,,,Income,Income,true
+2024-05-29,Visaデビット　557585　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-05-29,Visaデビット　610455　スターバックスコーヒージャパン,9.92,false,,,Variable,Variable,true
+2024-05-29,Visaデビット　628859　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-05-29,Visaデビット　647563　ＢＡＧＵＳ　銀座／ＮＦＣ,68.74,false,,,Variable,Variable,true
+2024-05-31,給与振込 リンクス（カ,4814.91,true,,,Income,Income,true
+2024-05-31,Visaデビット　825145　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-05-31,"Visaデビット　902981　GITHUB, INC.",20.16,false,,,Fixed,Fixed,true
+2024-06-01,Visaデビット　985357　GOOGLE PLAY JAPAN,5.44,false,,,Variable,Variable,true
+2024-06-01,Visaデビット　058436　ミニストップ羽村市役所前店,8.28,false,,,Variable,Variable,true
+2024-06-02,Visaデビット　073368　ＧＯＯＧＬＥ　ＡＤＳ３０９５３２２４４８,2.34,false,,,Fixed,Fixed,true
+2024-06-02,Visaデビット　123841　モリタウン,7.09,false,,,Variable,Variable,true
+2024-06-02,Visaデビット　158171　ユニクロ／ＮＦＣ,62.41,false,,,Variable,Variable,true
+2024-06-02,Visaデビット　195352　Preply Inc.,5.37,false,,,Variable,Variable,true
+2024-06-03,カード ゆうちょ,31.65,false,,,Variable,Variable,true
+2024-06-04,Visaデビット　369928　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-06-05,Visaデビット　554792　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-06-06,Visaデビット　576083　ネットフリックス,12.53,false,,,Variable,Variable,true
+2024-06-06,Visaデビット　600909　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-06-06,Visaデビット　639202　ローソン,1.89,false,,,Variable,Variable,true
+2024-06-06,Visaデビット　667856　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-06-07,Visaデビット　739520　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-06-07,Visaデビット　749956　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-06-08,Visaデビット　826484　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-06-08,Visaデビット　881381　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-06-09,Visaデビット　032642　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-06-12,Visaデビット　412661　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,263.56,false,,,Variable,Variable,true
+2024-06-13,"Visaデビット　491395　GITHUB, INC.",19.27,false,,,Fixed,Fixed,true
+2024-06-13,Visaデビット　601802　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,1100.01,false,,,Variable,Variable,true
+2024-06-15,Visaデビット　794978　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2024-06-15,Visaデビット　808830　ミニストップ羽村市役所前店,4.36,false,,,Variable,Variable,true
+2024-06-16,Visaデビット　918295　ミニストップ羽村市役所前店,2.94,false,,,Variable,Variable,true
+2024-06-16,Visaデビット　951953　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,17.61,false,,,Variable,Variable,true
+2024-06-16,Visaデビット　964209　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,100.65,false,,,Variable,Variable,true
+2024-06-16,Visaデビット　006177　ミニストップ羽村市役所前店,2.7,false,,,Variable,Variable,true
+2024-06-17,Visaデビット　054738　ミニストップ羽村市役所前店,3.54,false,,,Variable,Variable,true
+2024-06-17,Visaデビット　095671　セブンイレブン,5.58,false,,,Variable,Variable,true
+2024-06-17,Visaデビット　133095　セイユウ,41.58,false,,,Variable,Variable,true
+2024-06-17,Visaデビット　133698　フアミリ−マ−トハムラエキヒガシグチ,0.72,false,,,Variable,Variable,true
+2024-06-18,Visaデビット　874298　マイクロソフト,0.03,false,,,Variable,Variable,true
+2024-06-18,Visaデビット　205735　ミニストップ羽村市役所前店,2.94,false,,,Variable,Variable,true
+2024-06-18,Visaデビット　250353　ローソン,0.87,false,,,Variable,Variable,true
+2024-06-19,Visaデビット　262229　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,42.23,false,,,Variable,Variable,true
+2024-06-19,振込 ワイズペイメンツジヤパン（カ,3924.6,false,,,Savings,Savings,true
+2024-06-19,Visaデビット　290245　ミニストップ羽村市役所前店,2.94,false,,,Variable,Variable,true
+2024-06-20,振込 デビツトリヨウキヤツシユバツク,2.22,true,,,Income,Income,true
+2024-06-20,Visaデビット　383963　ミニストップ羽村市役所前店,4.94,false,,,Variable,Variable,true
+2024-06-20,Visaデビット　390438　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,27.41,false,,,Variable,Variable,true
+2024-06-20,Visaデビット　421494　Hotel at Booking.com,42.47,false,,,Variable,Variable,true
+2024-06-20,Visaデビット　493305　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-06-21,Visaデビット　509719　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-06-21,Visaデビット　530179　成田国際空港ターミナル／ＮＦＣ,6.77,false,,,Variable,Variable,true
+2024-06-21,Visaデビット　530504　成田国際空港ターミナル／ＮＦＣ,5.32,false,,,Variable,Variable,true
+2024-06-21,Visaデビット　544319　スターバックスコーヒージャパン,6.46,false,,,Variable,Variable,true
+2024-06-21,Visaデビット　603796　しゃぶ葉,54.25,false,,,Variable,Variable,true
+2024-06-22,Visaデビット　708275　福島屋　本店,74.91,false,,,Variable,Variable,true
+2024-06-23,Visaデビット　884978　セイユウニ,17.15,false,,,Variable,Variable,true
+2024-06-23,Visaデビット　887735　セイユウ,13.52,false,,,Variable,Variable,true
+2024-06-24,Visaデビット　999286　カインズホーム,29.63,false,,,Variable,Variable,true
+2024-06-25,Visaデビット　061540　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-06-25,Visaデビット　090096　ローソン,0.68,false,,,Variable,Variable,true
+2024-06-25,Visaデビット　141426　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-06-26,Visaデビット　249342　神原矯正歯科,174.07,false,,,Variable,Variable,true
+2024-06-26,Visaデビット　263576　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-06-26,Visaデビット　268781　フアミリ−マ−トハムラエキヒガシグチ,7.18,false,,,Variable,Variable,true
+2024-06-27,Visaデビット　305188　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2024-06-27,Visaデビット　323553　ＡＯＩ　ＧＡＲＤＥＮ　ＦＯＯＤＨＡＬＬ,8.86,false,,,Variable,Variable,true
+2024-06-27,Visaデビット　362233　ローソン,2.08,false,,,Variable,Variable,true
+2024-06-27,Visaデビット　372752　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-06-28,給与振込 リンクス（カ,5005.24,true,,,Income,Income,true
+2024-06-28,Visaデビット　505710　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,42.98,false,,,Variable,Variable,true
+2024-06-28,Visaデビット　514540　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,29.11,false,,,Variable,Variable,true
+2024-06-28,Visaデビット　518539　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,159.77,false,,,Variable,Variable,true
+2024-06-28,Visaデビット　520543　マルフジ羽村店,44.97,false,,,Variable,Variable,true
+2024-06-28,Visaデビット　531771　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,16.83,false,,,Variable,Variable,true
+2024-06-29,Visaデビット　621398　GOOGLE PLAY JAPAN,17.85,false,,,Variable,Variable,true
+2024-06-29,Visaデビット　665406　ユニクロ／ＮＦＣ,94.7,false,,,Variable,Variable,true
+2024-06-29,Visaデビット　669103　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-06-29,Visaデビット　671800　フアミリ−マ−トハムラエキヒガシグチ,1.7,false,,,Variable,Variable,true
+2024-06-30,Visaデビット　752004　ＧＯ（タクシーアプリ）＊アプリ配車,11.39,false,,,Variable,Variable,true
+2024-06-30,Visaデビット　774278　ＧＯ（タクシーアプリ）＊アプリ配車,10.76,false,,,Variable,Variable,true
+2024-07-01,Visaデビット　956421　MIRO.COM,199.53,false,,,Variable,Variable,true
+2024-07-01,Visaデビット　967295　Hotel at Booking.com,69.12,false,,,Variable,Variable,true
+2024-07-01,Visaデビット　969024　ＧＯＯＧＬＥ　ＡＤＳ３０９５３２２４４８,40.93,false,,,Fixed,Fixed,true
+2024-07-02,Visaデビット　006150　ミニストップ羽村市役所前店,2.58,false,,,Variable,Variable,true
+2024-07-02,Visaデビット　057893　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-07-02,Visaデビット　059768　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,55.27,false,,,Variable,Variable,true
+2024-07-02,Visaデビット　060179　羽田空港ターミナルビル／ＮＦＣ,6.83,false,,,Variable,Variable,true
+2024-07-03,Visaデビット　190345　ローソン,3.17,false,,,Variable,Variable,true
+2024-07-04,Visaデビット　305427　ミニストップ羽村市役所前店,3.13,false,,,Variable,Variable,true
+2024-07-05,Visaデビット　358981　ミニストップ羽村市役所前店,2.45,false,,,Variable,Variable,true
+2024-07-05,Visaデビット　389956　ミニストップ羽村市役所前店,1.89,false,,,Variable,Variable,true
+2024-07-05,Visaデビット　406645　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-07-05,Visaデビット　432783　TRIP.COM,380.81,false,,,Variable,Variable,true
+2024-07-05,Visaデビット　454260　デニーズ羽村店,49.02,false,,,Variable,Variable,true
+2024-07-05,Visaデビット　482261　UberJP_EATS,11.94,false,,,Variable,Variable,true
+2024-07-06,Visaデビット　501568　ネットフリックス,12.53,false,,,Variable,Variable,true
+2024-07-06,Visaデビット　524927　UberJP_EATS,9.5,false,,,Variable,Variable,true
+2024-07-06,Visaデビット　525236　UberJP_EATS,8.7,false,,,Variable,Variable,true
+2024-07-06,Visaデビット　567525　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-07-06,Visaデビット　607550　アジアテック　立川店,39.24,false,,,Variable,Variable,true
+2024-07-06,Visaデビット　615941　フアミリ−マ−トハムラエキヒガシグチ,0.68,false,,,Variable,Variable,true
+2024-07-06,Visaデビット　629700　Hotel at Booking.com,400.02,false,,,Variable,Variable,true
+2024-07-07,Visaデビット　673903　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,11.27,false,,,Variable,Variable,true
+2024-07-07,Visaデビット　727478　スターバックスコーヒージャパン,14.18,false,,,Variable,Variable,true
+2024-07-07,Visaデビット　745433　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-07-07,Visaデビット　752800　美楽味,35.58,false,,,Variable,Variable,true
+2024-07-08,Visaデビット　779296　ソフトバンク（Ｂ）,23.42,false,,,Variable,Variable,true
+2024-07-09,Visaデビット　012855　UberJP_EATS,9.1,false,,,Variable,Variable,true
+2024-07-09,Visaデビット　015123　・「ホンマイクロソフト（カ,7.66,false,,,Variable,Variable,true
+2024-07-11,Visaデビット　296905　UberJP_EATS,12.52,false,,,Variable,Variable,true
+2024-07-14,"Visaデビット　449166　GITHUB, INC.",19.77,false,,,Fixed,Fixed,true
+2024-07-14,Visaデビット　470374　ＧＯ（タクシーアプリ）＊アプリ配車,20.89,false,,,Variable,Variable,true
+2024-07-14,Visaデビット　470983　フアミリ−マ−トフツササンノウバシドオ,6.44,false,,,Variable,Variable,true
+2024-07-14,Visaデビット　477560　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-07-14,Visaデビット　485037　モリタウン,33.7,false,,,Variable,Variable,true
+2024-07-14,Visaデビット　495489　モリタウン,26.95,false,,,Variable,Variable,true
+2024-07-14,Visaデビット　500552　ニトリ,9.43,false,,,Variable,Variable,true
+2024-07-14,Visaデビット　502962　モリタウン,13.51,false,,,Variable,Variable,true
+2024-07-14,Visaデビット　523187　はむら線路沿い皮ふ科,4.68,false,,,Variable,Variable,true
+2024-07-14,Visaデビット　536016　セイユウ,7.92,false,,,Variable,Variable,true
+2024-07-15,Visaデビット　608962　ＧＯ（タクシーアプリ）＊アプリ配車,6.96,false,,,Variable,Variable,true
+2024-07-15,Visaデビット　621822　デニーズ羽村店,43.66,false,,,Variable,Variable,true
+2024-07-15,Visaデビット　725748　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2024-07-15,Visaデビット　761932　ニューデイズキオスクヨコハマシテン,11.38,false,,,Variable,Variable,true
+2024-07-16,Visaデビット　784020　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,56.58,false,,,Variable,Variable,true
+2024-07-16,Visaデビット　784715　セブンイレブン,0.68,false,,,Variable,Variable,true
+2024-07-16,Visaデビット　795362　フアミリ−マ−トハムラエキヒガシグチ,7.17,false,,,Variable,Variable,true
+2024-07-16,Visaデビット　864008　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-07-16,Visaデビット　864316　ＧＯ（タクシーアプリ）＊アプリ配車,3.8,false,,,Variable,Variable,true
+2024-07-17,Visaデビット　928392　CU EULZIRO5GAJUM,12.18,false,,,Variable,Variable,true
+2024-07-17,Visaデビット　981602　(JOO)KEOPIBINKOLIAGOANGHO,27.8,false,,,Variable,Variable,true
+2024-07-17,Visaデビット　981602　(JOO)KEOPIBINKOLIAGOANGHO,27.8,true,,,Income,Income,true
+2024-07-17,Visaデビット　982302　(JOO)KEOPIBINKOLIAGOANGHO,23.28,false,,,Variable,Variable,true
+2024-07-17,Visaデビット　021492　INDIA CHEF        7447939,5.93,false,,,Variable,Variable,true
+2024-07-17,Visaデビット　031253　INDIA CHEF        7447939,48.93,false,,,Variable,Variable,true
+2024-07-17,Visaデビット　037192　CU EULZIRO5GAJUM,5.37,false,,,Variable,Variable,true
+2024-07-18,Visaデビット　087338　CU EULZIRO5GAJUM,11.15,false,,,Variable,Variable,true
+2024-07-18,Visaデビット　090367　CU EULZIRO5GAJUM,18.58,false,,,Variable,Variable,true
+2024-07-18,Visaデビット　154063　StarbucksKorea,14.46,false,,,Variable,Variable,true
+2024-07-19,Visaデビット　213612　GUKJE  CLINIC     0969783,36.88,false,,,Variable,Variable,true
+2024-07-19,Visaデビット　215226　pharmacy,16.69,false,,,Variable,Variable,true
+2024-07-19,Visaデビット　215654　pharmacy,2.22,false,,,Variable,Variable,true
+2024-07-19,Visaデビット　216268　TROY TROY         7948809,19.03,false,,,Variable,Variable,true
+2024-07-19,Visaデビット　224940　StarbucksKorea,9.69,false,,,Variable,Variable,true
+2024-07-19,"Visaデビット　284172　CO., LTD. GONG-CHA KOREA",7.15,false,,,Variable,Variable,true
+2024-07-19,Visaデビット　290450　SAO,2.35,false,,,Variable,Variable,true
+2024-07-19,Visaデビット　299256　PIM FLOWER        5611027,2.8,false,,,Variable,Variable,true
+2024-07-20,Visaデビット　435429　EULJIRO 6-GA BRANCH,451.33,false,,,Variable,Variable,true
+2024-07-21,Visaデビット　491218　ZIP AIR TOKYO INC. KOREA,33.33,false,,,Variable,Variable,true
+2024-07-21,Visaデビット　506595　PASCUCCI  INCHEON AIR POR,9.27,false,,,Variable,Variable,true
+2024-07-22,Visaデビット　621463　ＧＯ（タクシーアプリ）＊アプリ配車,6.96,false,,,Variable,Variable,true
+2024-07-22,Visaデビット　685502　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-07-23,振込 デビツトリヨウキヤツシユバツク,11.93,true,,,Income,Income,true
+2024-07-23,Visaデビット　764799　UberJP_EATS,33.75,false,,,Variable,Variable,true
+2024-07-24,振込 カ）エイペスト,4511.0,false,,,Variable,Variable,true
+2024-07-24,振込 カ）タウンハウジングトウキヨウ,849.49,false,,,Variable,Variable,true
+2024-07-24,Visaデビット　938889　CLAUDE.AI SUBSCRIPTION,20.24,false,,,Fixed,Fixed,true
+2024-07-25,Visaデビット　008071　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-07-25,Visaデビット　008268　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-07-25,Visaデビット　047428　ローソン,3.94,false,,,Variable,Variable,true
+2024-07-25,Visaデビット　065149　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-07-26,Visaデビット　214152　ミニストップ羽村市役所前店,4.01,false,,,Variable,Variable,true
+2024-07-27,Visaデビット　274124　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2024-07-27,Visaデビット　314807　UberJP_EATS,13.46,false,,,Variable,Variable,true
+2024-07-27,Visaデビット　315437　UberJP_EATS,9.66,false,,,Variable,Variable,true
+2024-07-28,Visaデビット　457016　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-07-29,Visaデビット　562064　ミニストップ羽村市役所前店,6.53,false,,,Variable,Variable,true
+2024-07-29,Visaデビット　603111　ミニストップ羽村市役所前店,4.6,false,,,Variable,Variable,true
+2024-07-30,Visaデビット　730733　ＧＯ（タクシーアプリ）＊アプリ配車,6.96,false,,,Variable,Variable,true
+2024-07-30,Visaデビット　739665　神原矯正歯科,174.07,false,,,Variable,Variable,true
+2024-07-30,Visaデビット　745881　セレオコクブンジ,27.85,false,,,Variable,Variable,true
+2024-07-30,Visaデビット　754836　セレオコクブンジ,23.74,false,,,Variable,Variable,true
+2024-07-30,Visaデビット　773156　UberJP_EATS,8.68,false,,,Variable,Variable,true
+2024-07-31,給与振込 リンクス（カ,4212.09,true,,,Income,Income,true
+2024-07-31,Visaデビット　848215　マイクロソフト,71.36,false,,,Variable,Variable,true
+2024-07-31,Visaデビット　865065　ミニストップ羽村市役所前店,2.65,false,,,Variable,Variable,true
+2024-08-01,Visaデビット　970072　ミニストップ羽村市役所前店,3.22,false,,,Variable,Variable,true
+2024-08-01,Visaデビット　044343　ミニストップ羽村市役所前店,1.54,false,,,Variable,Variable,true
+2024-08-02,カード ゆうちょ,63.3,false,,,Variable,Variable,true
+2024-08-02,Visaデビット　106979　ミニストップ羽村市役所前店,4.46,false,,,Variable,Variable,true
+2024-08-03,Visaデビット　071252　GOOGLE*CLOUD 84ZRL3,0.01,false,,,Variable,Variable,true
+2024-08-03,Visaデビット　299043　ミニストップ羽村市役所前店,4.29,false,,,Variable,Variable,true
+2024-08-03,Visaデビット　348041　UberJP_EATS,14.57,false,,,Variable,Variable,true
+2024-08-04,Visaデビット　408687　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,25.19,false,,,Variable,Variable,true
+2024-08-04,Visaデビット　408809　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,132.74,false,,,Variable,Variable,true
+2024-08-04,Visaデビット　417286　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,215.09,false,,,Variable,Variable,true
+2024-08-04,Visaデビット　418371　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,51.13,false,,,Variable,Variable,true
+2024-08-04,Visaデビット　418388　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,17.08,false,,,Variable,Variable,true
+2024-08-04,Visaデビット　475151　GOOGLE PLAY JAPAN,20.51,false,,,Variable,Variable,true
+2024-08-05,Visaデビット　529057　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-08-05,Visaデビット　566829　UberJP_EATS,20.01,false,,,Variable,Variable,true
+2024-08-06,Visaデビット　627856　ネットフリックス,12.53,false,,,Variable,Variable,true
+2024-08-06,Visaデビット　672239　UberJP_EATS,18.45,false,,,Variable,Variable,true
+2024-08-06,Visaデビット　717984　UberJP_EATS,14.57,false,,,Variable,Variable,true
+2024-08-07,Visaデビット　801435　UberJP_EATS,29.45,false,,,Variable,Variable,true
+2024-08-07,Visaデビット　821748　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,46.75,false,,,Variable,Variable,true
+2024-08-08,Visaデビット　885766　ソフトバンク（Ｂ）,3.17,false,,,Variable,Variable,true
+2024-08-08,カード イオン,253.2,false,,,Variable,Variable,true
+2024-08-08,Visaデビット　929632　ミニストップ羽村市役所前店,3.53,false,,,Variable,Variable,true
+2024-08-08,Visaデビット　987095　UberJP_EATS,13.88,false,,,Variable,Variable,true
+2024-08-08,Visaデビット　993928　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,120.14,false,,,Variable,Variable,true
+2024-08-08,Visaデビット　994282　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,69.51,false,,,Variable,Variable,true
+2024-08-08,Visaデビット　006197　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,335.43,false,,,Variable,Variable,true
+2024-08-08,Visaデビット　007185　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,43.35,false,,,Variable,Variable,true
+2024-08-09,Visaデビット　087120　ミニストップ羽村市役所前店,7.1,false,,,Variable,Variable,true
+2024-08-09,Visaデビット　106713　UberJP_EATS,30.21,false,,,Variable,Variable,true
+2024-08-09,Visaデビット　109330　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-08-10,Visaデビット　219826　アート引越センター株式会社,627.94,false,,,Variable,Variable,true
+2024-08-10,Visaデビット　242246　ＧＯ（タクシーアプリ）＊アプリ配車,149.51,false,,,Variable,Variable,true
+2024-08-10,Visaデビット　261899　アート引越センター株式会社,30.38,false,,,Variable,Variable,true
+2024-08-10,Visaデビット　275213　NOJIMA,119.07,false,,,Variable,Variable,true
+2024-08-10,Visaデビット　298698　フアミリ−マ−トチガサキコワダサンチヨ,6.11,false,,,Variable,Variable,true
+2024-08-11,Visaデビット　333096　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,189.84,false,,,Variable,Variable,true
+2024-08-11,Visaデビット　350363　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,14.43,false,,,Variable,Variable,true
+2024-08-11,Visaデビット　351543　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,18.86,false,,,Variable,Variable,true
+2024-08-11,Visaデビット　355511　GOOGLE*TEMPORARY HOLD,1.27,false,,,Variable,Variable,true
+2024-08-11,Visaデビット　355511　GOOGLE*TEMPORARY HOLD,1.27,true,,,Income,Income,true
+2024-08-11,Visaデビット　374570　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,21.4,false,,,Variable,Variable,true
+2024-08-11,Visaデビット　395294　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2024-08-11,Visaデビット　275213　NOJIMA,119.07,true,,,Income,Income,true
+2024-08-11,Visaデビット　401063　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,32.54,false,,,Variable,Variable,true
+2024-08-11,Visaデビット　416479　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,18.04,false,,,Variable,Variable,true
+2024-08-11,Visaデビット　425999　サミット,30.37,false,,,Variable,Variable,true
+2024-08-11,Visaデビット　432523　ＢＳＢ　Ｌｕｚ湘南辻堂,29.28,false,,,Variable,Variable,true
+2024-08-11,Visaデビット　434513　辻堂交通株式会社,5.06,false,,,Variable,Variable,true
+2024-08-12,Visaデビット　506753　ＧＯ（タクシーアプリ）＊アプリ配車,6.96,false,,,Variable,Variable,true
+2024-08-12,Visaデビット　518286　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,22.53,false,,,Variable,Variable,true
+2024-08-12,Visaデビット　519394　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,9.75,false,,,Variable,Variable,true
+2024-08-12,Visaデビット　520362　ラクテンモバイルツウシンリョウ,14.99,false,,,Variable,Variable,true
+2024-08-12,Visaデビット　540826　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,34.06,false,,,Variable,Variable,true
+2024-08-12,Visaデビット　540828　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,34.06,false,,,Variable,Variable,true
+2024-08-12,振込 ヤマモト　ユウタ,633.0,false,,,Variable,Variable,true
+2024-08-13,Visaデビット　606930　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,25.95,false,,,Variable,Variable,true
+2024-08-13,"Visaデビット　613974　GITHUB, INC.",18.1,false,,,Fixed,Fixed,true
+2024-08-13,Visaデビット　635416　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2024-08-13,Visaデビット　648406　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,17.14,false,,,Variable,Variable,true
+2024-08-13,Visaデビット　658335　エスパティオ　小和田店,14.35,false,,,Variable,Variable,true
+2024-08-13,Visaデビット　717031　ダイソー／ＮＦＣ,4.23,false,,,Variable,Variable,true
+2024-08-13,Visaデビット　717482　バーガーキング／ＮＦＣ,14.75,false,,,Variable,Variable,true
+2024-08-14,Visaデビット　748911　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,39.56,false,,,Variable,Variable,true
+2024-08-14,Visaデビット　275213　ノジマ　テラスモール湘南店,119.07,false,,,Variable,Variable,true
+2024-08-14,Visaデビット　835438　UberJP_EATS,20.72,false,,,Variable,Variable,true
+2024-08-15,Visaデビット　000614　ノジマ　テラスモール湘南店,119.07,true,,,Income,Income,true
+2024-08-15,Visaデビット　926051　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2024-08-16,Visaデビット　073442　エスパティオ　小和田店,13.98,false,,,Variable,Variable,true
+2024-08-16,Visaデビット　096030　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,22.03,false,,,Variable,Variable,true
+2024-08-16,Visaデビット　109590　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,56.34,false,,,Variable,Variable,true
+2024-08-17,Visaデビット　219740　ノジマ　テラスモール湘南店,188.65,false,,,Variable,Variable,true
+2024-08-17,Visaデビット　221086　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,22.53,false,,,Variable,Variable,true
+2024-08-18,Visaデビット　289451　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,8.9,false,,,Variable,Variable,true
+2024-08-18,Visaデビット　291830　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,86.78,false,,,Variable,Variable,true
+2024-08-18,Visaデビット　307433　エスパティオ　小和田店,3.39,false,,,Variable,Variable,true
+2024-08-18,Visaデビット　368051　エスパティオ　小和田店,6.29,false,,,Variable,Variable,true
+2024-08-19,決算お利息,0.41,true,,,Income,Income,true
+2024-08-19,Visaデビット　454735　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2024-08-19,カード セブン,63.3,false,,,Variable,Variable,true
+2024-08-19,カード ローソンATM,63.3,false,,,Variable,Variable,true
+2024-08-19,Visaデビット　502679　バーガーキング／ＮＦＣ,11.84,false,,,Variable,Variable,true
+2024-08-19,Visaデビット　532709　セブンイレブン,7.15,false,,,Variable,Variable,true
+2024-08-20,Visaデビット　635694　フアミリ−マ−トツジドウカンダイ,6.03,false,,,Variable,Variable,true
+2024-08-20,カード イーネット,126.6,false,,,Variable,Variable,true
+2024-08-20,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-08-21,振込 デビツトリヨウキヤツシユバツク,7.53,true,,,Income,Income,true
+2024-08-21,Visaデビット　675891　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,31.75,false,,,Variable,Variable,true
+2024-08-21,Visaデビット　676685　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,8.26,false,,,Variable,Variable,true
+2024-08-21,Visaデビット　705879　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,2.15,false,,,Variable,Variable,true
+2024-08-21,Visaデビット　706999　株式会社パル・オネスト,12.66,false,,,Variable,Variable,true
+2024-08-21,Visaデビット　727835　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,6.99,false,,,Variable,Variable,true
+2024-08-21,Visaデビット　727839　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,6.99,false,,,Variable,Variable,true
+2024-08-21,Visaデビット　796706　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,40.98,false,,,Variable,Variable,true
+2024-08-22,Visaデビット　861370　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,35.95,false,,,Variable,Variable,true
+2024-08-22,Visaデビット　884740　UberJP_EATS,20.64,false,,,Variable,Variable,true
+2024-08-23,Visaデビット　935211　AMAZON CO JP,1.9,false,,,Variable,Variable,true
+2024-08-23,Visaデビット　      　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,48.49,true,,,Income,Income,true
+2024-08-23,Visaデビット　973840　Temu.com,54.91,false,,,Variable,Variable,true
+2024-08-23,Visaデビット　980318　Temu.com,5.66,false,,,Variable,Variable,true
+2024-08-23,Visaデビット　007008　ＧＯ（タクシーアプリ）＊アプリ配車,15.82,false,,,Variable,Variable,true
+2024-08-23,Visaデビット　010151　ローソン,4.11,false,,,Variable,Variable,true
+2024-08-23,カード ローソンATM,189.9,false,,,Variable,Variable,true
+2024-08-23,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-08-23,Visaデビット　014143　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-08-23,Visaデビット　033842　GOOGLE PLAY JAPAN,10.63,false,,,Variable,Variable,true
+2024-08-23,Visaデビット　035931　ハワイアンダイニング　ラ・オハナ,27.99,false,,,Variable,Variable,true
+2024-08-23,Visaデビット　039008　ＧＯ（タクシーアプリ）＊アプリ配車,20.89,false,,,Variable,Variable,true
+2024-08-24,Visaデビット　073610　Temu.com,48.76,false,,,Variable,Variable,true
+2024-08-24,Visaデビット　188905　CLAUDE.AI SUBSCRIPTION,18.88,false,,,Fixed,Fixed,true
+2024-08-25,Visaデビット　222676　AMAZON CO JP,55.45,false,,,Variable,Variable,true
+2024-08-25,Visaデビット　222677　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,50.63,false,,,Variable,Variable,true
+2024-08-25,Visaデビット　222895　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,242.38,false,,,Variable,Variable,true
+2024-08-25,Visaデビット　223104　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,107.55,false,,,Variable,Variable,true
+2024-08-25,Visaデビット　225096　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,3.77,false,,,Variable,Variable,true
+2024-08-25,Visaデビット　225880　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,37.7,false,,,Variable,Variable,true
+2024-08-25,Visaデビット　236576　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,43.68,false,,,Variable,Variable,true
+2024-08-26,Visaデビット　935211　AMAZON CO JP,1.9,true,,,Income,Income,true
+2024-08-27,Visaデビット　516806　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2024-08-27,Visaデビット　534314　UberJP_EATS,13.46,false,,,Variable,Variable,true
+2024-08-27,Visaデビット　593265　エスパティオ　小和田店,27.0,false,,,Variable,Variable,true
+2024-08-28,Visaデビット　222676　AMAZON CO JP,55.45,true,,,Income,Income,true
+2024-08-28,Visaデビット　624016　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,22.79,false,,,Variable,Variable,true
+2024-08-28,Visaデビット　624052　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,16.14,false,,,Variable,Variable,true
+2024-08-28,Visaデビット　624053　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,15.38,false,,,Variable,Variable,true
+2024-08-28,Visaデビット　624069　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,19.56,false,,,Variable,Variable,true
+2024-08-28,Visaデビット　624253　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,44.98,false,,,Variable,Variable,true
+2024-08-28,Visaデビット　626166　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,31.9,false,,,Variable,Variable,true
+2024-08-28,Visaデビット　626712　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,40.58,false,,,Variable,Variable,true
+2024-08-30,給与振込 リンクス（カ,4216.52,true,,,Income,Income,true
+2024-08-30,振込 ワイズペイメンツジヤパン（カ,316.5,false,,,Savings,Savings,true
+2024-08-30,Visaデビット　921548　TRIP.COM,1704.57,false,,,Variable,Variable,true
+2024-08-30,Visaデビット　946477　UberJP_EATS,16.75,false,,,Variable,Variable,true
+2024-08-30,Visaデビット　989897　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,65.79,false,,,Variable,Variable,true
+2024-08-31,Visaデビット　074309　Temu.com,28.53,false,,,Variable,Variable,true
+2024-08-31,Visaデビット　119539　UberJP_EATS,8.73,false,,,Variable,Variable,true
+2024-09-01,Visaデビット　250050　エスパティオ　小和田店,27.89,false,,,Variable,Variable,true
+2024-09-02,Visaデビット　371857　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,22.51,false,,,Variable,Variable,true
+2024-09-02,Visaデビット　414807　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,14.22,false,,,Variable,Variable,true
+2024-09-03,Visaデビット　305260　GOOGLE*CLOUD Q99BXS,0.01,false,,,Variable,Variable,true
+2024-09-03,Visaデビット　479952　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-03,Visaデビット　482494　ＧＯ（タクシーアプリ）＊アプリ配車,7.6,false,,,Variable,Variable,true
+2024-09-03,Visaデビット　494103　ローソン,3.6,false,,,Variable,Variable,true
+2024-09-03,カード 三菱ＵＦＪ,94.95,false,,,Variable,Variable,true
+2024-09-03,Visaデビット　536324　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-04,Visaデビット　565695　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,15.95,false,,,Variable,Variable,true
+2024-09-04,Visaデビット　576681　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-04,Visaデビット　576822　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2024-09-04,Visaデビット　587487　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-09-04,Visaデビット　589141　ミニストップ　成田空港第１ターミナル,2.66,false,,,Variable,Variable,true
+2024-09-04,Visaデビット　620290　UberJP_EATS,25.27,false,,,Variable,Variable,true
+2024-09-04,Visaデビット　662245　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,6.65,false,,,Variable,Variable,true
+2024-09-04,Visaデビット　675233　セブンイレブン,18.61,false,,,Variable,Variable,true
+2024-09-04,Visaデビット　680411　東急パワーサプライ,17.05,false,,,Fixed,Fixed,true
+2024-09-05,Visaデビット　725754　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-09-05,Visaデビット　751326　エスパティオ　小和田店,36.02,false,,,Variable,Variable,true
+2024-09-06,Visaデビット　835483　ＮＥＴＦＬＩＸ．ＣＯＭ,12.53,false,,,Fixed,Fixed,true
+2024-09-06,Visaデビット　887016　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-09-06,カード セブン,94.95,false,,,Variable,Variable,true
+2024-09-06,Visaデビット　925364　カブシキガイシヤア−ルプリユキカク,12.91,false,,,Variable,Variable,true
+2024-09-06,Visaデビット　934690　スターバックスコーヒージャパン,8.63,false,,,Variable,Variable,true
+2024-09-07,Visaデビット　053152　ＧＯ（タクシーアプリ）＊アプリ配車,26.59,false,,,Variable,Variable,true
+2024-09-07,Visaデビット　099243　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-07,Visaデビット　111107　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,22.03,false,,,Variable,Variable,true
+2024-09-08,Visaデビット　111328　ソフトバンク（Ｂ）,201.65,false,,,Variable,Variable,true
+2024-09-08,Visaデビット　112595　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,4.43,false,,,Variable,Variable,true
+2024-09-08,Visaデビット　120135　ソフトバンク（Ｂ）,22.83,false,,,Variable,Variable,true
+2024-09-08,Visaデビット　204971　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,6.82,false,,,Variable,Variable,true
+2024-09-08,Visaデビット　205549　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,4.18,false,,,Variable,Variable,true
+2024-09-08,Visaデビット　206334　TERASUMO-RUSIYOUNANN,24.12,false,,,Variable,Variable,true
+2024-09-08,Visaデビット　206334　TERASUMO-RUSIYOUNANN,24.12,true,,,Income,Income,true
+2024-09-08,Visaデビット　206898　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,22.72,false,,,Variable,Variable,true
+2024-09-08,Visaデビット　223598　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,13.74,false,,,Variable,Variable,true
+2024-09-08,Visaデビット　230749　クリエイトエス・ディー,22.97,false,,,Variable,Variable,true
+2024-09-09,Visaデビット　337682　マイクロソフト,7.66,false,,,Variable,Variable,true
+2024-09-09,Visaデビット　346816　UberJP_EATS,16.39,false,,,Variable,Variable,true
+2024-09-09,Visaデビット　363808　１０９シネマズ　湘南（券売機）,18.99,false,,,Variable,Variable,true
+2024-09-09,Visaデビット　364877　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,10.82,false,,,Variable,Variable,true
+2024-09-10,Visaデビット　454722　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-09-10,カード イーネット,63.3,false,,,Variable,Variable,true
+2024-09-10,Visaデビット　477227　神原矯正歯科,174.07,false,,,Variable,Variable,true
+2024-09-10,Visaデビット　479502　バーガーキング／ＮＦＣ,20.51,false,,,Variable,Variable,true
+2024-09-10,Visaデビット　523512　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,17.72,false,,,Variable,Variable,true
+2024-09-10,Visaデビット　523516　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,6.32,false,,,Variable,Variable,true
+2024-09-11,振込 ハムラシ　ノウゼイカ,401.95,true,,,Income,Income,true
+2024-09-11,Visaデビット　589463　エスパティオ　小和田店,90.92,false,,,Variable,Variable,true
+2024-09-12,Visaデビット　739438　ラクテンモバイルツウシンリョウ,13.81,false,,,Variable,Variable,true
+2024-09-12,Visaデビット　754853　エスパティオ　小和田店,2.51,false,,,Variable,Variable,true
+2024-09-12,Visaデビット　769524　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,31.52,false,,,Variable,Variable,true
+2024-09-13,"Visaデビット　810098　GITHUB, INC.",17.45,false,,,Fixed,Fixed,true
+2024-09-13,Visaデビット　      　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,24.12,true,,,Income,Income,true
+2024-09-13,Visaデビット　206334　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,24.12,false,,,Variable,Variable,true
+2024-09-13,Visaデビット　913074　バーガーキング／ＮＦＣ,11.39,false,,,Variable,Variable,true
+2024-09-13,Visaデビット　929559　サミット／ＮＦＣ,36.57,false,,,Variable,Variable,true
+2024-09-15,Visaデビット　977970　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-15,Visaデビット　979066　ＧＯ（タクシーアプリ）＊アプリ配車,7.6,false,,,Variable,Variable,true
+2024-09-15,Visaデビット　041012　うんこミュージアム　ＴＯＫＹＯ,32.92,false,,,Variable,Variable,true
+2024-09-15,Visaデビット　049762　うんこミュージアム　ＴＯＫＹＯ,10.13,false,,,Variable,Variable,true
+2024-09-15,Visaデビット　050173　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-15,Visaデビット　057588　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-15,Visaデビット　067858　サミット／ＮＦＣ,31.04,false,,,Variable,Variable,true
+2024-09-16,Visaデビット　113786　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2024-09-16,Visaデビット　143430　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-16,Visaデビット　162432　鼎・台湾屋台／ＮＦＣ,10.44,false,,,Variable,Variable,true
+2024-09-16,Visaデビット　179131　エ−ビ−シ−マ−トヨコハマワ−ルドポ−タ,50.13,false,,,Variable,Variable,true
+2024-09-16,Visaデビット　186839　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-16,Visaデビット　217053　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-16,Visaデビット　231041　マクドナルド,10.82,false,,,Variable,Variable,true
+2024-09-16,Visaデビット　238848　東京ディズニーリゾート（チケット通販）,125.33,false,,,Variable,Variable,true
+2024-09-17,Visaデビット　297261　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-17,Visaデビット　300147　UberJP_EATS,20.38,false,,,Variable,Variable,true
+2024-09-17,Visaデビット　305455　GOOGLE PLAY JAPAN,9.12,false,,,Variable,Variable,true
+2024-09-17,Visaデビット　311164　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,7.62,false,,,Variable,Variable,true
+2024-09-17,Visaデビット　346579　UberJP_EATS,22.8,false,,,Variable,Variable,true
+2024-09-17,Visaデビット　395848　UberJP_EATS,28.3,false,,,Variable,Variable,true
+2024-09-18,Visaデビット　431782　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-18,Visaデビット　447933　ＧＯ（タクシーアプリ）＊アプリ配車,7.6,false,,,Variable,Variable,true
+2024-09-18,カード 三菱ＵＦＪ,253.2,false,,,Variable,Variable,true
+2024-09-18,Visaデビット　462184　アトレシナノマチ,10.86,false,,,Variable,Variable,true
+2024-09-18,カード イオン,822.9,false,,,Variable,Variable,true
+2024-09-18,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-09-18,Visaデビット　492594　アトレシナノマチ,11.24,false,,,Variable,Variable,true
+2024-09-18,Visaデビット　508950　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-20,Visaデビット　718756　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-09-20,Visaデビット　719297　ＧＯ（タクシーアプリ）＊アプリ配車,7.6,false,,,Variable,Variable,true
+2024-09-20,カード セブン,94.95,false,,,Variable,Variable,true
+2024-09-20,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-09-20,カード ローソンATM,253.2,false,,,Variable,Variable,true
+2024-09-20,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-09-20,Visaデビット　767279　森ビル関連施設,26.71,false,,,Variable,Variable,true
+2024-09-20,Visaデビット　817494　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-20,Visaデビット　819510　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,34.18,false,,,Variable,Variable,true
+2024-09-21,Visaデビット　839298　株式会社パル・オネスト,12.66,false,,,Variable,Variable,true
+2024-09-21,Visaデビット　917104　ブッキング・ドットコム・ジャパンカフ,129.76,false,,,Variable,Variable,true
+2024-09-21,Visaデビット　922496　マイクロソフト,71.79,false,,,Variable,Variable,true
+2024-09-21,カード セブン,63.3,false,,,Variable,Variable,true
+2024-09-21,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-09-22,Visaデビット　018518　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-22,Visaデビット　033676　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-22,Visaデビット　044599　ＳＱ＊六本木ミュージアム,23.52,false,,,Variable,Variable,true
+2024-09-22,Visaデビット　062219　シディークパレス東京タワー店,24.94,false,,,Variable,Variable,true
+2024-09-22,Visaデビット　071181　GetYourGuide Deutschla,75.96,false,,,Variable,Variable,true
+2024-09-22,Visaデビット　093465　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-23,Visaデビット　195250　GOOGLE PLAY JAPAN,10.63,false,,,Variable,Variable,true
+2024-09-23,Visaデビット　197209　フアミリ−マ−トツジドウエキニシグチ,5.95,false,,,Variable,Variable,true
+2024-09-23,Visaデビット　218754　江の島ホテル　本館,39.25,false,,,Variable,Variable,true
+2024-09-23,Visaデビット　222625　フアミリ−マ−トカタセエノシマエキマエ,6.42,false,,,Variable,Variable,true
+2024-09-24,Visaデビット　282962　UberJP_EATS,16.34,false,,,Variable,Variable,true
+2024-09-24,Visaデビット　284333　UberJP_EATS,8.42,false,,,Variable,Variable,true
+2024-09-24,Visaデビット　335986　CLAUDE.AI SUBSCRIPTION,18.61,false,,,Fixed,Fixed,true
+2024-09-25,振込 デビツトリヨウキヤツシユバツク,20.85,true,,,Income,Income,true
+2024-09-25,給与振込 リンクス（カ,4216.52,true,,,Income,Income,true
+2024-09-25,Visaデビット　921599　ブッキング・ドットコム・ジャパンカフ,129.76,true,,,Income,Income,true
+2024-09-25,Visaデビット　382361　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-09-25,カード 三菱ＵＦＪ,126.6,false,,,Variable,Variable,true
+2024-09-25,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-09-25,Visaデビット　408537　聖路加国際病院内地下１階売店／ＮＦＣ,4.06,false,,,Variable,Variable,true
+2024-09-25,Visaデビット　408794　スターバックスコーヒージャパン,3.35,false,,,Variable,Variable,true
+2024-09-25,Visaデビット　437436　月島もんじゃ　くうや　渋谷,33.98,false,,,Variable,Variable,true
+2024-09-25,Visaデビット　465258　セブンイレブン,9.57,false,,,Variable,Variable,true
+2024-09-25,Visaデビット　480016　ユニクロ／ＮＦＣ,90.33,false,,,Variable,Variable,true
+2024-09-25,Visaデビット　489729　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-25,Visaデビット　492723　サミット／ＮＦＣ,33.86,false,,,Variable,Variable,true
+2024-09-25,Visaデビット　494116　セブンイレブン,4.4,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　502181　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,15.38,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　502316　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,21.4,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　502341　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,7.28,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　502360　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,47.63,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　502504　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,35.31,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　502553　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,22.79,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　502636　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,10.87,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　505264　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,14.25,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　509323　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,7.53,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　514665　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,20.76,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　514671　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,27.09,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　536990　Etsy.com*HayeAmeri,2.97,false,,,Variable,Variable,true
+2024-09-26,Visaデビット　600245　UberJP_EATS,9.7,false,,,Variable,Variable,true
+2024-09-27,Visaデビット　657550　Ａｍａｚｏｎ　Ｄｏｗｎｌｏａｄｓ,6.2,false,,,Variable,Variable,true
+2024-09-27,Visaデビット　677239　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2024-09-27,Visaデビット　678677　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,15.82,false,,,Variable,Variable,true
+2024-09-27,Visaデビット　696739　タリーズコーヒー築地聖ルカ通り,9.63,false,,,Variable,Variable,true
+2024-09-27,カード セブン,94.95,false,,,Variable,Variable,true
+2024-09-27,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-09-28,Visaデビット　801645　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,9.91,false,,,Variable,Variable,true
+2024-09-28,Visaデビット　847038　フアミリ−マ−トツジドウエキニシグチ,5.94,false,,,Variable,Variable,true
+2024-09-28,Visaデビット　858286　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-09-28,Visaデビット　862205　エバラコウツウ　タクシ−ゴリヨウダイキン,8.23,false,,,Variable,Variable,true
+2024-09-28,Visaデビット　879293　デニーズ築地店,29.31,false,,,Variable,Variable,true
+2024-09-28,Visaデビット　911723　サミット／ＮＦＣ,17.03,false,,,Variable,Variable,true
+2024-09-29,Visaデビット　989668　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-09-29,Visaデビット　009332　ホビーオフ藤沢店,33.45,false,,,Variable,Variable,true
+2024-09-29,Visaデビット　012794　ＯＤＡＫＹＵ湘南ＧＡＴＥ,8.91,false,,,Variable,Variable,true
+2024-09-29,Visaデビット　032524　ビックカメラ　藤沢店,30.73,false,,,Variable,Variable,true
+2024-09-30,Visaデビット　154915　ラクテンペイ　アクアテラ,29.12,false,,,Variable,Variable,true
+2024-09-30,Visaデビット　168086　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,19.12,false,,,Variable,Variable,true
+2024-10-01,Visaデビット　257144　エスパティオ　小和田店,38.63,false,,,Variable,Variable,true
+2024-10-01,Visaデビット　303056　UberJP_EATS,9.7,false,,,Variable,Variable,true
+2024-10-02,Visaデビット　452552　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,18.52,false,,,Variable,Variable,true
+2024-10-02,Visaデビット　458087　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,9.05,false,,,Variable,Variable,true
+2024-10-03,Visaデビット　346681　GOOGLE*CLOUD VVN64X,0.01,false,,,Variable,Variable,true
+2024-10-03,ラインペイ,801.38,false,,,Variable,Variable,true
+2024-10-03,Visaデビット　529572　UberJP_EATS,8.88,false,,,Variable,Variable,true
+2024-10-03,Visaデビット　530240　UberJP_EATS,10.25,false,,,Variable,Variable,true
+2024-10-04,Visaデビット　712953　辻堂ロフト,101.63,false,,,Variable,Variable,true
+2024-10-04,Visaデビット　715022　バーガーキング／ＮＦＣ,10.51,false,,,Variable,Variable,true
+2024-10-04,Visaデビット　729330　東急パワーサプライ,171.02,false,,,Fixed,Fixed,true
+2024-10-08,ラインペイ,158.25,false,,,Variable,Variable,true
+2024-10-08,Visaデビット　217761　ネットフリックス,12.53,false,,,Variable,Variable,true
+2024-10-08,Visaデビット　224664　エスパティオ　小和田店,45.16,false,,,Variable,Variable,true
+2024-10-09,振込 ワイズペイメンツジヤパン（カ,158.25,false,,,Savings,Savings,true
+2024-10-09,Visaデビット　340629　マイクロソフト,9.18,false,,,Variable,Variable,true
+2024-10-09,Visaデビット　354939　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,6.08,false,,,Variable,Variable,true
+2024-10-09,Visaデビット　355268　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,6.82,false,,,Variable,Variable,true
+2024-10-09,Visaデビット　355745　TERASUMO-RUSIYOUNANN,8.74,false,,,Variable,Variable,true
+2024-10-09,Visaデビット　355745　TERASUMO-RUSIYOUNANN,8.74,true,,,Income,Income,true
+2024-10-09,Visaデビット　356093　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,10.63,false,,,Variable,Variable,true
+2024-10-09,Visaデビット　363152　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,2.85,false,,,Variable,Variable,true
+2024-10-09,Visaデビット　373321　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,6.65,false,,,Variable,Variable,true
+2024-10-10,Visaデビット　505751　GOOGLE PLAY JAPAN,9.49,false,,,Variable,Variable,true
+2024-10-10,Visaデビット　505783　GOOGLE PLAY JAPAN,9.49,false,,,Variable,Variable,true
+2024-10-10,Visaデビット　523348　オーケー　辻堂店,24.29,false,,,Variable,Variable,true
+2024-10-11,Visaデビット　536336　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,8.86,false,,,Variable,Variable,true
+2024-10-11,カード ゆうちょ,94.95,false,,,Variable,Variable,true
+2024-10-11,Visaデビット　626043　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-10-11,Visaデビット　636476　スターバックスコーヒージャパン,3.29,false,,,Variable,Variable,true
+2024-10-11,Visaデビット　678565　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-10-12,Visaデビット　701398　マイクロソフト,9.18,false,,,Variable,Variable,true
+2024-10-12,Visaデビット　714076　PELAGO,27.85,false,,,Variable,Variable,true
+2024-10-12,Visaデビット　721176　ラクテンモバイルツウシンリョウ,13.67,false,,,Variable,Variable,true
+2024-10-12,Visaデビット　721935　鎌倉かまりんヒフクリニック,15.57,false,,,Variable,Variable,true
+2024-10-12,Visaデビット　729937　ハックドラッグ鎌倉店,19.18,false,,,Variable,Variable,true
+2024-10-12,Visaデビット　736409　オオフナルミネウイング,9.45,false,,,Variable,Variable,true
+2024-10-12,Visaデビット　738095　オオフナルミネウイング,11.64,false,,,Variable,Variable,true
+2024-10-12,Visaデビット　758144　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-10-12,Visaデビット　801130　アクアシティお台場,24.43,false,,,Variable,Variable,true
+2024-10-12,Visaデビット　803655　ゴンチャ　アクアシティお台場店,3.99,false,,,Variable,Variable,true
+2024-10-12,Visaデビット　821652　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-10-13,Visaデビット　827286　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-10-13,カード セブン,63.3,false,,,Variable,Variable,true
+2024-10-13,"Visaデビット　832054　GITHUB, INC.",20.1,false,,,Fixed,Fixed,true
+2024-10-13,Visaデビット　936819　UberJP_EATS,15.81,false,,,Variable,Variable,true
+2024-10-14,Visaデビット　037671　新江ノ島水族館（自動券売機）,35.45,false,,,Variable,Variable,true
+2024-10-14,Visaデビット　052025　新江ノ島水族館（物販店舗）／ＮＦＣ,6.14,false,,,Variable,Variable,true
+2024-10-14,Visaデビット　056891　ＫＵＡ‘ＡＩＮＡ　片瀬江ノ島店,21.46,false,,,Variable,Variable,true
+2024-10-14,ラインペイ,12.66,false,,,Variable,Variable,true
+2024-10-14,Visaデビット　080893　OBSIDIAN.MD,4.8,false,,,Variable,Variable,true
+2024-10-15,Visaデビット　131972　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,11.27,false,,,Variable,Variable,true
+2024-10-15,Visaデビット　145123　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2024-10-15,カード ゆうちょ,63.3,false,,,Variable,Variable,true
+2024-10-16,Visaデビット　      　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,8.74,true,,,Income,Income,true
+2024-10-16,Visaデビット　355745　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,8.74,false,,,Variable,Variable,true
+2024-10-16,Visaデビット　288341　SUICA GOOGLEPAY,18.99,false,,,Variable,Variable,true
+2024-10-16,Visaデビット　288846　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,9.49,false,,,Variable,Variable,true
+2024-10-16,カード ゆうちょ,63.3,false,,,Variable,Variable,true
+2024-10-16,Visaデビット　309396　モーゼスさんのケバブ秋葉原店駅前店,15.19,false,,,Variable,Variable,true
+2024-10-16,Visaデビット　346285　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-10-16,Visaデビット　355849　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,9.81,false,,,Variable,Variable,true
+2024-10-17,Visaデビット　361914　GOOGLE PLAY JAPAN,9.12,false,,,Variable,Variable,true
+2024-10-17,Visaデビット　288341　SUICA GOOGLEPAY,18.99,true,,,Income,Income,true
+2024-10-17,Visaデビット　      　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,8.86,true,,,Income,Income,true
+2024-10-18,Visaデビット　563983　PAYPAL,0.13,false,,,Variable,Variable,true
+2024-10-18,Visaデビット　563983　PAYPAL,0.13,true,,,Income,Income,true
+2024-10-18,Visaデビット　564006　ＰＡＹＰＡＬ　＊ＣＯＣＯＭＯ,63.3,false,,,Variable,Variable,true
+2024-10-18,カード ゆうちょ,63.3,false,,,Variable,Variable,true
+2024-10-18,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-10-19,Visaデビット　646759　UberJP_EATS,12.89,false,,,Variable,Variable,true
+2024-10-19,Visaデビット　660751　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-10-19,カード セブン,126.6,false,,,Variable,Variable,true
+2024-10-19,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-10-19,Visaデビット　690587　セブンイレブン,1.61,false,,,Variable,Variable,true
+2024-10-19,Visaデビット　694884　Ｃｏｃｏｍｏ,185.28,false,,,Variable,Variable,true
+2024-10-19,Visaデビット　731462　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-10-20,Visaデビット　871680　UberJP_EATS,13.79,false,,,Variable,Variable,true
+2024-10-20,Visaデビット　905169　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-10-20,Visaデビット　905196　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-10-21,カード セブン,63.3,false,,,Variable,Variable,true
+2024-10-21,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-10-21,Visaデビット　963663　グリーンハウス　北國銀行営業所　食堂,2.47,false,,,Variable,Variable,true
+2024-10-22,Visaデビット　142257　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,97.48,false,,,Variable,Variable,true
+2024-10-22,Visaデビット　152560　クリエイトエス・ディー,18.34,false,,,Variable,Variable,true
+2024-10-23,Visaデビット　163341　Ｐａｉｒｓ　ペアーズ,83.56,false,,,Variable,Variable,true
+2024-10-23,振込 デビツトリヨウキヤツシユバツク,11.57,true,,,Income,Income,true
+2024-10-23,Visaデビット　247932　GOOGLE PLAY JAPAN,10.63,false,,,Variable,Variable,true
+2024-10-23,Visaデビット　260831　FIVERR *,49.18,false,,,Variable,Variable,true
+2024-10-24,Visaデビット　331410　UberJP_EATS,11.28,false,,,Variable,Variable,true
+2024-10-24,カード セブン,63.3,false,,,Variable,Variable,true
+2024-10-24,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-10-24,Visaデビット　391063　CLAUDE.AI SUBSCRIPTION,19.74,false,,,Fixed,Fixed,true
+2024-10-25,給与振込 リンクス（カ,4216.52,true,,,Income,Income,true
+2024-10-25,Visaデビット　462422　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2024-10-25,Visaデビット　474631　ＪＲヒガシニホン　ミドリノマドグチ,21.9,false,,,Variable,Variable,true
+2024-10-25,Visaデビット　486953　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-10-25,Visaデビット　498572　成田国際空港ターミナル／ＮＦＣ,8.84,false,,,Variable,Variable,true
+2024-10-25,Visaデビット　513640　成田国際空港ターミナル／ＮＦＣ,10.17,false,,,Variable,Variable,true
+2024-10-25,カード セブン,31.65,false,,,Variable,Variable,true
+2024-10-25,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-10-25,カード セブン,126.6,false,,,Variable,Variable,true
+2024-10-25,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2024-10-25,Visaデビット　549096　ＪＲヒガシニホン　ミドリノマドグチ,29.75,false,,,Variable,Variable,true
+2024-10-26,ラインペイ,126.6,false,,,Variable,Variable,true
+2024-10-26,Visaデビット　645217　松屋　茅ヶ崎赤松町店,6.65,false,,,Variable,Variable,true
+2024-10-27,Visaデビット　809264　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,24.62,false,,,Variable,Variable,true
+2024-10-27,Visaデビット　810087　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,15.19,false,,,Variable,Variable,true
+2024-10-27,ラインペイ,63.3,false,,,Variable,Variable,true
+2024-10-27,Visaデビット　818779　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,11.9,false,,,Variable,Variable,true
+2024-10-27,Visaデビット　818818　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,11.45,false,,,Variable,Variable,true
+2024-10-27,Visaデビット　818841　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,24.56,false,,,Variable,Variable,true
+2024-10-27,Visaデビット　830440　UberJP_EATS,10.53,false,,,Variable,Variable,true
+2024-10-27,ラインペイ,63.3,false,,,Variable,Variable,true
+2024-10-28,ＭＨＦ）ヤチンシユウノウ,822.39,false,,,Variable,Variable,true
+2024-10-28,Visaデビット　868427　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,16.84,false,,,Variable,Variable,true
+2024-10-28,Visaデビット　868430　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,33.08,false,,,Variable,Variable,true
+2024-10-28,振込 マルテイネズ　ポンズ　リカルド,3165.0,false,,,Savings,Savings,true
+2024-10-28,振込手数料(税込),0.7,false,,,Fixed,Fixed,true
+2024-10-28,ラインペイ,94.95,false,,,Variable,Variable,true
+2024-10-31,振込 ア−トヒツコシセンタ−（カ　ヒガシヤマトシテン,113.94,true,,,Income,Income,true
+2024-11-09,カード ゆうちょ,31.65,false,,,Variable,Variable,true
+2024-11-14,Visaデビット　127671　ラクテンモバイルツウシンリョウ,13.81,false,,,Variable,Variable,true
+2024-11-14,Visaデビット　193860　フアミリ−マ−トチガサキコワダサンチヨ,8.29,false,,,Variable,Variable,true
+2024-11-21,振込 デビツトリヨウキヤツシユバツク,8.82,true,,,Income,Income,true
+2024-11-21,Visaデビット　040071　GOOGLE*TEMPORARY HOLD,1.27,false,,,Variable,Variable,true
+2024-11-21,Visaデビット　040081　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2024-11-21,Visaデビット　040071　GOOGLE*TEMPORARY HOLD,1.27,true,,,Income,Income,true
+2024-11-22,Visaデビット　182581　シンフォニー東京湾クルーズ,145.59,false,,,Variable,Variable,true
+2024-11-24,Visaデビット　532188　CLAUDE.AI SUBSCRIPTION,19.98,false,,,Fixed,Fixed,true
+2024-11-25,給与振込 リンクス（カ,4216.52,true,,,Income,Income,true
+2024-11-25,振込 ワイズペイメンツジヤパン（カ,316.5,false,,,Savings,Savings,true
+2024-11-25,振込 マルテイネズ　ポンズ　リカルド,2532.0,false,,,Savings,Savings,true
+2024-11-25,Visaデビット　600885　エスパティオ　小和田店,53.29,false,,,Variable,Variable,true
+2024-11-26,ＭＨＦ）ヤチンシユウノウ,822.39,false,,,Variable,Variable,true
+2024-11-26,Visaデビット　743384　TradingView,238.0,false,,,Variable,Variable,true
+2024-11-30,Visaデビット　306679　コニカミノルタプラネタリウム　オンライン,30.38,false,,,Variable,Variable,true
+2024-12-02,振込 サイトウ　リコ,329.16,false,,,Variable,Variable,true
+2024-12-04,Visaデビット　954717　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,8.86,false,,,Variable,Variable,true
+2024-12-05,Visaデビット　047052　チケットぴあ,199.36,false,,,Variable,Variable,true
+2024-12-05,Visaデビット　081747　東急パワーサプライ,73.16,false,,,Fixed,Fixed,true
+2024-12-05,Visaデビット　088716　エイチアンドエム　テラスモ−ルシヨウナ,19.11,false,,,Variable,Variable,true
+2024-12-06,Visaデビット　192145　フアミリ−マ−トチガサキコワダサンチヨ,7.86,false,,,Variable,Variable,true
+2024-12-06,Visaデビット　231199　ビックカメラ　藤沢店,39.47,false,,,Variable,Variable,true
+2024-12-06,Visaデビット　233847　ビックカメラ　藤沢店,35.0,false,,,Variable,Variable,true
+2024-12-06,Visaデビット　236002　ビックカメラ　藤沢店,42.98,false,,,Variable,Variable,true
+2024-12-06,Visaデビット　237524　ルミネフジサワ,9.24,false,,,Variable,Variable,true
+2024-12-07,Visaデビット　327451　箱根ロープウェイ,31.65,false,,,Variable,Variable,true
+2024-12-07,Visaデビット　335145　桃源台港,46.84,false,,,Variable,Variable,true
+2024-12-07,Visaデビット　378531　バーガーキング／ＮＦＣ,8.04,false,,,Variable,Variable,true
+2024-12-08,Visaデビット　484584　フアミリ−マ−トチガサキコワダサンチヨ,5.69,false,,,Variable,Variable,true
+2024-12-08,Visaデビット　501528　神奈中タクシー,8.23,false,,,Variable,Variable,true
+2024-12-08,Visaデビット　530398　文教スタヂオ　東京タワー,9.49,false,,,Variable,Variable,true
+2024-12-08,Visaデビット　531309　ケンズカフェ東京　東京タワー店,8.1,false,,,Variable,Variable,true
+2024-12-09,Visaデビット　628811　エスパティオ　小和田店,27.18,false,,,Variable,Variable,true
+2024-12-12,Visaデビット　030297　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2024-12-12,Visaデビット　063718　ラクテンモバイルツウシンリョウ,0.91,false,,,Variable,Variable,true
+2024-12-17,Visaデビット　778824　ＧＯ（タクシーアプリ）＊アプリ配車,8.86,false,,,Variable,Variable,true
+2024-12-18,Visaデビット　854993　ＪＲヒガシニホン　ミドリノマドグチ,10.95,false,,,Variable,Variable,true
+2024-12-18,Visaデビット　855289　ニューデイズキオスクトウキョウシテン,2.04,false,,,Variable,Variable,true
+2024-12-18,Visaデビット　910430　松屋　茅ヶ崎赤松町店,15.76,false,,,Variable,Variable,true
+2024-12-18,Visaデビット　948387　フアミリ−マ−トチガサキコワダサンチヨ,2.85,false,,,Variable,Variable,true
+2024-12-19,Visaデビット　992986　エスパティオ　小和田店,8.03,false,,,Variable,Variable,true
+2024-12-19,Visaデビット　993481　０９５７マツモトキヨシＤＳ茅ヶ崎小和田店,1.52,false,,,Variable,Variable,true
+2024-12-19,Visaデビット　058964　エスパティオ　小和田店,4.75,false,,,Variable,Variable,true
+2024-12-20,Visaデビット　133797　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2024-12-21,Visaデビット　329195　松屋　茅ヶ崎赤松町店,5.25,false,,,Variable,Variable,true
+2024-12-21,Visaデビット　329470　松屋　茅ヶ崎赤松町店,4.62,false,,,Variable,Variable,true
+2024-12-24,振込 デビツトリヨウキヤツシユバツク,1.17,true,,,Income,Income,true
+2024-12-25,給与振込 リンクス（カ,5549.57,true,,,Income,Income,true
+2024-12-25,振込 マルテイネズ　ポンズ　リカルド,3981.57,false,,,Savings,Savings,true
+2024-12-25,Visaデビット　938893　CLAUDE.AI SUBSCRIPTION,20.29,false,,,Fixed,Fixed,true
+2024-12-26,ＭＨＦ）ヤチンシユウノウ,822.39,false,,,Variable,Variable,true
+2024-12-26,Visaデビット　001716　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-12-26,Visaデビット　007534　フアミリ−マ−トツジドウエキニシグチ,3.31,false,,,Variable,Variable,true
+2024-12-26,Visaデビット　041084　だるまのめ　秋葉原店,10.25,false,,,Variable,Variable,true
+2024-12-26,Visaデビット　061880　ベロ−チエ　ウエノサンチヨウメテン／Ｎ,2.85,false,,,Variable,Variable,true
+2024-12-26,Visaデビット　073822　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-12-27,Visaデビット　124324　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2024-12-27,Visaデビット　138672　ニューデイズキオスクハチオウジシテン,5.75,false,,,Variable,Variable,true
+2024-12-27,Visaデビット　166860　オフハウス八王子大和田店,95.61,false,,,Variable,Variable,true
+2024-12-28,Visaデビット　341005　セブンイレブン,2.3,false,,,Variable,Variable,true
+2024-12-28,Visaデビット　346932　ペテモ大和,29.43,false,,,Variable,Variable,true
+2024-12-28,Visaデビット　349755　イオン　大和,11.87,false,,,Variable,Variable,true
+2024-12-28,Visaデビット　352495　イオン　大和,20.17,false,,,Variable,Variable,true
+2024-12-28,Visaデビット　353232　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2024-12-28,Visaデビット　362189　エスパティオ　小和田店,30.45,false,,,Variable,Variable,true
+2024-12-29,Visaデビット　470788　ＫＵＡ‘ＡＩＮＡ　片瀬江ノ島店,23.99,false,,,Variable,Variable,true
+2024-12-29,Visaデビット　508913　ライフさいか屋藤沢店,22.16,false,,,Variable,Variable,true
+2025-01-02,Visaデビット　007067　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-01-02,Visaデビット　024238　鼎・台湾屋台／ＮＦＣ,27.22,false,,,Variable,Variable,true
+2025-01-03,Visaデビット　092863　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2025-01-03,Visaデビット　132134　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-01-03,Visaデビット　148888　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-01-03,Visaデビット　156973　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,37.18,false,,,Variable,Variable,true
+2025-01-03,Visaデビット　166513　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,10.44,false,,,Variable,Variable,true
+2025-01-04,Visaデビット　212250　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-01-04,Visaデビット　215650　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2025-01-04,Visaデビット　238838　東武トップツアーズ　輪王寺三仏堂,17.09,false,,,Variable,Variable,true
+2025-01-04,Visaデビット　285628　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2025-01-05,Visaデビット　380973　エスパティオ　小和田店,17.0,false,,,Variable,Variable,true
+2025-01-07,Visaデビット　659568　れんげ食堂Ｔｏｓｈｕ辻堂店,4.6,false,,,Variable,Variable,true
+2025-01-07,Visaデビット　659643　れんげ食堂Ｔｏｓｈｕ辻堂店,7.31,false,,,Variable,Variable,true
+2025-01-07,Visaデビット　678411　エスパティオ　小和田店,24.71,false,,,Variable,Variable,true
+2025-01-08,Visaデビット　808121　松屋　茅ヶ崎赤松町店,5.25,false,,,Variable,Variable,true
+2025-01-09,Visaデビット　878001　松屋　茅ヶ崎赤松町店,6.33,false,,,Variable,Variable,true
+2025-01-09,Visaデビット　916626　東急パワーサプライ,97.1,false,,,Fixed,Fixed,true
+2025-01-09,Visaデビット　927491　エスパティオ　小和田店,13.76,false,,,Variable,Variable,true
+2025-01-10,Visaデビット　041523　ローソンチケット,78.05,false,,,Variable,Variable,true
+2025-01-12,Visaデビット　154449　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2025-01-12,Visaデビット　171121　遊就館券売機,12.66,false,,,Variable,Variable,true
+2025-01-12,Visaデビット　189948　だるまのめ　秋葉原店,10.25,false,,,Variable,Variable,true
+2025-01-13,Visaデビット　250721　ラクテンモバイルツウシンリョウ,1.03,false,,,Variable,Variable,true
+2025-01-20,振込 ワイズペイメンツジヤパン（カ,506.4,false,,,Savings,Savings,true
+2025-01-21,振込 デビツトリヨウキヤツシユバツク,4.42,true,,,Income,Income,true
+2025-01-24,給与振込 リンクス（カ,4265.17,true,,,Income,Income,true
+2025-01-24,振込 マルテイネズ　ポンズ　リカルド,2532.0,false,,,Savings,Savings,true
+2025-01-24,Visaデビット　746257　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2025-01-24,Visaデビット　814959　CLAUDE.AI SUBSCRIPTION,20.21,false,,,Fixed,Fixed,true
+2025-01-27,ＭＨＦ）ヤチンシユウノウ,822.39,false,,,Variable,Variable,true
+2025-01-27,振込 ワイズペイメンツジヤパン（カ,1899.0,false,,,Savings,Savings,true
+2025-01-27,振込手数料(税込),0.7,false,,,Fixed,Fixed,true
+2025-01-27,カード セブン,94.95,false,,,Variable,Variable,true
+2025-01-29,Visaデビット　498917　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2025-01-30,Visaデビット　617975　コメダ珈琲店　新橋烏森通り店,9.37,false,,,Variable,Variable,true
+2025-02-01,Visaデビット　898824　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,6.16,false,,,Variable,Variable,true
+2025-02-01,Visaデビット　899255　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,2.6,false,,,Variable,Variable,true
+2025-02-01,Visaデビット　903259　サミット／ＮＦＣ,8.37,false,,,Variable,Variable,true
+2025-02-04,Visaデビット　299462　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,2.66,false,,,Variable,Variable,true
+2025-02-04,Visaデビット　299677　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,2.75,false,,,Variable,Variable,true
+2025-02-05,Visaデビット　433609　東急パワーサプライ,101.29,false,,,Fixed,Fixed,true
+2025-02-06,Visaデビット　451124　ネットフリックス,14.5,false,,,Variable,Variable,true
+2025-02-08,Visaデビット　742854　ＧＯ（タクシーアプリ）＊アプリ配車,13.29,false,,,Variable,Variable,true
+2025-02-08,Visaデビット　763162　フジ交通,12.66,false,,,Variable,Variable,true
+2025-02-09,Visaデビット　889362　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,6.1,false,,,Variable,Variable,true
+2025-02-09,カード ゆうちょ,63.3,false,,,Variable,Variable,true
+2025-02-11,カード ゆうちょ,63.3,false,,,Variable,Variable,true
+2025-02-11,Visaデビット　257926　ＳＱ＊ＬＩＮＫＩＮ　ＰＡＲＫ,25.32,false,,,Variable,Variable,true
+2025-02-12,Visaデビット　301061　ラクテンモバイルツウシンリョウ,1.3,false,,,Variable,Variable,true
+2025-02-12,Visaデビット　335038　チケットぴあ,332.29,false,,,Variable,Variable,true
+2025-02-16,カード ゆうちょ,63.3,false,,,Variable,Variable,true
+2025-02-17,決算お利息,0.7,true,,,Income,Income,true
+2025-02-19,Visaデビット　244430　ＧＯ（タクシーアプリ）＊アプリ配車,8.86,false,,,Variable,Variable,true
+2025-02-20,振込 デビツトリヨウキヤツシユバツク,2.84,true,,,Income,Income,true
+2025-02-23,Visaデビット　763103　アイハーブジャパンゴウドウガイシャ,24.38,false,,,Variable,Variable,true
+2025-02-23,Visaデビット　796468　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2025-02-23,Visaデビット　877786　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2025-02-25,給与振込 リンクス（カ,4265.17,true,,,Income,Income,true
+2025-02-25,振込 マルテイネズ　ポンズ　リカルド,2532.0,false,,,Savings,Savings,true
+2025-02-25,Visaデビット　101400　ＧＯ（タクシーアプリ）＊アプリ配車,12.66,false,,,Variable,Variable,true
+2025-02-25,Visaデビット　113951　相愛交通,12.03,false,,,Variable,Variable,true
+2025-02-25,カード ゆうちょ,94.95,false,,,Variable,Variable,true
+2025-02-25,Visaデビット　151892　CLAUDE.AI SUBSCRIPTION,19.31,false,,,Fixed,Fixed,true
+2025-02-26,ＭＨＦ）ヤチンシユウノウ,822.39,false,,,Variable,Variable,true
+2025-02-27,Visaデビット　359961　ＧＯ（タクシーアプリ）＊アプリ配車,12.03,false,,,Variable,Variable,true
+2025-02-27,Visaデビット　413003　ＧＯ（タクシーアプリ）＊アプリ配車,13.29,false,,,Variable,Variable,true
+2025-02-28,Visaデビット　483925　ＧＯ（タクシーアプリ）＊アプリ配車,6.96,false,,,Variable,Variable,true
+2025-03-02,Visaデビット　860870　エスパティオ　小和田店,20.22,false,,,Variable,Variable,true
+2025-03-05,振込 ギヨ）ジヤパンビザサポ−ト,452.59,false,,,Variable,Variable,true
+2025-03-06,Visaデビット　345953　ネットフリックス,14.5,false,,,Variable,Variable,true
+2025-03-06,Visaデビット　467459　東急パワーサプライ,161.02,false,,,Fixed,Fixed,true
+2025-03-07,Visaデビット　518320　犬と猫のマイクロチップ情報登録,2.53,false,,,Variable,Variable,true
+2025-03-07,Visaデビット　524460　ＧＯ（タクシーアプリ）＊アプリ配車,14.56,false,,,Variable,Variable,true
+2025-03-07,Visaデビット　535083　ＧＯ（タクシーアプリ）＊アプリ配車,13.93,false,,,Variable,Variable,true
+2025-03-12,Visaデビット　298003　ラクテンモバイルツウシンリョウ,13.69,false,,,Variable,Variable,true
+2025-03-13,Visaデビット　476152　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,15.82,false,,,Variable,Variable,true
+2025-03-13,Visaデビット　486353　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,27.9,false,,,Variable,Variable,true
+2025-03-21,振込 デビツトリヨウキヤツシユバツク,3.1,true,,,Income,Income,true
+2025-03-21,Visaデビット　617482　サミット／ＮＦＣ,72.01,false,,,Variable,Variable,true
+2025-03-21,Visaデビット　618780　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,3.14,false,,,Variable,Variable,true
+2025-03-23,Visaデビット　856317　GOOGLE PLAY JAPAN,14.43,false,,,Variable,Variable,true
+2025-03-24,Visaデビット　069463　CLAUDE.AI SUBSCRIPTION,19.29,false,,,Fixed,Fixed,true
+2025-03-24,Visaデビット　087297　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2025-03-25,給与振込 リンクス（カ,4265.17,true,,,Income,Income,true
+2025-03-25,振込 マルテイネズ　ポンズ　リカルド,1899.0,false,,,Savings,Savings,true
+2025-03-25,Visaデビット　230022　ローソン,1.15,false,,,Variable,Variable,true
+2025-03-25,Visaデビット　235985　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,3.86,false,,,Variable,Variable,true
+2025-03-26,ＭＨＦ）ヤチンシユウノウ,822.39,false,,,Variable,Variable,true
+2025-03-26,Visaデビット　308859　サミット／ＮＦＣ,49.54,false,,,Variable,Variable,true
+2025-03-26,Visaデビット　357717　エスエスセンチユリ−プラス／ＮＦＣ,24.56,false,,,Variable,Variable,true
+2025-03-26,Visaデビット　360194　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,16.08,false,,,Variable,Variable,true
+2025-03-26,Visaデビット　375065　ユニクロ／ＮＦＣ,18.93,false,,,Variable,Variable,true
+2025-03-27,Visaデビット　490791　ウィング新橋（京急グループ）,21.1,false,,,Variable,Variable,true
+2025-03-27,Visaデビット　519806　Ａｓｈｉ,39.12,false,,,Variable,Variable,true
+2025-03-28,Visaデビット　568784　森ビル関連施設,3.17,false,,,Variable,Variable,true
+2025-03-28,Visaデビット　568893　森ビル関連施設,5.82,false,,,Variable,Variable,true
+2025-03-28,Visaデビット　599911　ＴＯＳＣＡＮＡ　神谷町店＊ＵＳＥＮ,13.93,false,,,Variable,Variable,true
+2025-03-28,Visaデビット　601173　セブンイレブン,3.64,false,,,Variable,Variable,true
+2025-03-28,カード セブン,63.3,false,,,Variable,Variable,true
+2025-03-28,Visaデビット　675137　権八　浅草吾妻橋／ＮＦＣ,41.08,false,,,Variable,Variable,true
+2025-03-29,Visaデビット　750488　Ｎｕｉ．　ＬＯＵＮＧＥ,25.0,false,,,Variable,Variable,true
+2025-03-29,Visaデビット　842665　フアミリ−マ−トツジドウエキニシグチ,1.09,false,,,Variable,Variable,true
+2025-03-30,Visaデビット　979417　サミット／ＮＦＣ,91.04,false,,,Variable,Variable,true
+2025-03-30,Visaデビット　980034　フアミリ−マ−トツジドウエキニシグチ,2.72,false,,,Variable,Variable,true
+2025-03-31,振込 イトウ　アンナ,108.56,false,,,Savings,Savings,true
+2025-03-31,振込手数料(税込),0.7,false,,,Fixed,Fixed,true
+2025-03-31,振込 サイトウ　リコ,54.65,false,,,Variable,Variable,true
+2025-03-31,振込手数料(税込),0.7,false,,,Fixed,Fixed,true
+2025-03-31,Visaデビット　112786　ＳＱ＊菊正寿司,29.12,false,,,Variable,Variable,true
+2025-04-01,Visaデビット　138018　フアミリ−マ−トツジドウエキニシグチ,1.01,false,,,Variable,Variable,true
+2025-04-01,カード ゆうちょ,126.6,false,,,Variable,Variable,true
+2025-04-01,Visaデビット　214800　ローソン,4.25,false,,,Variable,Variable,true
+2025-04-02,Visaデビット　395722　神原矯正歯科,174.07,false,,,Variable,Variable,true
+2025-04-02,Visaデビット　396768　バーガーキング／ＮＦＣ,9.81,false,,,Variable,Variable,true
+2025-04-02,Visaデビット　418526　セブンイレブン,3.28,false,,,Variable,Variable,true
+2025-04-03,Visaデビット　471901　鎌倉かまりんヒフクリニック,53.8,false,,,Variable,Variable,true
+2025-04-03,Visaデビット　481788　ハックドラッグ鎌倉店,23.95,false,,,Variable,Variable,true
+2025-04-04,カード ゆうちょ,94.95,false,,,Variable,Variable,true
+2025-04-04,Visaデビット　655994　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,13.88,false,,,Variable,Variable,true
+2025-04-04,Visaデビット　672929　アパホテル（浅草蔵前）,130.35,false,,,Variable,Variable,true
+2025-04-04,Visaデビット　678516　東急パワーサプライ,116.49,false,,,Fixed,Fixed,true
+2025-04-04,Visaデビット　693495　とろけるハンバーグ福よし浅草蔵前店,33.17,false,,,Variable,Variable,true
+2025-04-06,Visaデビット　869982　ＮＥＴＦＬＩＸ．ＣＯＭ,14.5,false,,,Fixed,Fixed,true
+2025-04-07,Visaデビット　086186　松屋　茅ヶ崎赤松町店,5.89,false,,,Variable,Variable,true
+2025-04-07,Visaデビット　090036　フアミリ−マ−トチガサキコワダサンチヨ,2.46,false,,,Variable,Variable,true
+2025-04-09,Visaデビット　316911　ＧＯ（タクシーアプリ）＊アプリ配車,7.6,false,,,Variable,Variable,true
+2025-04-09,Visaデビット　339977　ローソン,5.71,false,,,Variable,Variable,true
+2025-04-12,Visaデビット　757377　ラクテンモバイルツウシンリョウ,13.82,false,,,Variable,Variable,true
+2025-04-15,振込 ギヨ）ジヤパンビザサポ−ト,473.48,false,,,Variable,Variable,true
+2025-04-16,Visaデビット　282335　PAYPAL,0.13,false,,,Variable,Variable,true
+2025-04-16,Visaデビット　282335　PAYPAL,0.13,true,,,Income,Income,true
+2025-04-17,Visaデビット　537713　ローソン,0.94,false,,,Variable,Variable,true
+2025-04-22,振込 デビツトリヨウキヤツシユバツク,3.11,true,,,Income,Income,true
+2025-04-23,Visaデビット　313968　ＧＯ（タクシーアプリ）＊アプリ配車,6.96,false,,,Variable,Variable,true
+2025-04-23,Visaデビット　315848　ＧＯＯＧＬＥ　ＰＬＡＹ　ＪＡＰＡＮ,14.43,false,,,Variable,Variable,true
+2025-04-24,Visaデビット　431682　ＧＯ（タクシーアプリ）＊アプリ配車,19.24,false,,,Variable,Variable,true
+2025-04-24,Visaデビット　518251　ＣＬＡＵＤＥ．ＡＩ　ＳＵＢＳＣＲＩＰＴＩＯＮ,18.5,false,,,Fixed,Fixed,true
+2025-04-25,給与振込 リンクス（カ,4283.57,true,,,Income,Income,true
+2025-04-25,Visaデビット　576371　セブンイレブン,1.77,false,,,Variable,Variable,true
+2025-04-25,Visaデビット　602121　金沢百番街,18.74,false,,,Variable,Variable,true
+2025-04-25,Visaデビット　603020　金沢百番街,12.61,false,,,Variable,Variable,true
+2025-04-25,Visaデビット　603177　金沢百番街,6.15,false,,,Variable,Variable,true
+2025-04-25,カード セブン,63.3,false,,,Variable,Variable,true
+2025-04-26,Visaデビット　790272　コ−ヒ−カン　ト−セイホテルココネアサク,25.38,false,,,Variable,Variable,true
+2025-04-26,Visaデビット　864659　ＧＯ（タクシーアプリ）＊アプリ配車,9.49,false,,,Variable,Variable,true
+2025-04-27,Visaデビット　922823　未来ダイニング浅草リッチモンドホテル店,16.14,false,,,Variable,Variable,true
+2025-04-27,Visaデビット　946350　フアミリ−マ−トツジドウエキニシグチ,4.63,false,,,Variable,Variable,true
+2025-04-27,Visaデビット　967556　Ｔｅｍｕ．ｃｏｍ,36.16,false,,,Variable,Variable,true
+2025-04-28,ＭＨＦ）ヤチンシユウノウ,822.39,false,,,Variable,Variable,true
+2025-04-28,カード ゆうちょ,126.6,false,,,Variable,Variable,true
+2025-04-28,カード セブン,126.6,false,,,Variable,Variable,true
+2025-04-28,ＡＴＭ利用手数料(税込),0.7,false,,,Variable,Variable,true
+2025-04-28,Visaデビット　146445　ＭＹＢ蔵前駅北,13.07,false,,,Variable,Variable,true
+2025-04-29,Visaデビット　240444　Ｎｕｉ．　ＬＯＵＮＧＥ,28.48,false,,,Variable,Variable,true
+2025-04-29,Visaデビット　274986　ユニクロ／ＮＦＣ,26.27,false,,,Variable,Variable,true
+2025-04-29,Visaデビット　289713　ＭＹＢ蔵前駅北,10.06,false,,,Variable,Variable,true
+2025-04-29,Visaデビット　318339　ＴＲＩＰ．ＣＯＭ,59.12,false,,,Variable,Variable,true
+2025-04-30,Visaデビット　388443　森ビル関連施設,3.7,false,,,Variable,Variable,true
+2025-04-30,Visaデビット　421886　ローソン,3.08,false,,,Variable,Variable,true
+2025-04-30,Visaデビット　453843　セブンイレブン,0.94,false,,,Variable,Variable,true
+2025-05-01,Visaデビット　525683　株式会社ノードセキュリティジェーピー,35.09,false,,,Variable,Variable,true
+2025-05-01,振込 マルテイネズ　ポンズ　リカルド,2215.5,false,,,Savings,Savings,true
+2025-05-01,Visaデビット　602598　松屋　茅ヶ崎赤松町店,7.6,false,,,Variable,Variable,true
+2025-05-01,Visaデビット　609837　フアミリ−マ−トチガサキコワダサンチヨ,3.04,false,,,Variable,Variable,true
+2025-05-01,振込 イトウ　アンナ,126.6,false,,,Savings,Savings,true
+2025-05-02,Visaデビット　793193　ローソン,1.08,false,,,Variable,Variable,true
+2025-05-03,Visaデビット 01　850301　Ｔｅｍｕ．ｃｏｍ,19.36,false,,,Variable,Variable,true
+2025-05-03,Visaデビット 01　882691　松屋　茅ヶ崎赤松町店,7.6,false,,,Variable,Variable,true
+2025-05-03,Visaデビット 01　888641　エスパティオ　小和田店,2.5,false,,,Variable,Variable,true
+2025-05-03,Visaデビット 01　930672　ローソン,1.08,false,,,Variable,Variable,true
+2025-05-07,Visaデビット 01　367409　ＧＯ（タクシーアプリ）＊アプリ配車,32.92,false,,,Variable,Variable,true
+2025-05-08,Visaデビット 01　545605　ローソン,5.25,false,,,Variable,Variable,true
+2025-05-08,カード セブン,63.3,false,,,Variable,Variable,true
+2025-05-08,Visaデビット 01　582331　東急パワーサプライ,107.45,false,,,Fixed,Fixed,true
+2025-05-08,Visaデビット 01　583249　バーガーキング／ＮＦＣ,10.25,false,,,Variable,Variable,true
+2025-05-08,Visaデビット 01　588641　サミット／ＮＦＣ,40.24,false,,,Variable,Variable,true
+2025-05-12,Visaデビット 01　094608　ラクテンモバイルツウシンリョウ,21.62,false,,,Variable,Variable,true
+2025-05-14,Visaデビット 01　415548　ＧＯ（タクシーアプリ）＊アプリ配車,7.6,false,,,Variable,Variable,true
+2025-05-17,Visaデビット 01　788505　ＧＯ（タクシーアプリ）＊アプリ配車,5.06,false,,,Variable,Variable,true
+2025-05-17,カード イーネット,63.3,false,,,Variable,Variable,true
+2025-05-18,Visaデビット 01　951405　エスパティオ　小和田店,18.57,false,,,Variable,Variable,true
+2025-05-19,Visaデビット 01　169576　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2025-05-20,デビツトリヨウキヤツシユバツク,4.65,true,,,Income,Income,true
+2025-05-23,給与振込 リンクス（カ,4319.85,true,,,Income,Income,true
+2025-05-23,Visaデビット 01　652194　ＧＯＯＧＬＥ　ＰＬＡＹ　ＪＡＰＡＮ,14.43,false,,,Variable,Variable,true
+2025-05-23,カード ゆうちょ,189.9,false,,,Variable,Variable,true
+2025-05-26,ＭＨＦ）ヤチンシユウノウ,822.39,false,,,Variable,Variable,true
+2025-05-30,Visaデビット 01　668515　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2025-05-30,Visaデビット 01　668875　ニューデイズ・キオスク　ヨコハマシテンカ,2.3,false,,,Variable,Variable,true
+2025-05-31,Visaデビット 01　854507　ＧＯ（タクシーアプリ）＊アプリ配車,10.13,false,,,Variable,Variable,true
+2025-05-31,Visaデビット 01　875703　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,31.36,false,,,Variable,Variable,true
+2025-05-31,Visaデビット 01　879641　ダイソー／ＮＦＣ,0.7,false,,,Variable,Variable,true
+2025-05-31,Visaデビット 01　881249　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,1.86,false,,,Variable,Variable,true
+2025-05-31,Visaデビット 01　884748　サミット／ＮＦＣ,16.01,false,,,Variable,Variable,true
+2025-06-01,Visaデビット 01　938481　Ｔｅｍｕ．ｃｏｍ,41.69,false,,,Variable,Variable,true
+2025-06-01,Visaデビット 01　013041　ラクテンペイ　クツカ−ズグリル,31.02,false,,,Variable,Variable,true
+2025-06-01,カード セブン,63.3,false,,,Variable,Variable,true
+2025-06-01,Visaデビット 01　053637　ＭＹＢ蔵前駅前,14.81,false,,,Variable,Variable,true
+2025-06-01,Visaデビット 01　076475　デイリーヤマザキ,2.94,false,,,Variable,Variable,true
+2025-06-02,Visaデビット 01　166448　ローソン,1.08,false,,,Variable,Variable,true
+2025-06-02,Visaデビット 01　216662　ラクテンペイ　マクレ−ンダイナ−,26.11,false,,,Variable,Variable,true
+2025-06-02,Visaデビット 01　229658　セブンイレブン,6.67,false,,,Variable,Variable,true
+2025-06-03,Visaデビット 01　261890　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,49.37,false,,,Variable,Variable,true
+2025-06-03,Visaデビット 01　306220　ラクテンペイ　エン,30.45,false,,,Variable,Variable,true
+2025-06-03,Visaデビット 01　353519　ブリス蔵前店,21.59,false,,,Variable,Variable,true
+2025-06-04,Visaデビット 01　433677　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-06-04,Visaデビット 01　439412　フアミリ−マ−トチガサキコワダサンチヨ,2.79,false,,,Variable,Variable,true
+2025-06-05,Visaデビット 01　616895　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-06-05,Visaデビット 01　620358　エスパティオ　小和田店,1.48,false,,,Variable,Variable,true
+2025-06-05,Visaデビット 01　649592　東急パワーサプライ,87.94,false,,,Fixed,Fixed,true
+2025-06-05,Visaデビット 01　660731　フアミリ−マ−トチガサキコワダサンチヨ,2.58,false,,,Variable,Variable,true
+2025-06-06,Visaデビット 01　728012　フアミリ−マ−トツジドウエキニシグチ,6.37,false,,,Variable,Variable,true
+2025-06-06,Visaデビット 01　772252　セブンイレブン,16.5,false,,,Variable,Variable,true
+2025-06-07,Visaデビット 01　834176　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,8.36,false,,,Variable,Variable,true
+2025-06-07,Visaデビット 01　853172　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,12.53,false,,,Variable,Variable,true
+2025-06-07,Visaデビット 01　886422　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,32.38,false,,,Variable,Variable,true
+2025-06-07,Visaデビット 01　914085　ＳＯＤＡ　ＣＡＦＥ／ＮＦＣ,12.6,false,,,Variable,Variable,true
+2025-06-07,Visaデビット 01　935917　セブンイレブン,8.83,false,,,Variable,Variable,true
+2025-06-07,Visaデビット 01　938798　０９５７マツモトキヨシＤＳ茅ヶ崎小和田店,3.63,false,,,Variable,Variable,true
+2025-06-08,Visaデビット 01　040262　エスパティオ　小和田店,23.06,false,,,Variable,Variable,true
+2025-06-09,Visaデビット 01　190616　Ｔｅｍｕ．ｃｏｍ,16.08,false,,,Variable,Variable,true
+2025-06-09,Visaデビット 01　197904　ローソン,4.0,false,,,Variable,Variable,true
+2025-06-09,Visaデビット 01　224403　デイリーヤマザキ,3.36,false,,,Variable,Variable,true
+2025-06-10,Visaデビット 01　330591　ラクテンペイ　エン,20.19,false,,,Variable,Variable,true
+2025-06-10,Visaデビット 01　382814　サイゼリヤ／ＮＦＣ,16.77,false,,,Variable,Variable,true
+2025-06-10,カード イーネット,63.3,false,,,Variable,Variable,true
+2025-06-11,Visaデビット 01　512808　松屋　茅ヶ崎赤松町店,7.47,false,,,Variable,Variable,true
+2025-06-11,Visaデビット 01　517708　フアミリ−マ−トチガサキコワダサンチヨ,2.42,false,,,Variable,Variable,true
+2025-06-12,Visaデビット 01　593529　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,12.91,false,,,Variable,Variable,true
+2025-06-12,Visaデビット 01　606751　ラクテンモバイルツウシンリョウ,13.68,false,,,Variable,Variable,true
+2025-06-12,Visaデビット 01　636526　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-06-12,Visaデビット 01　641524　フアミリ−マ−トチガサキコワダサンチヨ,2.89,false,,,Variable,Variable,true
+2025-06-12,Visaデビット 01　686628　フアミリ−マ−トチガサキコワダサンチヨ,2.39,false,,,Variable,Variable,true
+2025-06-12,Visaデビット 01　708641　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,11.62,false,,,Variable,Variable,true
+2025-06-12,Visaデビット 01　708711　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,18.86,false,,,Variable,Variable,true
+2025-06-13,Visaデビット 01　817235　セブンイレブン,3.41,false,,,Variable,Variable,true
+2025-06-13,Visaデビット 01　840849　マクドナルド,7.66,false,,,Variable,Variable,true
+2025-06-14,Visaデビット 01　917948　エスパティオ　小和田店,40.69,false,,,Variable,Variable,true
+2025-06-14,Visaデビット 01　920151　０９５７マツモトキヨシＤＳ茅ヶ崎小和田店,17.85,false,,,Variable,Variable,true
+2025-06-14,Visaデビット 01　929892　エスパティオ　小和田店,7.84,false,,,Variable,Variable,true
+2025-06-14,Visaデビット 01　991133　０９５７マツモトキヨシＤＳ茅ヶ崎小和田店,11.13,false,,,Variable,Variable,true
+2025-06-15,Visaデビット 01　078385　エスパティオ　小和田店,5.73,false,,,Variable,Variable,true
+2025-06-15,Visaデビット 01　080777　０９５７マツモトキヨシＤＳ茅ヶ崎小和田店,14.19,false,,,Variable,Variable,true
+2025-06-15,Visaデビット 01　154326　Ｔｅｍｕ．ｃｏｍ,54.26,false,,,Variable,Variable,true
+2025-06-16,Visaデビット 01　237143　エスパティオ　小和田店,14.81,false,,,Variable,Variable,true
+2025-06-16,Visaデビット 01　312244　フアミリ−マ−トチガサキコワダサンチヨ,1.84,false,,,Variable,Variable,true
+2025-06-16,Visaデビット 01　314764　ＮＥＴＦＬＩＸ．ＣＯＭ,14.5,false,,,Fixed,Fixed,true
+2025-06-17,Visaデビット 01　427279　ＵｂｅｒＪＰ＿ＥＡＴＳ,27.35,false,,,Variable,Variable,true
+2025-06-17,Visaデビット 01　427279　ＵｂｅｒＪＰ＿ＥＡＴＳ,27.35,true,,,Income,Income,true
+2025-06-17,Visaデビット 01　436309　ＵｂｅｒＪＰ＿ＥＡＴＳ,22.35,false,,,Variable,Variable,true
+2025-06-18,Visaデビット 01　501592　ＵｂｅｒＪＰ＿ＥＡＴＳ,8.54,false,,,Variable,Variable,true
+2025-06-18,Visaデビット 01　555529　バーガーキング／ＮＦＣ,13.74,false,,,Variable,Variable,true
+2025-06-19,Visaデビット 01　671281　エスパティオ　小和田店,8.79,false,,,Variable,Variable,true
+2025-06-19,Visaデビット 01　736819　ＴＲＩＰ．ＣＯＭ,76.95,false,,,Variable,Variable,true
+2025-06-19,Visaデビット 01　741105　フアミリ−マ−トチガサキコワダサンチヨ,3.51,false,,,Variable,Variable,true
+2025-06-20,デビツトリヨウキヤツシユバツク,2.42,true,,,Income,Income,true
+2025-06-20,Visaデビット 01　806474　ＧＯ（タクシーアプリ）＊アプリ配車,7.6,false,,,Variable,Variable,true
+2025-06-20,Visaデビット 01　829239　デイリーヤマザキ,11.55,false,,,Variable,Variable,true
+2025-06-21,Visaデビット 01　924295　ＨＳＢＣ／ＨＫＩＡ　ＧＴＣ　５Ｇ０８６Ａ，,25.74,false,,,Variable,Variable,true
+2025-06-21,Visaデビット 01　931596　ＴＲＩＰ．ＣＯＭ,411.29,false,,,Variable,Variable,true
+2025-06-21,Visaデビット 01　980267　ＥＬＥＰＨＡＮＴ　ＧＲＯＵＮＤＳ,20.52,false,,,Variable,Variable,true
+2025-06-21,Visaデビット 01　015192　ＫＰＡＹ＊ＢＡＮＤＯＮＥ　ＣＡＴＥＲＩＮＧ,37.44,false,,,Variable,Variable,true
+2025-06-21,Visaデビット 01　038054　ＴＯＭＭＹ　ＹＵＭＭＹ　　　　　　３２９０１,13.39,false,,,Variable,Variable,true
+2025-06-21,Visaデビット 01　046479　ＨＯＮＧ　ＫＯＮＧ　ＴＲＡＭＷＡＹ９５８００,0.27,false,,,Variable,Variable,true
+2025-06-21,Visaデビット 01　056573　７−ＥＬＥＶＥＮ，　ＨＫ　（１８８２）,22.68,false,,,Variable,Variable,true
+2025-06-21,Visaデビット 01　074309　ＴＨＥ　ＰＥＡＫ　ＬＯＯＫＯＵＴ　ＲＥＳＴＡ,116.17,false,,,Variable,Variable,true
+2025-06-22,Visaデビット 01　101347　ＭＴＲ　−　ＲＩＤＥＳ,2.66,false,,,Variable,Variable,true
+2025-06-22,Visaデビット 01　151064　Ｄｅ　Ｖｏｅｕｘ　Ｒｄ　Ｃｒ,13.39,false,,,Variable,Variable,true
+2025-06-22,Visaデビット 01　187359　ＶＥＮＥＴＩＡＮ　ＣＯＴＡＩ　ＬＩＭＩＴＥＤ,39.19,false,,,Variable,Variable,true
+2025-06-22,Visaデビット 01　233973　Ｔａｉｐａ　Ｆｅｒｒｙ　Ｔｅｒｍｉｎａｌ,61.39,false,,,Variable,Variable,true
+2025-06-23,Visaデビット 01　277320　ＧＯＯＧＬＥ　ＰＬＡＹ　ＪＡＰＡＮ,14.43,false,,,Variable,Variable,true
+2025-06-24,Visaデビット 01　038054　ＴＯＭＭＹ　ＹＵＭＭＹ　　　　　　３２９０１,0.31,true,,,Income,Income,true
+2025-06-24,Visaデビット 01　393910　ＭＴＲ　−　ＲＩＤＥＳ,0.9,false,,,Variable,Variable,true
+2025-06-24,Visaデビット 01　417217　ＭＴＲ　−　ＲＩＤＥＳ,4.14,false,,,Variable,Variable,true
+2025-06-25,給与振込 リンクス（カ,4583.62,true,,,Income,Income,true
+2025-06-25,Visaデビット 01　564819　フアミリ−マ−トツジドウエキニシグチ,5.55,false,,,Variable,Variable,true
+2025-06-25,カード ゆうちょ,63.3,false,,,Variable,Variable,true
+2025-06-25,振込 サイトウ　リコ,1392.6,false,,,Variable,Variable,true
+2025-06-26,ＭＨＦ）ヤチンシユウノウ,822.39,false,,,Variable,Variable,true
+2025-06-26,Visaデビット 01　707057　エスパティオ　小和田店,33.2,false,,,Variable,Variable,true
+2025-06-26,Visaデビット 01　758724　ＵｂｅｒＪＰ＿ＥＡＴＳ,10.32,false,,,Variable,Variable,true
+2025-06-26,Visaデビット 01　777751　ＣＬＡＵＤＥ．ＡＩ　ＳＵＢＳＣＲＩＰＴＩＯＮ,75.26,false,,,Fixed,Fixed,true
+2025-06-26,Visaデビット 01　785793　ＣＬＡＵＤＥ．ＡＩ　ＳＵＢＳＣＲＩＰＴＩＯＮ,18.81,false,,,Fixed,Fixed,true
+2025-06-27,Visaデビット 01　855822　エスパティオ　小和田店,6.54,false,,,Variable,Variable,true
+2025-06-27,Visaデビット 01　903133　ＧＯ（タクシーアプリ）＊アプリ配車,6.96,false,,,Variable,Variable,true
+2025-06-27,Visaデビット 01　904015　フアミリ−マ−トツジドウエキニシグチ,4.1,false,,,Variable,Variable,true
+2025-06-27,Visaデビット 01　953255　サイゼリヤ／ＮＦＣ,15.07,false,,,Variable,Variable,true
+2025-06-27,Visaデビット 01　955090　セブンイレブン,2.72,false,,,Variable,Variable,true
+2025-06-28,Visaデビット 01　020029　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,18.93,false,,,Variable,Variable,true
+2025-06-28,Visaデビット 01　034189　０９５７マツモトキヨシＤＳ茅ヶ崎小和田店,6.84,false,,,Variable,Variable,true
+2025-06-28,Visaデビット 01　035735　エスパティオ　小和田店,6.32,false,,,Variable,Variable,true
+2025-06-28,Visaデビット 01　072201　フアミリ−マ−トチガサキコワダサンチヨ,21.36,false,,,Variable,Variable,true
+2025-06-28,Visaデビット 01　122853　Ｔｅｍｕ．ｃｏｍ,39.98,false,,,Variable,Variable,true
+2025-06-29,Visaデビット 01　217563　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,1.13,false,,,Variable,Variable,true
+2025-06-29,Visaデビット 01　224391　セブンイレブン,3.01,false,,,Variable,Variable,true
+2025-06-30,Visaデビット 01　310268　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,39.5,false,,,Variable,Variable,true
+2025-06-30,Visaデビット 01　336073　エスパティオ　小和田店,10.25,false,,,Variable,Variable,true
+2025-06-30,Visaデビット 01　392361　ＵｂｅｒＪＰ＿ＥＡＴＳ,11.89,false,,,Variable,Variable,true
+2025-07-01,Visaデビット 01　522876　エスパティオ　小和田店,9.78,false,,,Variable,Variable,true
+2025-07-01,Visaデビット 01　617076　フアミリ−マ−トチガサキコワダサンチヨ,7.89,false,,,Variable,Variable,true
+2025-07-03,Visaデビット 01　798404　ＧＯ（タクシーアプリ）＊アプリ配車,5.7,false,,,Variable,Variable,true
+2025-07-03,Visaデビット 01　816924　ｇｒｕｓ,48.74,false,,,Variable,Variable,true
+2025-07-03,Visaデビット 01　832253　ｅｎ　ｃａｆｅ／ＮＦＣ,28.67,false,,,Variable,Variable,true
+2025-07-03,Visaデビット 01　841347　ローソン,2.33,false,,,Variable,Variable,true
+2025-07-03,Visaデビット 01　870523　ローソン,2.29,false,,,Variable,Variable,true
+2025-07-03,Visaデビット 01　887949　やよい軒蔵前店,15.7,false,,,Variable,Variable,true
+2025-07-04,Visaデビット 01　972593　エスパティオ　小和田店,32.85,false,,,Variable,Variable,true
+2025-07-04,Visaデビット 01　039484　フアミリ−マ−トチガサキコワダサンチヨ,2.97,false,,,Variable,Variable,true
+2025-07-04,Visaデビット 01　062133　東急パワーサプライ,88.08,false,,,Fixed,Fixed,true
+2025-07-04,Visaデビット 01　063283　フアミリ−マ−トツジドウエキニシグチ,2.27,false,,,Variable,Variable,true
+2025-07-05,Visaデビット 01　201295　デニーズ辻堂南口店,28.13,false,,,Variable,Variable,true
+2025-07-05,Visaデビット 01　205639　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,4.24,false,,,Variable,Variable,true
+2025-07-06,Visaデビット 01　368779　ＬＯＮＣＡＦＥ　湘南江の島本店,17.06,false,,,Variable,Variable,true
+2025-07-06,Visaデビット 01　379331　フアミリ−マ−トツジドウエキニシグチ,0.76,false,,,Variable,Variable,true
+2025-07-07,Visaデビット 01　451728　ＧＯ（タクシーアプリ）＊アプリ配車,10.76,false,,,Variable,Variable,true
+2025-07-07,Visaデビット 01　458838　エスパティオ　小和田店,21.77,false,,,Variable,Variable,true
+2025-07-07,Visaデビット 01　505604　フアミリ−マ−トチガサキコワダサンチヨ,4.68,false,,,Variable,Variable,true
+2025-07-07,Visaデビット 01　526214　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,425.84,false,,,Variable,Variable,true
+2025-07-08,Visaデビット 01　545015　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,2.65,false,,,Variable,Variable,true
+2025-07-08,Visaデビット 01　547369　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,14.15,false,,,Variable,Variable,true
+2025-07-08,Visaデビット 01　547372　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,240.88,false,,,Variable,Variable,true
+2025-07-08,振込 イトウ　アンナ,626.67,true,,,Income,Income,true
+2025-07-08,Visaデビット 01　594696　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,38.63,false,,,Variable,Variable,true
+2025-07-09,Visaデビット 01　697210　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,19.52,false,,,Variable,Variable,true
+2025-07-09,Visaデビット 01　712965　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,12.72,false,,,Variable,Variable,true
+2025-07-09,Visaデビット 01　721588　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,72.95,false,,,Variable,Variable,true
+2025-07-09,Visaデビット 01　776948　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-07-09,Visaデビット 01　799707　フアミリ−マ−トチガサキコワダサンチヨ,2.38,false,,,Variable,Variable,true
+2025-07-10,Visaデビット 01　893363　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-07-10,Visaデビット 01　899396　エスパティオ　小和田店,2.17,false,,,Variable,Variable,true
+2025-07-10,Visaデビット 01　943394　フアミリ−マ−トチガサキコワダサンチヨ,3.58,false,,,Variable,Variable,true
+2025-07-10,Visaデビット 01　988903　フアミリ−マ−トチガサキコワダサンチヨ,2.38,false,,,Variable,Variable,true
+2025-07-11,Visaデビット 01　021970　フアミリ−マ−トチガサキコワダサンチヨ,5.53,false,,,Variable,Variable,true
+2025-07-11,Visaデビット 01　      　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,75.96,true,,,Income,Income,true
+2025-07-11,Visaデビット 01　063796　松屋　茅ヶ崎赤松町店,6.96,false,,,Variable,Variable,true
+2025-07-11,Visaデビット 01　069027　エスパティオ　小和田店,3.13,false,,,Variable,Variable,true
+2025-07-11,カード ゆうちょ,63.3,false,,,Variable,Variable,true
+2025-07-11,Visaデビット 01　142468　ハノイ町,14.43,false,,,Variable,Variable,true
+2025-07-11,Visaデビット 01　143243　ＭＹＢ蔵前駅北,4.22,false,,,Variable,Variable,true
+2025-07-12,Visaデビット 01　250562　ｃｏｂａｃｈｉ　ｃｈａｉ,5.06,false,,,Variable,Variable,true
+2025-07-12,Visaデビット 01　268917　タリーズコーヒー上野の森さくらテラス,8.29,false,,,Variable,Variable,true
+2025-07-12,Visaデビット 01　274896　ラクテンモバイルツウシンリョウ,16.77,false,,,Variable,Variable,true
+2025-07-12,Visaデビット 01　302576　彩ｔｏｒｉ鳥,50.64,false,,,Variable,Variable,true
+2025-07-12,Visaデビット 01　312932　セブンイレブン,4.55,false,,,Variable,Variable,true
+2025-07-13,Visaデビット 01　409752　フリホーレス　代官山店,15.64,false,,,Variable,Variable,true
+2025-07-13,Visaデビット 01　414400　フリホーレス　代官山店,1.27,false,,,Variable,Variable,true
+2025-07-13,Visaデビット 01　471209　ＧＩＮＺＡ　ＳＩＸ,13.29,false,,,Variable,Variable,true
+2025-07-13,Visaデビット 01　472217　ＧＩＮＺＡ　ＳＩＸ,18.99,false,,,Variable,Variable,true
+2025-07-13,Visaデビット 01　476210　デイリーヤマザキ,3.04,false,,,Variable,Variable,true
+2025-07-14,Visaデビット 01　511101　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,34.07,false,,,Variable,Variable,true
+2025-07-14,Visaデビット 01　542522　ｅｎ　ｃａｆｅ／ＮＦＣ,16.2,false,,,Variable,Variable,true
+2025-07-14,Visaデビット 01　586366　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-07-14,Visaデビット 01　590459　エスパティオ　小和田店,2.38,false,,,Variable,Variable,true
+2025-07-14,Visaデビット 01　594631　Ｍｉｃｒｏｓｏｆｔ＊Ｓｔｏｒｅ,0.63,false,,,Variable,Variable,true
+2025-07-14,Visaデビット 01　594631　Ｍｉｃｒｏｓｏｆｔ＊Ｓｔｏｒｅ,0.63,true,,,Income,Income,true
+2025-07-14,Visaデビット 01　594700　マイクロソフト,7.39,false,,,Variable,Variable,true
+2025-07-14,Visaデビット 01　635202　フアミリ−マ−トチガサキコワダサンチヨ,4.63,false,,,Variable,Variable,true
+2025-07-15,Visaデビット 01　711753　松屋　茅ヶ崎赤松町店,7.6,false,,,Variable,Variable,true
+2025-07-15,Visaデビット 01　716086　エスパティオ　小和田店,2.17,false,,,Variable,Variable,true
+2025-07-15,Visaデビット 01　754367　フアミリ−マ−トチガサキコワダサンチヨ,4.94,false,,,Variable,Variable,true
+2025-07-16,Visaデビット 01　803300　ネットフリックス,14.5,false,,,Variable,Variable,true
+2025-07-16,Visaデビット 01　      　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,2.65,true,,,Income,Income,true
+2025-07-16,Visaデビット 01　853931　エスパティオ　小和田店,8.33,false,,,Variable,Variable,true
+2025-07-16,Visaデビット 01　909729　松屋　茅ヶ崎赤松町店,6.71,false,,,Variable,Variable,true
+2025-07-16,Visaデビット 01　914583　フアミリ−マ−トチガサキコワダサンチヨ,2.39,false,,,Variable,Variable,true
+2025-07-17,Visaデビット 01　983106　エスパティオ　小和田店,21.28,false,,,Variable,Variable,true
+2025-07-17,Visaデビット 01　071713　フアミリ−マ−トチガサキコワダサンチヨ,6.65,false,,,Variable,Variable,true
+2025-07-18,Visaデビット 01　144781　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-07-18,Visaデビット 01　151133　エスパティオ　小和田店,2.03,false,,,Variable,Variable,true
+2025-07-18,Visaデビット 01　213245　フアミリ−マ−トツジドウエキニシグチ,2.15,false,,,Variable,Variable,true
+2025-07-18,カード ゆうちょ,63.3,false,,,Variable,Variable,true
+2025-07-18,Visaデビット 01　237910　フアミリ−マ−トクラマエ,6.79,false,,,Variable,Variable,true
+2025-07-19,Visaデビット 01　278067　アトレウエノ,8.97,false,,,Variable,Variable,true
+2025-07-19,Visaデビット 01　372119　イオン　かほく,16.19,false,,,Variable,Variable,true
+2025-07-20,Visaデビット 01　500522　ｋａｋｕｒｅｚａｔｏ,15.51,false,,,Variable,Variable,true
+2025-07-21,Visaデビット 01　715087　フアミリ−マ−トクラマエ,8.96,false,,,Variable,Variable,true
+2025-07-22,デビツトリヨウキヤツシユバツク,6.67,true,,,Income,Income,true
+2025-07-22,Visaデビット 01　767153　ＭＹＢ蔵前駅北,3.94,false,,,Variable,Variable,true
+2025-07-22,Visaデビット 01　790570　成田空港京成高速バス,50.64,false,,,Variable,Variable,true
+2025-07-22,Visaデビット 01　823083　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-07-22,Visaデビット 01　823220　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-07-22,Visaデビット 01　830704　エスパティオ　小和田店,9.92,false,,,Variable,Variable,true
+2025-07-22,Visaデビット 01　869743　フアミリ−マ−トチガサキコワダサンチヨ,4.41,false,,,Variable,Variable,true
+2025-07-23,Visaデビット 01　922219　ＧＯＯＧＬＥ　ＰＬＡＹ　ＪＡＰＡＮ,14.43,false,,,Variable,Variable,true
+2025-07-23,Visaデビット 01　933145　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-07-23,Visaデビット 01　933426　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-07-23,Visaデビット 01　940876　エスパティオ　小和田店,4.15,false,,,Variable,Variable,true
+2025-07-23,Visaデビット 01　962408　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2025-07-23,Visaデビット 01　974572　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,51.6,false,,,Variable,Variable,true
+2025-07-23,Visaデビット 01　007921　フアミリ−マ−トチガサキコワダサンチヨ,3.49,false,,,Variable,Variable,true
+2025-07-24,Visaデビット 01　063016　ＧＯ（タクシーアプリ）＊アプリ配車,25.95,false,,,Variable,Variable,true
+2025-07-24,Visaデビット 01　083586　びっくりドンキー茅ヶ崎店,32.22,false,,,Variable,Variable,true
+2025-07-24,Visaデビット 01　092827　ＧＯ（タクシーアプリ）＊アプリ配車,16.46,false,,,Variable,Variable,true
+2025-07-24,Visaデビット 01　095227　エスパティオ　小和田店,35.66,false,,,Variable,Variable,true
+2025-07-25,給与振込 リンクス（カ,4684.73,true,,,Income,Income,true
+2025-07-25,Visaデビット 01　205546　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2025-07-25,Visaデビット 01　214263　ローソン,3.45,false,,,Variable,Variable,true
+2025-07-25,カード セブン,63.3,false,,,Variable,Variable,true
+2025-07-25,Visaデビット 01　323727　０９５７マツモトキヨシＤＳ茅ヶ崎小和田店,9.99,false,,,Variable,Variable,true
+2025-07-26,Visaデビット 01　390244　ＧＯ（タクシーアプリ）＊アプリ配車,4.43,false,,,Variable,Variable,true
+2025-07-26,カード セブン,94.95,false,,,Variable,Variable,true
+2025-07-26,Visaデビット 01　391219　セブンイレブン,1.09,false,,,Variable,Variable,true
+2025-07-26,Visaデビット 01　419483　タイ　エラワン,24.69,false,,,Variable,Variable,true
+2025-07-26,Visaデビット 01　421843　三笠ターミナル／ＮＦＣ,37.98,false,,,Variable,Variable,true
+2025-07-26,Visaデビット 01　439922　記念艦三笠　売店,1.27,false,,,Variable,Variable,true
+2025-07-26,Visaデビット 01　456240　カフェ・ド・クリエ　横須賀中央リドレ店,11.2,false,,,Variable,Variable,true
+2025-07-26,Visaデビット 01　478638　ＣＬＡＵＤＥ．ＡＩ　ＳＵＢＳＣＲＩＰＴＩＯＮ,95.33,false,,,Fixed,Fixed,true
+2025-07-26,Visaデビット 01　479940　サイゼリヤ／ＮＦＣ,20.13,false,,,Variable,Variable,true
+2025-07-26,Visaデビット 01　482340　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-07-26,Visaデビット 01　492773　フアミリ−マ−トツジドウエキニシグチ,1.52,false,,,Variable,Variable,true
+2025-07-27,Visaデビット 01　559258　エスパティオ　小和田店,26.45,false,,,Variable,Variable,true
+2025-07-27,Visaデビット 01　645075　ＢＳＢ　Ｌｕｚ湘南辻堂,6.27,false,,,Variable,Variable,true
+2025-07-27,Visaデビット 01　646665　ＢＳＢ　Ｌｕｚ湘南辻堂,16.74,false,,,Variable,Variable,true
+2025-07-27,Visaデビット 01　648173　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,14.56,false,,,Variable,Variable,true
+2025-07-27,Visaデビット 01　648919　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,2.47,false,,,Variable,Variable,true
+2025-07-28,ＭＨＦ）ヤチンシユウノウ,822.39,false,,,Variable,Variable,true
+2025-07-28,Visaデビット 01　703482　ＧＯ（タクシーアプリ）＊アプリ配車,8.86,false,,,Variable,Variable,true
+2025-07-28,Visaデビット 01　787549　フアミリ−マ−トチガサキコワダサンチヨ,5.93,false,,,Variable,Variable,true
+2025-07-29,Visaデビット 01　874563　エスパティオ　小和田店,40.13,false,,,Variable,Variable,true
+2025-07-30,振込 カ）エイペスト,1544.52,false,,,Variable,Variable,true
+2025-07-30,Visaデビット 01　031208　エスパティオ　小和田店,5.73,false,,,Variable,Variable,true
+2025-07-30,Visaデビット 01　079555　フアミリ−マ−トチガサキコワダサンチヨ,5.69,false,,,Variable,Variable,true
+2025-07-31,Visaデビット 01　142963　ＧＯ（タクシーアプリ）＊アプリ配車,8.86,false,,,Variable,Variable,true
+2025-07-31,Visaデビット 01　171979　ブランチーズ,30.83,false,,,Variable,Variable,true
+2025-07-31,Visaデビット 01　181424　セブンイレブン,6.75,false,,,Variable,Variable,true
+2025-07-31,Visaデビット 01　182504　辻堂交通株式会社,5.06,false,,,Variable,Variable,true
+2025-07-31,Visaデビット 01　224920　エスパティオ　小和田店,9.06,false,,,Variable,Variable,true
+2025-07-31,振込 イトウ　アンナ,1835.7,false,,,Savings,Savings,true
+2025-08-01,Visaデビット 01　309179　ＧＯ（タクシーアプリ）＊アプリ配車,6.33,false,,,Variable,Variable,true
+2025-08-01,Visaデビット 01　397236　エスパティオ　小和田店,2.49,false,,,Variable,Variable,true
+2025-08-02,Visaデビット 01　492622　ＧＯ（タクシーアプリ）＊アプリ配車,5.06,false,,,Variable,Variable,true
+2025-08-02,カード セブン,94.95,false,,,Variable,Variable,true
+2025-08-02,Visaデビット 01　498587　ダイソー／ＮＦＣ,1.39,false,,,Variable,Variable,true
+2025-08-02,Visaデビット 01　568897　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-08-03,Visaデビット 01　633325　ＧＯ（タクシーアプリ）＊アプリ配車,5.06,false,,,Variable,Variable,true
+2025-08-03,Visaデビット 01　636836　フアミリ−マ−トカマクラニノトリイ,9.74,false,,,Variable,Variable,true
+2025-08-03,Visaデビット 01　637760　梨花和服　鎌倉店,199.39,false,,,Variable,Variable,true
+2025-08-03,Visaデビット 01　657116　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-08-03,Visaデビット 01　672142　日本料理　鯉之助,85.64,false,,,Variable,Variable,true
+2025-08-03,Visaデビット 01　713001　コメダ珈琲店　鎌倉小町店,36.84,false,,,Variable,Variable,true
+2025-08-03,Visaデビット 01　722249　セブンイレブン,2.62,false,,,Variable,Variable,true
+2025-08-04,Visaデビット 01　826737　エスパティオ　小和田店,21.84,false,,,Variable,Variable,true
+2025-08-05,Visaデビット 01　964172　エスパティオ　小和田店,10.08,false,,,Variable,Variable,true
+2025-08-05,Visaデビット 01　994035　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2025-08-05,Visaデビット 01　032443　東急パワーサプライ,123.16,false,,,Fixed,Fixed,true
+2025-08-05,Visaデビット 01　058651　ＳＵＩＣＡ　ＧＯＯＧＬＥＰＡＹ,6.33,false,,,Variable,Variable,true
+2025-08-05,Visaデビット 01　058651　ＳＵＩＣＡ　ＧＯＯＧＬＥＰＡＹ,6.33,true,,,Income,Income,true
+2025-08-05,Visaデビット 01　059534　セブンイレブン,1.78,false,,,Variable,Variable,true
+2025-08-06,Visaデビット 01　117804　ＧＯ（タクシーアプリ）＊アプリ配車,5.7,false,,,Variable,Variable,true
+2025-08-06,Visaデビット 01　125709　ＪＲヒガシニホン　ミドリノマドグチ,29.75,false,,,Variable,Variable,true
+2025-08-06,Visaデビット 01　131683　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-08-06,Visaデビット 01　132808　フアミリ−マ−トツジドウエキニシグチ,5.61,false,,,Variable,Variable,true
+2025-08-06,Visaデビット 01　145090　松屋　茅ヶ崎赤松町店,6.52,false,,,Variable,Variable,true
+2025-08-06,Visaデビット 01　145218　松屋　茅ヶ崎赤松町店,4.18,false,,,Variable,Variable,true
+2025-08-06,Visaデビット 01　150714　エスパティオ　小和田店,4.96,false,,,Variable,Variable,true
+2025-08-06,Visaデビット 01　155897　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,55.58,false,,,Variable,Variable,true
+2025-08-07,Visaデビット 01　341020　バーガーキング／ＮＦＣ,14.37,false,,,Variable,Variable,true
+2025-08-07,Visaデビット 01　350954　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,4.49,false,,,Variable,Variable,true
+2025-08-07,Visaデビット 01　361698　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,20.21,false,,,Variable,Variable,true
+2025-08-08,Visaデビット 01　414600　ＧＯ（タクシーアプリ）＊アプリ配車,7.6,false,,,Variable,Variable,true
+2025-08-08,Visaデビット 01　455441　松屋　茅ヶ崎赤松町店,8.23,false,,,Variable,Variable,true
+2025-08-08,Visaデビット 01　540379　フアミリ−マ−トチガサキコワダサンチヨ,4.82,false,,,Variable,Variable,true
+2025-08-09,Visaデビット 01　648003　松屋　茅ヶ崎赤松町店,8.23,false,,,Variable,Variable,true
+2025-08-09,Visaデビット 01　653782　エスパティオ　小和田店,7.11,false,,,Variable,Variable,true
+2025-08-09,Visaデビット 01　711347　フアミリ−マ−トチガサキコワダサンチヨ,4.92,false,,,Variable,Variable,true
+2025-08-10,Visaデビット 01　804037　フアミリ−マ−トチガサキコワダサンチヨ,13.0,false,,,Variable,Variable,true
+2025-08-10,Visaデビット 01　864435　松屋　茅ヶ崎赤松町店,8.23,false,,,Variable,Variable,true
+2025-08-10,Visaデビット 01　871733　フアミリ−マ−トチガサキコワダサンチヨ,3.44,false,,,Variable,Variable,true
+2025-08-11,Visaデビット 01　974618　松屋　茅ヶ崎赤松町店,8.23,false,,,Variable,Variable,true
+2025-08-11,Visaデビット 01　980464　エスパティオ　小和田店,2.03,false,,,Variable,Variable,true
+2025-08-11,Visaデビット 01　998115　ＧＯ（タクシーアプリ）＊アプリ配車,11.39,false,,,Variable,Variable,true
+2025-08-11,Visaデビット 01　998256　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-08-11,Visaデビット 01　018137　ＭＹＢ蔵前駅北,7.15,false,,,Variable,Variable,true
+2025-08-12,Visaデビット 01　087525　ｆｅｂｓ　ｃｏｆｆｅｅ　Ｂｌｕｃｃａ,13.55,false,,,Variable,Variable,true
+2025-08-12,Visaデビット 01　123711　ラクテンモバイルツウシンリョウ,13.69,false,,,Variable,Variable,true
+2025-08-12,Visaデビット 01　138858　ローソン,3.54,false,,,Variable,Variable,true
+2025-08-12,Visaデビット 01　157057　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-08-12,Visaデビット 01　165669　ロケツトナウ,4.59,false,,,Variable,Variable,true
+2025-08-12,Visaデビット 01　166028　ロケツトナウ,2.37,false,,,Variable,Variable,true
+2025-08-13,振込 イトウ　アンナ,562.61,false,,,Savings,Savings,true
+2025-08-13,Visaデビット 01　303759　森ビル関連施設,21.65,false,,,Variable,Variable,true
+2025-08-13,Visaデビット 01　313259　ザシティベーカリー赤坂アーク／ＮＦＣ,15.74,false,,,Variable,Variable,true
+2025-08-13,Visaデビット 01　326595　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-08-13,Visaデビット 01　369053　フアミリ−マ−トツジドウエキニシグチ,2.95,false,,,Variable,Variable,true
+2025-08-14,Visaデビット 01　438732　マイクロソフト,21.43,false,,,Variable,Variable,true
+2025-08-14,Visaデビット 01　466049　松屋　茅ヶ崎赤松町店,8.23,false,,,Variable,Variable,true
+2025-08-14,Visaデビット 01　474089　エスパティオ　小和田店,2.03,false,,,Variable,Variable,true
+2025-08-14,Visaデビット 01　516128　フアミリ−マ−トチガサキコワダサンチヨ,3.15,false,,,Variable,Variable,true
+2025-08-15,Visaデビット 01　598938　松屋　茅ヶ崎赤松町店,6.71,false,,,Variable,Variable,true
+2025-08-15,Visaデビット 01　605122　エスパティオ　小和田店,1.68,false,,,Variable,Variable,true
+2025-08-15,Visaデビット 01　667835　フアミリ−マ−トチガサキコワダサンチヨ,6.51,false,,,Variable,Variable,true
+2025-08-15,Visaデビット 01　694473　フアミリ−マ−トチガサキコワダサンチヨ,3.02,false,,,Variable,Variable,true
+2025-08-16,Visaデビット 01　706639　ネットフリックス,14.5,false,,,Variable,Variable,true
+2025-08-16,Visaデビット 01　765478　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2025-08-16,Visaデビット 01　768143　フアミリ−マ−トツジドウエキニシグチ,2.29,false,,,Variable,Variable,true
+2025-08-16,Visaデビット 01　787028　ラクテンペイ　マクレ−ンスタンド,14.31,false,,,Variable,Variable,true
+2025-08-16,Visaデビット 01　790001　ＭＹＢ蔵前駅北,3.6,false,,,Variable,Variable,true
+2025-08-16,Visaデビット 01　791071　フアミリ−マ−トクラマエ,1.06,false,,,Variable,Variable,true
+2025-08-16,Visaデビット 01　838456　ジーユー／ＮＦＣ,13.17,false,,,Variable,Variable,true
+2025-08-17,Visaデビット 01　910185　フアミリ−マ−トクラマエ,2.65,false,,,Variable,Variable,true
+2025-08-17,Visaデビット 01　934406　イベントゴリヨウブン,12.66,false,,,Variable,Variable,true
+2025-08-17,Visaデビット 01　940163　イベントゴリヨウブン,15.82,false,,,Variable,Variable,true
+2025-08-17,Visaデビット 01　949879　ＺＯＺＯマリンスタジアム／ＮＦＣ,2.22,false,,,Variable,Variable,true
+2025-08-17,Visaデビット 01　984162　イベントゴリヨウブン,8.86,false,,,Variable,Variable,true
+2025-08-17,Visaデビット 01　987498　イベントゴリヨウブン,7.6,false,,,Variable,Variable,true
+2025-08-17,Visaデビット 01　989250　イベントゴリヨウブン,1.9,false,,,Variable,Variable,true
+2025-08-17,Visaデビット 01　999127　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-08-17,Visaデビット 01　007232　ＭＹＢ蔵前駅北,0.94,false,,,Variable,Variable,true
+2025-08-17,Visaデビット 01　007730　フアミリ−マ−トクラマエ,6.8,false,,,Variable,Variable,true
+2025-08-18,決算利息,1.27,true,,,Income,Income,true
+2025-08-18,Visaデビット 01　050739　フアミリ−マ−トクラマエ,3.75,false,,,Variable,Variable,true
+2025-08-18,Visaデビット 01　087469　すき家,10.0,false,,,Variable,Variable,true
+2025-08-18,Visaデビット 01　088254　フアミリ−マ−トクラマエ,3.85,false,,,Variable,Variable,true
+2025-08-18,Visaデビット 01　138520　フアミリ−マ−トツジドウエキニシグチ,3.15,false,,,Variable,Variable,true
+2025-08-19,Visaデビット 01　233298　松屋　茅ヶ崎赤松町店,8.23,false,,,Variable,Variable,true
+2025-08-19,Visaデビット 01　239300　エスパティオ　小和田店,1.83,false,,,Variable,Variable,true
+2025-08-19,Visaデビット 01　292204　フアミリ−マ−トチガサキコワダサンチヨ,4.56,false,,,Variable,Variable,true
+2025-08-20,デビツトリヨウキヤツシユバツク,10.58,true,,,Income,Income,true
+2025-08-20,Visaデビット 01　385867　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,6.22,false,,,Variable,Variable,true
+2025-08-20,Visaデビット 01　397882　松屋　茅ヶ崎赤松町店,6.14,false,,,Variable,Variable,true
+2025-08-20,Visaデビット 01　404383　エスパティオ　小和田店,1.83,false,,,Variable,Variable,true
+2025-08-20,カード ゆうちょ,63.3,false,,,Variable,Variable,true
+2025-08-20,Visaデビット 01　425009　ロケツトナウ,4.59,false,,,Variable,Variable,true
+2025-08-22,Visaデビット 01　710061　フアミリ−マ−トチガサキコワダサンチヨ,12.17,false,,,Variable,Variable,true
+2025-08-22,Visaデビット 01　739281　丸亀製麺　茅ヶ崎／ＮＦＣ,9.31,false,,,Variable,Variable,true
+2025-08-22,Visaデビット 01　748239　マクドナルド,7.41,false,,,Variable,Variable,true
+2025-08-22,Visaデビット 01　765631　フアミリ−マ−トチガサキコワダサンチヨ,3.86,false,,,Variable,Variable,true
+2025-08-23,Visaデビット 01　835538　ＧＯＯＧＬＥ　ＰＬＡＹ　ＪＡＰＡＮ,14.43,false,,,Variable,Variable,true
+2025-08-23,Visaデビット 01　845549　茅ヶ崎　増田屋／ＮＦＣ,19.37,false,,,Variable,Variable,true
+2025-08-23,Visaデビット 01　851222　エスパティオ　小和田店,2.5,false,,,Variable,Variable,true
+2025-08-23,カード セブン,63.3,false,,,Variable,Variable,true
+2025-08-24,Visaデビット 01　002108　マクドナルド,9.18,false,,,Variable,Variable,true
+2025-08-24,Visaデビット 01　009129　エスパティオ　小和田店,3.04,false,,,Variable,Variable,true
+2025-08-24,Visaデビット 01　070406　松屋　茅ヶ崎赤松町店,5.38,false,,,Variable,Variable,true
+2025-08-24,Visaデビット 01　073162　フアミリ−マ−トチガサキコワダサンチヨ,4.48,false,,,Variable,Variable,true
+2025-08-25,給与振込 リンクス（カ,4684.73,true,,,Income,Income,true
+2025-08-25,Visaデビット 01　193809　フアミリ−マ−トチガサキコワダサンチヨ,18.02,false,,,Variable,Variable,true
+2025-08-25,Visaデビット 01　197787　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2025-08-25,Visaデビット 01　244689　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2025-08-25,Visaデビット 01　246726　ロケツトナウ,5.06,false,,,Variable,Variable,true
+2025-08-25,Visaデビット 01　256709　セブンイレブン,5.14,false,,,Variable,Variable,true
+2025-08-25,Visaデビット 01　262665　Ｔｅｍｕ．ｃｏｍ,35.23,false,,,Variable,Variable,true
+2025-08-25,Visaデビット 01　264351　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,146.69,false,,,Variable,Variable,true
+2025-08-25,Visaデビット 01　264436　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,335.36,false,,,Variable,Variable,true
+2025-08-25,Visaデビット 01　265631　Ｔｅｍｕ．ｃｏｍ,14.16,false,,,Variable,Variable,true
+2025-08-26,Visaデビット 01　300512　エスパティオ　小和田店,5.67,false,,,Variable,Variable,true
+2025-08-26,Visaデビット 01　301085　松屋　茅ヶ崎赤松町店,8.1,false,,,Variable,Variable,true
+2025-08-26,Visaデビット 01　301243　松屋　茅ヶ崎赤松町店,3.54,false,,,Variable,Variable,true
+2025-08-26,Visaデビット 01　313826　マクドナルド,2.72,false,,,Variable,Variable,true
+2025-08-26,Visaデビット 01　340291　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2025-08-26,Visaデビット 01　372196　びっくりドンキー茅ヶ崎店,21.65,false,,,Variable,Variable,true
+2025-08-26,振込 イトウ　アンナ,917.85,false,,,Savings,Savings,true
+2025-08-26,振込 イトウ　アンナ,727.95,false,,,Savings,Savings,true
+2025-08-26,振込手数料（税込）,0.7,false,,,Fixed,Fixed,true
+2025-08-26,Visaデビット 01　395412　ＣＬＡＵＤＥ．ＡＩ　ＳＵＢＳＣＲＩＰＴＩＯＮ,95.33,false,,,Fixed,Fixed,true
+2025-08-27,振込 イトウ　ヒロシ,633.0,true,,,Income,Income,true
+2025-08-27,Visaデビット 01　465498　やまか松林店,64.36,false,,,Variable,Variable,true
+2025-08-27,Visaデビット 01　469663　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,54.37,false,,,Variable,Variable,true
+2025-08-27,Visaデビット 01　520217　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,18.71,false,,,Variable,Variable,true
+2025-08-27,Visaデビット 01　573767　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,11.68,false,,,Variable,Variable,true
+2025-08-28,Visaデビット 01　653254　ＧＯ（タクシーアプリ）＊アプリ配車,12.03,false,,,Variable,Variable,true
+2025-08-28,Visaデビット 01　682643　ＧＯ（タクシーアプリ）＊アプリ配車,10.13,false,,,Variable,Variable,true
+2025-08-28,Visaデビット 01　699443　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,36.71,false,,,Variable,Variable,true
+2025-08-28,Visaデビット 01　718843　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,38.49,false,,,Variable,Variable,true
+2025-08-28,Visaデビット 01　721797　Ｔｅｍｕ．ｃｏｍ,66.66,false,,,Variable,Variable,true
+2025-08-29,Visaデビット 01　763401　Ｔｅｍｕ．ｃｏｍ,31.93,false,,,Variable,Variable,true
+2025-08-29,Visaデビット 01　860899　ＧＯ（タクシーアプリ）＊アプリ配車,36.08,false,,,Variable,Variable,true
+2025-08-29,Visaデビット 01　875003　ｂｉｌｌｓ七里ガ浜／ＮＦＣ,77.54,false,,,Variable,Variable,true
+2025-08-29,Visaデビット 01　888251　藤沢タクシー株式会社　本社営業所,23.42,false,,,Variable,Variable,true
+2025-08-30,Visaデビット 01　979700　ロケツトナウ,10.13,false,,,Variable,Variable,true
+2025-08-30,Visaデビット 01　044711　クリエイトエス・ディー,39.18,false,,,Variable,Variable,true
+2025-08-31,Visaデビット 01　184082　ロケツトナウ,15.82,false,,,Variable,Variable,true
+2025-09-01,Visaデビット 01　233946　Ｔｅｍｕ．ｃｏｍ,14.59,false,,,Variable,Variable,true
+2025-09-03,Visaデビット 01　597349　やまか松林店,19.08,false,,,Variable,Variable,true
+2025-09-03,Visaデビット 01　668643　Ｔｅｍｕ．ｃｏｍ,36.83,false,,,Variable,Variable,true
+2025-09-03,Visaデビット 01　680479　ローソン,6.46,false,,,Variable,Variable,true
+2025-09-03,Visaデビット 01　683002　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,3.74,false,,,Variable,Variable,true
+2025-09-04,Visaデビット 01　831501　東急パワーサプライ,148.41,false,,,Fixed,Fixed,true
+2025-09-04,Visaデビット 01　847249　ローソン,5.45,false,,,Variable,Variable,true
+2025-09-04,Visaデビット 01　848279　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,8.2,false,,,Variable,Variable,true
+2025-09-05,Visaデビット 01　937363　ＵｂｅｒＪＰ＿ＥＡＴＳ,17.61,false,,,Variable,Variable,true
+2025-09-05,Visaデビット 01　937793　ＵｂｅｒＪＰ＿ＥＡＴＳ,9.68,false,,,Variable,Variable,true
+2025-09-05,Visaデビット 01　973070　クリエイトエス・ディー,7.44,false,,,Variable,Variable,true
+2025-09-06,Visaデビット 01　088530　やまか松林店,22.12,false,,,Variable,Variable,true
+2025-09-06,Visaデビット 01　156361　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,37.85,false,,,Variable,Variable,true
+2025-09-07,Visaデビット 01　299179　セブンイレブン,5.3,false,,,Variable,Variable,true
+2025-09-08,Visaデビット 01　367343　セブンイレブン,5.73,false,,,Variable,Variable,true
+2025-09-08,Visaデビット 01　432462　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-09-08,Visaデビット 01　438899　セブンイレブン,4.82,false,,,Variable,Variable,true
+2025-09-08,Visaデビット 01　461310　ＰＩＺＺＥＲＩＡ　ＳＨＯＣＨＡＮ,43.87,false,,,Variable,Variable,true
+2025-09-09,Visaデビット 01　571304　やまか松林店,12.63,false,,,Variable,Variable,true
+2025-09-10,Visaデビット 01　646922　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,11.47,false,,,Variable,Variable,true
+2025-09-10,Visaデビット 01　652926　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,18.69,false,,,Variable,Variable,true
+2025-09-11,Visaデビット 01　923071　ロケツトナウ,15.38,false,,,Variable,Variable,true
+2025-09-11,振込 カ）エイペスト,255.35,false,,,Variable,Variable,true
+2025-09-12,Visaデビット 01　044506　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,12.66,false,,,Variable,Variable,true
+2025-09-12,Visaデビット 01　044786　ＧＯ（タクシーアプリ）＊アプリ配車,11.39,false,,,Variable,Variable,true
+2025-09-12,Visaデビット 01　052801　ラクテンモバイルツウシンリョウ,13.66,false,,,Variable,Variable,true
+2025-09-12,Visaデビット 01　055660　ジェイアールヒガシニホンクロスステーショ,10.13,false,,,Variable,Variable,true
+2025-09-12,Visaデビット 01　104656　無印良品,7.91,false,,,Variable,Variable,true
+2025-09-13,Visaデビット 01　294323　４７１ゲンキー条南小学校北店,4.16,false,,,Variable,Variable,true
+2025-09-14,カード イーネット,63.3,false,,,Variable,Variable,true
+2025-09-14,Visaデビット 01　477112　マイクロソフト,38.42,false,,,Variable,Variable,true
+2025-09-15,Visaデビット 01　551058　オヤドタクシ−　ホンシヤ,6.96,false,,,Variable,Variable,true
+2025-09-15,Visaデビット 01　581404　ＣｈｏｃｏＴｅａ,11.08,false,,,Variable,Variable,true
+2025-09-15,Visaデビット 01　601470　ユニクロ／ＮＦＣ,7.47,false,,,Variable,Variable,true
+2025-09-15,Visaデビット 01　610264　平和堂,4.16,false,,,Variable,Variable,true
+2025-09-16,Visaデビット 01　647997　ＮＥＴＦＬＩＸ．ＣＯＭ,14.5,false,,,Fixed,Fixed,true
+2025-09-16,Visaデビット 01　660430　北陸鉄道／ＮＦＣ,2.66,false,,,Variable,Variable,true
+2025-09-16,Visaデビット 01　721856　オヤドタクシ−　ホンシヤ,7.6,false,,,Variable,Variable,true
+2025-09-16,Visaデビット 01　730884　金沢百番街,25.07,false,,,Variable,Variable,true
+2025-09-16,Visaデビット 01　732001　金沢エムザ,2.89,false,,,Variable,Variable,true
+2025-09-16,Visaデビット 01　770994　北國銀行貸出端末８４,53.36,false,,,Variable,Variable,true
+2025-09-16,Visaデビット 01　772983　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-09-17,Visaデビット 01　845109　金沢百番街,6.99,false,,,Variable,Variable,true
+2025-09-17,Visaデビット 01　891119　Ｓｕｉｃａ（ＧｏｏｇｌｅＰａｙ）,6.33,false,,,Variable,Variable,true
+2025-09-17,Visaデビット 01　893946　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,20.75,false,,,Variable,Variable,true
+2025-09-17,Visaデビット 01　895528　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,8.56,false,,,Variable,Variable,true
+2025-09-17,Visaデビット 01　895986　Ｔｅｒｒａｃｅ　Ｍａｌｌ　湘南,10.44,false,,,Variable,Variable,true
+2025-09-17,Visaデビット 01　904384　辻堂交通株式会社,8.86,false,,,Variable,Variable,true
+2025-09-18,Visaデビット 01　985699　ＵｂｅｒＪＰ＿ＥＡＴＳ,101.83,false,,,Variable,Variable,true
+2025-09-18,Visaデビット 01　012043　セブンイレブン,3.39,false,,,Variable,Variable,true
+2025-09-19,Visaデビット 01　209863　ユ−コ−プチガサキタカタテン／ＮＦＣ,4.73,false,,,Variable,Variable,true
+2025-09-20,Visaデビット 01　985699　ＵｂｅｒＪＰ＿ＥＡＴＳ,1.72,true,,,Income,Income,true
+2025-09-20,Visaデビット 01　354547　やまか松林店,10.06,false,,,Variable,Variable,true
+2025-09-21,Visaデビット 01　451915　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,12.66,false,,,Variable,Variable,true
+2025-09-21,Visaデビット 01　558286　むさしの森珈琲,27.43,false,,,Variable,Variable,true
+2025-09-22,デビツトリヨウキヤツシユバツク,10.25,true,,,Income,Income,true
+2025-09-23,Visaデビット 01　797348　ＧＯＯＧＬＥ　ＰＬＡＹ　ＪＡＰＡＮ,14.43,false,,,Variable,Variable,true
+2025-09-23,Visaデビット 01　849262　やまか松林店,9.81,false,,,Variable,Variable,true
+2025-09-25,給与振込 リンクス（カ,4811.33,true,,,Income,Income,true
+2025-09-25,振込 マルテイネズ　ポンズ　リカルド,1202.7,false,,,Savings,Savings,true
+2025-09-25,振込 イトウ　アンナ,1835.7,false,,,Savings,Savings,true
+2025-09-25,振込手数料（税込）,0.7,false,,,Fixed,Fixed,true
+2025-09-25,振込 マルテイネズ　ポンズ　リカルド,727.95,false,,,Savings,Savings,true
+2025-09-25,振込手数料（税込）,0.7,false,,,Fixed,Fixed,true
+2025-09-26,Visaデビット 01　288326　ロケツトナウ,12.28,false,,,Variable,Variable,true
+2025-09-27,Visaデビット 01　438135　ロケツトナウ,16.46,false,,,Variable,Variable,true
+2025-09-27,Visaデビット 01　493749　ＧＯ（タクシーアプリ）＊アプリ配車,9.49,false,,,Variable,Variable,true
+2025-09-28,Visaデビット 01　659468　ＡＭＡＺＯＮ．ＣＯ．ＪＰ,51.84,false,,,Variable,Variable,true
+2025-10-01,Visaデビット 01　151678　やまか松林店,13.0,false,,,Variable,Variable,true
+2025-10-04,Visaデビット 01　563496　ロケツトナウ,13.29,false,,,Variable,Variable,true
+2025-10-05,Visaデビット 01　748386　ロケツトナウ,12.28,false,,,Variable,Variable,true
+2025-10-05,Visaデビット 01　766258　ＧＯ（タクシーアプリ）＊アプリ配車,8.86,false,,,Variable,Variable,true
+2025-10-06,Visaデビット 01　003334　東急パワーサプライ,54.94,false,,,Fixed,Fixed,true
+2025-10-08,Visaデビット 01　224136　ロケツトナウ,9.81,false,,,Variable,Variable,true
+2025-10-10,Visaデビット 01　611765　ロケツトナウ,17.41,false,,,Variable,Variable,true
+2025-10-11,Visaデビット 01　763750　やまか松林店,33.6,false,,,Variable,Variable,true
+2025-10-13,Visaデビット 01　050913　やまか松林店,17.08,false,,,Variable,Variable,true
+2025-10-14,Visaデビット 01　244867　ＧＯ（タクシーアプリ）＊アプリ配車,6.96,false,,,Variable,Variable,true
+2025-10-16,Visaデビット 01　495337　ロケツトナウ,18.67,false,,,Variable,Variable,true
+2025-10-17,Visaデビット 01　670900　ＧＯ（タクシーアプリ）＊アプリ配車,11.39,false,,,Variable,Variable,true
+2025-10-19,Visaデビット 01　964042　ＧＯ（タクシーアプリ）＊アプリ配車,10.13,false,,,Variable,Variable,true
+2025-10-20,デビツトリヨウキヤツシユバツク,5.45,true,,,Income,Income,true
+2025-10-20,振込 イトウ　アンナ,577.58,false,,,Savings,Savings,true
+2025-10-20,Visaデビット 01　174994　ＧＯ（タクシーアプリ）＊アプリ配車,6.96,false,,,Variable,Variable,true
+2025-10-21,Visaデビット 01　308094　ＧＯ（タクシーアプリ）＊アプリ配車,12.03,false,,,Variable,Variable,true
+2025-10-23,Visaデビット 01　621175　ＧＯ（タクシーアプリ）＊アプリ配車,10.13,false,,,Variable,Variable,true
+2025-10-24,給与振込 リンクス（カ,4697.97,true,,,Income,Income,true
+2025-10-24,振込 イトウ　アンナ,1845.19,false,,,Savings,Savings,true
+2025-10-24,振込 マルテイネズ　ポンズ　リカルド,696.3,false,,,Savings,Savings,true
+2025-10-24,振込手数料（税込）,0.7,false,,,Fixed,Fixed,true
+2025-10-24,振込 マルテイネズ　ポンズ　リカルド,1266.0,false,,,Savings,Savings,true
+2025-10-24,振込手数料（税込）,0.7,false,,,Fixed,Fixed,true
+2025-10-25,Visaデビット 01　890018　ＵＢＥＲ　ＴＲＩＰ＊　ＰＥＮＤＩＮＧ,8.35,false,,,Variable,Variable,true
+2025-10-25,Visaデビット 01　890018　ＵＢＥＲ　ＴＲＩＰ＊　ＰＥＮＤＩＮＧ,8.35,true,,,Income,Income,true
+2025-10-25,Visaデビット 01　947348　ＵＢＥＲ　＊　ＰＥＮＤＩＮＧ,8.35,false,,,Variable,Variable,true
+2025-10-26,Visaデビット 01　087697　やまか松林店,9.59,false,,,Variable,Variable,true
+2025-10-28,Visaデビット 01　947348　ＵＢＥＲ　＊　ＰＥＮＤＩＮＧ,8.35,true,,,Income,Income,true
+2025-11-02,Visaデビット 01　205536　ＧＯ（タクシーアプリ）＊アプリ配車,12.03,false,,,Variable,Variable,true
+2025-11-02,Visaデビット 01　233660　アートアクアリウム公式チケット,31.65,false,,,Variable,Variable,true
+2025-11-03,Visaデビット 01　386752　やまか松林店,21.05,false,,,Variable,Variable,true
+2025-11-05,Visaデビット 01　727893　ＰＡＹＰＡＬ　＊ＷＩＸ　１２０７２７４０７３,12.03,false,,,Fixed,Fixed,true
+2025-11-05,振込 イトウ　アンナ,1786.24,false,,,Savings,Savings,true
+2025-11-06,Visaデビット 01　877284　東急パワーサプライ,3.71,false,,,Fixed,Fixed,true
+2025-11-07,Visaデビット 01　935373　ＧＯ（タクシーアプリ）＊アプリ配車,10.13,false,,,Variable,Variable,true
+2025-11-08,Visaデビット 01　103831　ＧＯ（タクシーアプリ）＊アプリ配車,12.03,false,,,Variable,Variable,true
+2025-11-08,Visaデビット 01　130497　ＧＯ（タクシーアプリ）＊アプリ配車,12.66,false,,,Variable,Variable,true
+2025-11-09,Visaデビット 01　272145　ＧＯ（タクシーアプリ）＊アプリ配車,13.29,false,,,Variable,Variable,true
+2025-11-15,Visaデビット 01　268755　ＧＯ（タクシーアプリ）＊アプリ配車,10.13,false,,,Variable,Variable,true
+2025-11-20,デビツトリヨウキヤツシユバツク,1.72,true,,,Income,Income,true
+2025-11-21,Visaデビット 01　198700　ＧＯ（タクシーアプリ）＊アプリ配車,10.76,false,,,Variable,Variable,true
+2025-11-24,Visaデビット 01　632540　ＧＯ（タクシーアプリ）＊アプリ配車,11.39,false,,,Variable,Variable,true
+2025-11-25,給与振込 リンクス（カ,4697.97,true,,,Income,Income,true
+2025-11-27,振込 イトウ　アンナ,1750.24,false,,,Savings,Savings,true
+2025-11-27,振込 マルテイネズ　ポンズ　リカルド,1266.0,false,,,Savings,Savings,true
+2025-11-27,振込手数料（税込）,0.7,false,,,Fixed,Fixed,true
+2025-12-01,Visaデビット 01　826520　ＧＯ（タクシーアプリ）＊アプリ配車,10.13,false,,,Variable,Variable,true
+2025-12-02,Visaデビット 01　051426　ＧＯ（タクシーアプリ）＊アプリ配車,10.76,false,,,Variable,Variable,true
+2025-12-04,Visaデビット 01　283063　ＧＯ（タクシーアプリ）＊アプリ配車,13.93,false,,,Variable,Variable,true
+2025-12-04,Visaデビット 01　290362　ＧＯ（タクシーアプリ）＊アプリ配車,12.66,false,,,Variable,Variable,true
+2025-12-06,Visaデビット 01　665436　やまか松林店,26.86,false,,,Variable,Variable,true
+2025-12-07,Visaデビット 01　824431　ロケツトナウ,18.55,false,,,Variable,Variable,true
+2025-12-08,振込 イトウ　アンナ,2211.98,false,,,Savings,Savings,true
+2025-12-09,Visaデビット 01　205860　やまか松林店,31.33,false,,,Variable,Variable,true
+2025-12-10,Visaデビット 01　280812　ＧＯ（タクシーアプリ）＊アプリ配車,10.76,false,,,Variable,Variable,true
+2025-12-10,Visaデビット 01　375130　ロケツトナウ,11.14,false,,,Variable,Variable,true
+2025-12-12,Visaデビット 01　641634　ＧＯ（タクシーアプリ）＊アプリ配車,11.39,false,,,Variable,Variable,true
+2025-12-16,Visaデビット 01　365425　ＧＯ（タクシーアプリ）＊アプリ配車,11.39,false,,,Variable,Variable,true
+2025-12-16,カード セブンATM,63.3,false,,,Variable,Variable,true
+2025-12-17,Visaデビット 01　514525　塩田歯科医院,18.74,false,,,Variable,Variable,true
+2025-12-19,Visaデビット 01　809249　ＧＯ（タクシーアプリ）＊アプリ配車,10.13,false,,,Variable,Variable,true
+2025-12-21,Visaデビット 01　134531　ＧＯ（タクシーアプリ）＊アプリ配車,8.23,false,,,Variable,Variable,true
+2025-12-22,デビツトリヨウキヤツシユバツク,0.73,true,,,Income,Income,true
+2025-12-23,Visaデビット 01　495538　ＧＯ（タクシーアプリ）＊アプリ配車,17.72,false,,,Variable,Variable,true
+2025-12-23,Visaデビット 01　517594　ＧＯ（タクシーアプリ）＊アプリ配車,20.89,false,,,Variable,Variable,true
+2025-12-25,給与振込 リンクス（カ,5045.51,true,,,Income,Income,true
+2025-12-25,振込 イトウ　アンナ,1751.83,false,,,Savings,Savings,true
+2025-12-25,振込 マルテイネズ　ポンズ　リカルド,1266.0,false,,,Savings,Savings,true
+2025-12-25,振込手数料（税込）,0.7,false,,,Fixed,Fixed,true
+2025-12-29,Visaデビット 01　498747　ＰＡＹＰＡＬ　＊ＧＩＴＨＵＢ　ＩＮＣ,4.58,false,,,Fixed,Fixed,true
+2025-12-29,Visaデビット 01　625312　ＳＴＥＡＭＧＡＭＥＳ．ＣＯＭ　４２５９５２２９８５,13.86,false,,,Variable,Variable,true
+2025-12-30,Visaデビット 01　718027　Ｂｏｕｌａｎｇｅｒ　Ｔａｋａｍａｔｕ,16.22,false,,,Variable,Variable,true
+2026-01-05,Visaデビット 01　668687　ロケツトナウ,12.03,false,,,Variable,Variable,true
+2026-01-05,Visaデビット 01　720772　やまか松林店,33.62,false,,,Variable,Variable,true
+2026-01-06,Visaデビット 01　840014　ロケツトナウ,11.9,false,,,Variable,Variable,true
+2026-01-07,振込 イトウ　アンナ,2933.65,false,,,Savings,Savings,true
+2026-01-10,Visaデビット 01　515046　やまか松林店,37.2,false,,,Variable,Variable,true
+2026-01-15,Visaデビット 01　385134　ＧＯ（タクシーアプリ）＊アプリ配車,12.03,false,,,Variable,Variable,true
+2026-01-16,Visaデビット 01　528750　ＴＨＥ　ＨＩＤＥＯＵＴ　ＣＡＦＥ　２,5.41,false,,,Variable,Variable,true
+2026-01-16,Visaデビット 01　544141　ＧＩＭＭＥ　ＭＡＲＴ,2.44,false,,,Variable,Variable,true
+2026-01-17,Visaデビット 01　621320　Ｑ−ＭＡＲＴ,8.7,false,,,Variable,Variable,true
+2026-01-17,Visaデビット 01　622578　ＢＩＤＶ,44.01,false,,,Variable,Variable,true
+2026-01-17,Visaデビット 01　693207　ＴＨＥ　ＰＯＷＥＲ　ＨＯＵＳＥ,3.1,false,,,Variable,Variable,true
+2026-01-17,Visaデビット 01　709941　ＮＨＡ　ＨＡＮＧ　ＡＮ　ＴＨＯＩ,24.93,false,,,Variable,Variable,true
+2026-01-18,Visaデビット 01　785720　ＣＴ　ＣＰ　ＤＩＣＨ　ＶＵ　ＣＡＰ　ＴＲＥＯ　ＢＡ,1.94,false,,,Variable,Variable,true
+2026-01-18,Visaデビット 01　787332　ＣＴ　ＣＰ　ＤＩＣＨ　ＶＵ　ＣＡＰ　ＴＲＥＯ　ＢＡ,5.82,false,,,Variable,Variable,true
+2026-01-18,Visaデビット 01　791710　ＣＴ　ＣＰ　ＤＩＣＨ　ＶＵ　ＣＡＰ　ＴＲＥＯ　ＢＡ,21.75,false,,,Variable,Variable,true
+2026-01-18,Visaデビット 01　805155　ＣＴ　ＣＰ　ＤＩＣＨ　ＶＵ　ＣＡＰ　ＴＲＥＯ　ＢＡ,7.77,false,,,Variable,Variable,true
+2026-01-18,Visaデビット 01　823673　ＣＴ　ＣＰ　ＤＩＣＨ　ＶＵ　ＣＡＰ　ＴＲＥＯ　ＢＡ,5.24,false,,,Variable,Variable,true
+2026-01-18,Visaデビット 01　852578　ＤＡＰＨＡＲＣＯ　ＢＲＡＶＯ,2.13,false,,,Variable,Variable,true
+2026-01-18,Visaデビット 01　861215　ＰＡＹＯＯ−ＰＩＺＺＡ４ＰＳ　１９Ｂ,24.91,false,,,Variable,Variable,true
+2026-01-19,Visaデビット 01　011710　ＣＡ　ＲＯ　ＤＯＮＧ,17.8,false,,,Variable,Variable,true
+2026-01-19,Visaデビット 01　015988　ＧＯＣ　ＴＲＥ　ＨＯＩ　ＡＮ,20.2,false,,,Variable,Variable,true
+2026-01-19,Visaデビット 01　019602　ＮＨＩ　ＢＩＮ−ＮＧＵＹＥＮ　ＴＨＩ　ＰＨＵＯＮ,49.99,false,,,Variable,Variable,true
+2026-01-20,デビツトリヨウキヤツシユバツク,1.22,true,,,Income,Income,true
+2026-01-21,Visaデビット 01　292008　ＹＡＭＡＫＡＳＹＯＲＩＮＴＥＮ,36.64,false,,,Variable,Variable,true

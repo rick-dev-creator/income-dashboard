@@ -274,8 +274,10 @@ public class AnalyticsWithIncomeDataTests(PostgresFixture fixture) : IAsyncLifet
         public IReadOnlyList<IIncomeConnector> GetAll() => [];
         public IReadOnlyList<ISyncableConnector> GetSyncable() => [];
         public IReadOnlyList<IRecurringConnector> GetRecurring() => [];
+        public IReadOnlyList<ICsvImportConnector> GetCsvImport() => [];
         public IIncomeConnector? GetById(string providerId) => null;
         public ISyncableConnector? GetSyncableById(string providerId) => null;
         public IRecurringConnector? GetRecurringById(string providerId) => null;
+        public ICsvImportConnector? GetCsvImportById(string providerId) => null;
     }
 }

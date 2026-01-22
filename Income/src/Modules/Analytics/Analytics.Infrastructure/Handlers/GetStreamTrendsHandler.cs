@@ -11,7 +11,7 @@ internal sealed class GetStreamTrendsHandler(
 {
     public async Task<Result<StreamTrendsDto>> HandleAsync(GetStreamTrendsQuery query, CancellationToken ct = default)
     {
-        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType), ct);
+        var streamsResult = await streamsHandler.HandleAsync(new GetAllStreamsQuery(query.StreamType, query.ProviderId), ct);
         if (streamsResult.IsFailed)
             return streamsResult.ToResult<StreamTrendsDto>();
 
@@ -76,32 +76,75 @@ internal sealed class GetStreamTrendsHandler(
         GetPeriodBoundaries(string comparisonType)
     {
         var now = DateTime.UtcNow;
-        var today = DateOnly.FromDateTime(now);
 
+        // Compare complete periods (last month vs month before) to avoid
+        // confusing partial-month comparisons
         return comparisonType.ToUpper() switch
         {
-            "MOM" => (
-                new DateOnly(now.Year, now.Month, 1),
-                today,
-                new DateOnly(now.Year, now.Month, 1).AddMonths(-1),
-                new DateOnly(now.Year, now.Month, 1).AddDays(-1)),
-            "WOW" => (
-                today.AddDays(-(int)today.DayOfWeek),
-                today,
-                today.AddDays(-(int)today.DayOfWeek - 7),
-                today.AddDays(-(int)today.DayOfWeek - 1)),
-            "YOY" => (
-                new DateOnly(now.Year, 1, 1),
-                today,
-                new DateOnly(now.Year - 1, 1, 1),
-                new DateOnly(now.Year - 1, 12, 31)),
-            "QOQ" => GetQuarterBoundaries(now),
-            _ => (
-                new DateOnly(now.Year, now.Month, 1),
-                today,
-                new DateOnly(now.Year, now.Month, 1).AddMonths(-1),
-                new DateOnly(now.Year, now.Month, 1).AddDays(-1))
+            "MOM" => GetMonthOverMonthComplete(now),
+            "WOW" => GetWeekOverWeekComplete(now),
+            "YOY" => GetYearOverYearComplete(now),
+            "QOQ" => GetQuarterBoundariesComplete(now),
+            _ => GetMonthOverMonthComplete(now)
         };
+    }
+
+    private static (DateOnly CurrentStart, DateOnly CurrentEnd, DateOnly PreviousStart, DateOnly PreviousEnd)
+        GetMonthOverMonthComplete(DateTime now)
+    {
+        // Compare last complete month vs the month before
+        // e.g., in January, compare December vs November
+        var lastMonthStart = new DateOnly(now.Year, now.Month, 1).AddMonths(-1);
+        var lastMonthEnd = new DateOnly(now.Year, now.Month, 1).AddDays(-1);
+
+        var previousMonthStart = lastMonthStart.AddMonths(-1);
+        var previousMonthEnd = lastMonthStart.AddDays(-1);
+
+        return (lastMonthStart, lastMonthEnd, previousMonthStart, previousMonthEnd);
+    }
+
+    private static (DateOnly CurrentStart, DateOnly CurrentEnd, DateOnly PreviousStart, DateOnly PreviousEnd)
+        GetWeekOverWeekComplete(DateTime now)
+    {
+        var today = DateOnly.FromDateTime(now);
+        // Last complete week (Sun-Sat)
+        var lastWeekEnd = today.AddDays(-(int)today.DayOfWeek - 1);
+        var lastWeekStart = lastWeekEnd.AddDays(-6);
+
+        var previousWeekEnd = lastWeekStart.AddDays(-1);
+        var previousWeekStart = previousWeekEnd.AddDays(-6);
+
+        return (lastWeekStart, lastWeekEnd, previousWeekStart, previousWeekEnd);
+    }
+
+    private static (DateOnly CurrentStart, DateOnly CurrentEnd, DateOnly PreviousStart, DateOnly PreviousEnd)
+        GetYearOverYearComplete(DateTime now)
+    {
+        // Compare last complete year vs year before
+        var lastYearStart = new DateOnly(now.Year - 1, 1, 1);
+        var lastYearEnd = new DateOnly(now.Year - 1, 12, 31);
+
+        var previousYearStart = new DateOnly(now.Year - 2, 1, 1);
+        var previousYearEnd = new DateOnly(now.Year - 2, 12, 31);
+
+        return (lastYearStart, lastYearEnd, previousYearStart, previousYearEnd);
+    }
+
+    private static (DateOnly CurrentStart, DateOnly CurrentEnd, DateOnly PreviousStart, DateOnly PreviousEnd)
+        GetQuarterBoundariesComplete(DateTime now)
+    {
+        // Last complete quarter
+        var currentQuarter = (now.Month - 1) / 3;
+        var lastQuarterIndex = currentQuarter == 0 ? 3 : currentQuarter - 1;
+        var lastQuarterYear = currentQuarter == 0 ? now.Year - 1 : now.Year;
+
+        var lastQuarterStart = new DateOnly(lastQuarterYear, lastQuarterIndex * 3 + 1, 1);
+        var lastQuarterEnd = lastQuarterStart.AddMonths(3).AddDays(-1);
+
+        var previousQuarterStart = lastQuarterStart.AddMonths(-3);
+        var previousQuarterEnd = lastQuarterStart.AddDays(-1);
+
+        return (lastQuarterStart, lastQuarterEnd, previousQuarterStart, previousQuarterEnd);
     }
 
     private static (DateOnly CurrentStart, DateOnly CurrentEnd, DateOnly PreviousStart, DateOnly PreviousEnd)
