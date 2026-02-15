@@ -100,9 +100,13 @@ internal sealed class SyncJob : BackgroundService
                 // Decrypt credentials
                 var decryptedCredentials = credentialEncryptor.Decrypt(streamEntity.EncryptedCredentials!);
 
-                // Calculate date range (last 30 days by default)
+                // Calculate date range
+                // First sync: fetch full history (3 years back)
+                // Subsequent syncs: fetch from last success date
                 var to = DateOnly.FromDateTime(DateTime.UtcNow);
-                var from = to.AddDays(-30);
+                var from = streamEntity.LastSuccessAt is null
+                    ? to.AddYears(-3)
+                    : DateOnly.FromDateTime(streamEntity.LastSuccessAt.Value).AddDays(-1);
 
                 _logger.LogDebug("Syncing stream {StreamId} ({StreamName}) from {From} to {To}",
                     streamEntity.Id, streamEntity.Name, from, to);

@@ -35,7 +35,7 @@
                     </MudCardContent>
                 </MudCard>
 
-                @if (!_isOutcomeMode)
+                @if (_syncableConnectors.Any())
                 {
                     <MudCard Class="cursor-pointer hover-card" @onclick="SelectApiIntegration" Elevation="2">
                         <MudCardContent>
@@ -46,7 +46,7 @@
                                 <div>
                                     <MudText Typo="Typo.h6">API Integration</MudText>
                                     <MudText Typo="Typo.body2" Color="Color.Secondary">
-                                        Exchanges, platforms - sync automatically via API
+                                        Exchanges, platforms, budgeting apps - sync automatically via API
                                     </MudText>
                                 </div>
                             </MudStack>
@@ -89,42 +89,65 @@
                 <MudStack Spacing="3">
                     <MudTextField @bind-Value="_name" Label="Stream Name" Required="true"
                                   RequiredError="Name is required" Variant="Variant.Outlined"
-                                  Placeholder="e.g., My Blofin Account" />
+                                  Placeholder="@GetStreamNamePlaceholder()" />
 
                     <MudSelect T="string" Label="Category" @bind-Value="_category" Required="true"
                                RequiredError="Category is required" Variant="Variant.Outlined">
-                        <MudSelectItem Value="@("Trading")">Trading</MudSelectItem>
-                        <MudSelectItem Value="@("Investment")">Investment</MudSelectItem>
-                        <MudSelectItem Value="@("Staking")">Staking</MudSelectItem>
-                        <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                        @if (IsEzbookkeepingConnector())
+                        {
+                            <MudSelectItem Value="@("Budgeting")">Budgeting</MudSelectItem>
+                            <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                        }
+                        else
+                        {
+                            <MudSelectItem Value="@("Trading")">Trading</MudSelectItem>
+                            <MudSelectItem Value="@("Investment")">Investment</MudSelectItem>
+                            <MudSelectItem Value="@("Staking")">Staking</MudSelectItem>
+                            <MudSelectItem Value="@("Other")">Other</MudSelectItem>
+                        }
                     </MudSelect>
 
                     <MudDivider Class="my-2" />
                     <MudText Typo="Typo.subtitle2" Color="Color.Primary">API Credentials</MudText>
 
-                    @* Dynamic credentials form based on ConfigSchema *@
-                    <MudTextField @bind-Value="_apiKey" Label="API Key" Required="true"
-                                  RequiredError="API Key is required" Variant="Variant.Outlined"
-                                  InputType="@(_showApiKey ? InputType.Text : InputType.Password)"
-                                  Adornment="Adornment.End"
-                                  AdornmentIcon="@(_showApiKey ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
-                                  OnAdornmentClick="() => _showApiKey = !_showApiKey" />
+                    @if (IsEzbookkeepingConnector())
+                    {
+                        <MudTextField @bind-Value="_serverUrl" Label="Server URL" Required="true"
+                                      RequiredError="Server URL is required" Variant="Variant.Outlined"
+                                      Placeholder="https://ezbook.example.com" />
 
-                    <MudTextField @bind-Value="_secretKey" Label="Secret Key" Required="true"
-                                  RequiredError="Secret Key is required" Variant="Variant.Outlined"
-                                  InputType="@(_showSecretKey ? InputType.Text : InputType.Password)"
-                                  Adornment="Adornment.End"
-                                  AdornmentIcon="@(_showSecretKey ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
-                                  OnAdornmentClick="() => _showSecretKey = !_showSecretKey" />
+                        <MudTextField @bind-Value="_apiToken" Label="API Token" Required="true"
+                                      RequiredError="API Token is required" Variant="Variant.Outlined"
+                                      InputType="@(_showApiToken ? InputType.Text : InputType.Password)"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@(_showApiToken ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                                      OnAdornmentClick="() => _showApiToken = !_showApiToken" />
+                    }
+                    else
+                    {
+                        <MudTextField @bind-Value="_apiKey" Label="API Key" Required="true"
+                                      RequiredError="API Key is required" Variant="Variant.Outlined"
+                                      InputType="@(_showApiKey ? InputType.Text : InputType.Password)"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@(_showApiKey ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                                      OnAdornmentClick="() => _showApiKey = !_showApiKey" />
 
-                    <MudTextField @bind-Value="_passphrase" Label="Passphrase" Required="true"
-                                  RequiredError="Passphrase is required" Variant="Variant.Outlined"
-                                  InputType="@(_showPassphrase ? InputType.Text : InputType.Password)"
-                                  Adornment="Adornment.End"
-                                  AdornmentIcon="@(_showPassphrase ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
-                                  OnAdornmentClick="() => _showPassphrase = !_showPassphrase" />
+                        <MudTextField @bind-Value="_secretKey" Label="Secret Key" Required="true"
+                                      RequiredError="Secret Key is required" Variant="Variant.Outlined"
+                                      InputType="@(_showSecretKey ? InputType.Text : InputType.Password)"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@(_showSecretKey ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                                      OnAdornmentClick="() => _showSecretKey = !_showSecretKey" />
 
-                    <MudCheckBox @bind-Value="_isDemo" Label="Demo Mode (use demo trading environment)" Color="Color.Primary" />
+                        <MudTextField @bind-Value="_passphrase" Label="Passphrase" Required="true"
+                                      RequiredError="Passphrase is required" Variant="Variant.Outlined"
+                                      InputType="@(_showPassphrase ? InputType.Text : InputType.Password)"
+                                      Adornment="Adornment.End"
+                                      AdornmentIcon="@(_showPassphrase ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                                      OnAdornmentClick="() => _showPassphrase = !_showPassphrase" />
+
+                        <MudCheckBox @bind-Value="_isDemo" Label="Demo Mode (use demo trading environment)" Color="Color.Primary" />
+                    }
 
                     @if (!string.IsNullOrEmpty(_validationError))
                     {
@@ -134,7 +157,16 @@
                     <MudAlert Severity="Severity.Info" Dense="true" Class="mt-2">
                         <MudStack>
                             <MudText Typo="Typo.body2">Your credentials will be encrypted and stored securely.</MudText>
-                            <MudText Typo="Typo.body2">Balance will sync automatically every 24 hours.</MudText>
+                            <MudText Typo="Typo.body2">
+                                @if (IsEzbookkeepingConnector())
+                                {
+                                    @($"Transactions will sync automatically every hour. Tracking {(_isOutcomeMode ? "expenses" : "income")} flow.")
+                                }
+                                else
+                                {
+                                    @("Balance will sync automatically every 24 hours.")
+                                }
+                            </MudText>
                         </MudStack>
                     </MudAlert>
                 </MudStack>
@@ -304,7 +336,7 @@
     private int _frequency = 3; // Monthly
     private DateTime? _startDate = DateTime.Today;
 
-    // Form fields - API Credentials
+    // Form fields - Exchange API Credentials
     private string _apiKey = "";
     private string _secretKey = "";
     private string _passphrase = "";
@@ -313,11 +345,23 @@
     private bool _showSecretKey = false;
     private bool _showPassphrase = false;
 
+    // Form fields - ezbookkeeping Credentials
+    private string _serverUrl = "";
+    private string _apiToken = "";
+    private bool _showApiToken = false;
+
     protected override void OnInitialized()
     {
         _isOutcomeMode = AppState.CurrentMode == AppMode.Outcome;
         _category = _isOutcomeMode ? "Housing" : "Salary";
-        _syncableConnectors = ConnectorRegistry.GetSyncable();
+
+        // Filter connectors by supported stream types for the current mode
+        var requiredType = _isOutcomeMode
+            ? SupportedStreamTypes.Outcome
+            : SupportedStreamTypes.Income;
+        _syncableConnectors = ConnectorRegistry.GetSyncable()
+            .Where(c => c.SupportedStreamTypes.HasFlag(requiredType))
+            .ToList();
     }
 
     private string GetDialogTitle() => _step switch
@@ -357,9 +401,19 @@
     private void SelectConnector(ISyncableConnector connector)
     {
         _selectedConnector = connector;
-        _name = $"My {connector.DisplayName}";
         _currency = connector.DefaultCurrency;
         _step = Step.ConfigureConnector;
+
+        if (connector.ProviderId == "ezbookkeeping")
+        {
+            _name = _isOutcomeMode ? "ezbookkeeping Expenses" : "ezbookkeeping Income";
+            _category = "Budgeting";
+        }
+        else
+        {
+            _name = $"My {connector.DisplayName}";
+            _category = "Trading";
+        }
     }
 
     private void ResetForm()
@@ -377,22 +431,48 @@
         _secretKey = "";
         _passphrase = "";
         _isDemo = false;
+        _serverUrl = "";
+        _apiToken = "";
+        _showApiToken = false;
         _credentialsValidated = false;
         _validationError = null;
     }
 
-    private bool CanValidate() =>
-        !string.IsNullOrWhiteSpace(_apiKey) &&
-        !string.IsNullOrWhiteSpace(_secretKey) &&
-        !string.IsNullOrWhiteSpace(_passphrase);
+    private bool IsEzbookkeepingConnector() =>
+        _selectedConnector?.ProviderId == "ezbookkeeping";
 
-    private string BuildCredentialsJson() => JsonSerializer.Serialize(new
+    private string GetStreamNamePlaceholder() =>
+        IsEzbookkeepingConnector()
+            ? (_isOutcomeMode ? "e.g., ezbookkeeping Expenses" : "e.g., ezbookkeeping Income")
+            : "e.g., My Blofin Account";
+
+    private bool CanValidate() =>
+        IsEzbookkeepingConnector()
+            ? !string.IsNullOrWhiteSpace(_serverUrl) && !string.IsNullOrWhiteSpace(_apiToken)
+            : !string.IsNullOrWhiteSpace(_apiKey) &&
+              !string.IsNullOrWhiteSpace(_secretKey) &&
+              !string.IsNullOrWhiteSpace(_passphrase);
+
+    private string BuildCredentialsJson()
     {
-        apiKey = _apiKey,
-        secretKey = _secretKey,
-        passphrase = _passphrase,
-        isDemo = _isDemo
-    });
+        if (IsEzbookkeepingConnector())
+        {
+            return JsonSerializer.Serialize(new
+            {
+                serverUrl = _serverUrl,
+                apiToken = _apiToken,
+                streamMode = _isOutcomeMode ? "expense" : "income"
+            });
+        }
+
+        return JsonSerializer.Serialize(new
+        {
+            apiKey = _apiKey,
+            secretKey = _secretKey,
+            passphrase = _passphrase,
+            isDemo = _isDemo
+        });
+    }
 
     private async Task ValidateCredentials()
     {
@@ -438,6 +518,7 @@
         try
         {
             var credentials = BuildCredentialsJson();
+            var streamType = _isOutcomeMode ? StreamTypeDto.Outcome : StreamTypeDto.Income;
 
             var request = new CreateStreamRequest(
                 ProviderId: _selectedConnector.ProviderId,
@@ -447,6 +528,7 @@
                 IsFixed: false,
                 FixedPeriod: null,
                 Credentials: credentials,
+                StreamType: streamType,
                 RecurringAmount: null,
                 RecurringFrequency: null,
                 RecurringStartDate: null);

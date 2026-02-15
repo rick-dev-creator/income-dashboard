@@ -4,6 +4,7 @@ using Income.Installer;
 using Analytics.Installer;
 using Connectors.Blofin;
 using Connectors.Toobit;
+using Connectors.Ezbookkeeping;
 using MudBlazor;
 using MudBlazor.Services;
 
@@ -121,6 +122,7 @@ builder.Services
     .AddAnalyticsModule()
     .AddBlofinConnector()
     .AddToobitConnector()
+    .AddEzbookkeepingConnector()
     .AddMudServices(config =>
     {
         config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
