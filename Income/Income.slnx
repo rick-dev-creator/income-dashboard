@@ -13,6 +13,7 @@
   <Folder Name="/Connectors/">
     <Project Path="src/Connectors/Connectors.Blofin/Connectors.Blofin.csproj" />
     <Project Path="src/Connectors/Connectors.Toobit/Connectors.Toobit.csproj" />
+    <Project Path="src/Connectors/Connectors.Ezbookkeeping/Connectors.Ezbookkeeping.csproj" />
   </Folder>
 
   <!-- Modules/Income -->
