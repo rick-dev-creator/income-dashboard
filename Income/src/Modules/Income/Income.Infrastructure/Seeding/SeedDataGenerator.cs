@@ -1,7 +1,11 @@
+using System.Text.Json;
 using Income.Application.Connectors;
+using Income.Application.Services;
 using Income.Infrastructure.Persistence;
 using Income.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Income.Infrastructure.Seeding;
@@ -9,6 +13,9 @@ namespace Income.Infrastructure.Seeding;
 internal sealed class SeedDataGenerator(
     IDbContextFactory<IncomeDbContext> dbContextFactory,
     IConnectorRegistry connectorRegistry,
+    ICredentialEncryptor credentialEncryptor,
+    IConfiguration configuration,
+    IHostEnvironment environment,
     ILogger<SeedDataGenerator> logger) : ISeedDataGenerator
 {
     public async Task<bool> HasDataAsync(CancellationToken ct = default)
@@ -32,6 +39,93 @@ internal sealed class SeedDataGenerator(
             await dbContext.Providers.AddAsync(provider, ct);
             await dbContext.SaveChangesAsync(ct);
             logger.LogInformation("Created built-in provider: {ProviderId}", BuiltInProviders.RecurringIncome);
+        }
+
+        // Development-only: auto-create ezbookkeeping streams from config
+        if (environment.IsDevelopment())
+        {
+            await SeedEzbookkeepingStreamsAsync(dbContext, ct);
+        }
+    }
+
+    /// <summary>
+    /// In development, auto-creates ezbookkeeping Income and Outcome streams
+    /// using credentials from appsettings.Development.json.
+    /// </summary>
+    private async Task SeedEzbookkeepingStreamsAsync(IncomeDbContext dbContext, CancellationToken ct)
+    {
+        var serverUrl = configuration["DevSeed:Ezbookkeeping:ServerUrl"];
+        var apiToken = configuration["DevSeed:Ezbookkeeping:ApiToken"];
+
+        if (string.IsNullOrWhiteSpace(serverUrl) || string.IsNullOrWhiteSpace(apiToken))
+            return;
+
+        var existingStreams = await dbContext.Streams
+            .Where(s => s.ProviderId == "ezbookkeeping")
+            .Select(s => s.StreamType)
+            .ToListAsync(ct);
+
+        var anyCreated = false;
+
+        // Income stream (StreamType = 0)
+        if (!existingStreams.Contains(0))
+        {
+            var incomeCredentials = JsonSerializer.Serialize(new
+            {
+                serverUrl,
+                apiToken,
+                streamMode = "income"
+            });
+
+            dbContext.Streams.Add(new StreamEntity
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                ProviderId = "ezbookkeeping",
+                Name = "ezbookkeeping Income",
+                Category = "Budgeting",
+                OriginalCurrency = "USD",
+                IsFixed = false,
+                EncryptedCredentials = credentialEncryptor.Encrypt(incomeCredentials),
+                SyncState = 0, // Active
+                StreamType = 0, // Income
+                CreatedAt = DateTime.UtcNow
+            });
+
+            logger.LogInformation("Dev seed: created ezbookkeeping Income stream");
+            anyCreated = true;
+        }
+
+        // Outcome stream (StreamType = 1)
+        if (!existingStreams.Contains(1))
+        {
+            var outcomeCredentials = JsonSerializer.Serialize(new
+            {
+                serverUrl,
+                apiToken,
+                streamMode = "expense"
+            });
+
+            dbContext.Streams.Add(new StreamEntity
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                ProviderId = "ezbookkeeping",
+                Name = "ezbookkeeping Expenses",
+                Category = "Budgeting",
+                OriginalCurrency = "USD",
+                IsFixed = false,
+                EncryptedCredentials = credentialEncryptor.Encrypt(outcomeCredentials),
+                SyncState = 0, // Active
+                StreamType = 1, // Outcome
+                CreatedAt = DateTime.UtcNow
+            });
+
+            logger.LogInformation("Dev seed: created ezbookkeeping Expenses stream");
+            anyCreated = true;
+        }
+
+        if (anyCreated)
+        {
+            await dbContext.SaveChangesAsync(ct);
         }
     }
 
