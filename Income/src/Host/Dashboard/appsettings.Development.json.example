@@ -1,0 +1,18 @@
+{
+  "DetailedErrors": true,
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Database=flowmetrics;Username=<your-username>;Password=<your-password>"
+  },
+  "DevSeed": {
+    "Ezbookkeeping": {
+      "ServerUrl": "http://<your-server>:8080",
+      "ApiToken": "<your-api-token>"
+    }
+  }
+}

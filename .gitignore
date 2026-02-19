@@ -3,6 +3,9 @@
 # Claude Code local settings
 .claude/
 
+# Sensitive local settings (connection strings, API tokens)
+**/appsettings.Development.json
+
 # User-specific files
 *.rsuser
 *.suo
